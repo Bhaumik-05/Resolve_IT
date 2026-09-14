@@ -1,0 +1,73 @@
+# =========================
+# Visual Studio
+# =========================
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# =========================
+# Build output
+# =========================
+[Bb]in/
+[Oo]bj/
+
+# =========================
+# Test results
+# =========================
+TestResults/
+[Tt]est[Rr]esult*/
+*.trx
+
+# =========================
+# NuGet
+# =========================
+*.nupkg
+*.snupkg
+.nuget/
+packages/
+
+# =========================
+# IDEs
+# =========================
+.vscode/
+.idea/
+
+# =========================
+# Logs / temporary files
+# =========================
+*.log
+*.tmp
+*.temp
+*.bak
+*.swp
+
+# =========================
+# OS files
+# =========================
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# =========================
+# Local secrets / configuration
+# =========================
+appsettings.Development.json
+appsettings.Local.json
+.env
+.env.*
+!.env.example
+
+# =========================
+# Local database files
+# =========================
+*.mdf
+*.ldf
+
+# =========================
+# Coverage
+# =========================
+coverage/
+*.coverage
+*.coveragexml
