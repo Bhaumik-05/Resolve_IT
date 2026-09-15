@@ -1,0 +1,268 @@
+﻿* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: #f4f6f9;
+}
+
+.auth-wrapper {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 30px;
+}
+
+.auth-container {
+    width: 100%;
+    max-width: 1050px;
+    min-height: 650px;
+    display: grid;
+    grid-template-columns: 42% 58%;
+    background: white;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.10);
+}
+
+/* BRAND */
+
+.auth-brand {
+    padding: 60px 45px;
+    background: linear-gradient( 145deg, #243b53, #1b2a41 );
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.brand-icon {
+    width: 62px;
+    height: 62px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.12);
+    font-size: 28px;
+    margin-bottom: 25px;
+}
+
+.auth-brand h1 {
+    font-size: 38px;
+    font-weight: 700;
+    margin-bottom: 12px;
+}
+
+.auth-brand > p {
+    color: rgba(255,255,255,.72);
+    line-height: 1.7;
+    max-width: 330px;
+}
+
+.brand-features {
+    margin-top: 45px;
+}
+
+    .brand-features div {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 22px;
+        color: rgba(255,255,255,.85);
+    }
+
+    .brand-features i {
+        font-size: 20px;
+    }
+
+
+/* FORM */
+
+.auth-form-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 50px;
+}
+
+.auth-form {
+    width: 100%;
+    max-width: 430px;
+}
+
+    .auth-form h2 {
+        font-size: 30px;
+        font-weight: 700;
+        color: #263238;
+        margin-bottom: 8px;
+    }
+
+.auth-subtitle {
+    color: #8a969f;
+    margin-bottom: 35px;
+}
+
+
+/* INPUTS */
+
+.form-group {
+    margin-bottom: 22px;
+}
+
+    .form-group label {
+        display: block;
+        font-size: 14px;
+        font-weight: 600;
+        color: #455a64;
+        margin-bottom: 8px;
+    }
+
+.input-wrapper {
+    position: relative;
+}
+
+    .input-wrapper i {
+        position: absolute;
+        left: 16px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #9aa6ad;
+        z-index: 2;
+    }
+
+    .input-wrapper .form-control {
+        height: 50px;
+        padding-left: 45px;
+        border: 1px solid #e0e5e8;
+        border-radius: 6px;
+        box-shadow: none;
+    }
+
+        .input-wrapper .form-control:focus {
+            border-color: #26a69a;
+            box-shadow: 0 0 0 3px rgba(38,166,154,.10);
+        }
+
+
+/* OPTIONS */
+
+.login-options {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 25px;
+}
+
+.remember-me {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: #607d8b;
+}
+
+
+/* BUTTON */
+
+.btn-login {
+    width: 100%;
+    height: 50px;
+    border: none;
+    border-radius: 6px;
+    background: #26a69a;
+    color: white;
+    font-size: 15px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    transition: .2s;
+}
+
+    .btn-login:hover {
+        background: #218f85;
+    }
+
+    .btn-login i {
+        transition: .2s;
+    }
+
+    .btn-login:hover i {
+        transform: translateX(4px);
+    }
+
+
+/* REGISTER */
+
+.auth-divider {
+    text-align: center;
+    margin: 30px 0 20px;
+    color: #90a4ae;
+    font-size: 13px;
+}
+
+.btn-register {
+    width: 100%;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #26a69a;
+    border-radius: 6px;
+    color: #26a69a;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+    .btn-register:hover {
+        background: #26a69a;
+        color: white;
+    }
+
+
+/* MOBILE */
+
+.mobile-brand {
+    display: none;
+}
+
+
+/* RESPONSIVE */
+
+@media (max-width: 850px) {
+
+    .auth-container {
+        grid-template-columns: 1fr;
+        max-width: 500px;
+    }
+
+    .auth-brand {
+        display: none;
+    }
+
+    .mobile-brand {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 35px;
+    }
+
+        .mobile-brand .brand-icon {
+            margin: 0;
+            width: 50px;
+            height: 50px;
+        }
+
+        .mobile-brand h2 {
+            margin: 0;
+        }
+
+    .auth-form-container {
+        padding: 40px 30px;
+    }
+}
