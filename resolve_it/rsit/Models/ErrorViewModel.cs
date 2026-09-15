@@ -1,8 +1,9 @@
-﻿using System;
-
-public class Class1
+﻿namespace rsit.Models
 {
-	public Class1()
-	{
-	}
+    public class ErrorViewModel
+    {
+        public string? RequestId { get; set; }
+
+        public bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
+    }
 }
