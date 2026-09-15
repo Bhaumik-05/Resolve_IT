@@ -1,5 +1,7 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using rsit.Data;
+using rsit.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +12,29 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+// ASP.NET Core Identity
+builder.Services
+    .AddIdentity<User, IdentityRole<int>>()
+    .AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddDefaultTokenProviders();
+
+builder.Services.Configure<IdentityOptions>(options =>
+{
+    // Password settings
+    options.Password.RequiredLength = 8;
+    options.Password.RequireDigit = true;
+    options.Password.RequireLowercase = true;
+    options.Password.RequireUppercase = true;
+    options.Password.RequireNonAlphanumeric = true;
+
+    // User settings
+    options.User.RequireUniqueEmail = true;
+
+    // Lockout settings
+    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
+    options.Lockout.MaxFailedAccessAttempts = 5;
+});
 
 var app = builder.Build();
 
@@ -23,6 +48,8 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseRouting();
 
+// Authentication must come before Authorization
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapStaticAssets();

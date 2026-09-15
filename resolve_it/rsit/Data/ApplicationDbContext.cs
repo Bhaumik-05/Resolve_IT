@@ -1,16 +1,17 @@
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using rsit.Models;
 
 namespace rsit.Data;
 
-public class ApplicationDbContext : DbContext
+public class ApplicationDbContext : IdentityDbContext<User, IdentityRole<int>, int>
 {
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : base(options)
     {
     }
 
-    public DbSet<User> Users { get; set; }
     public DbSet<Department> Departments { get; set; }
     public DbSet<Category> Categories { get; set; }
     public DbSet<Ticket> Tickets { get; set; }
@@ -26,10 +27,6 @@ public class ApplicationDbContext : DbContext
         // USER
         modelBuilder.Entity<User>()
             .HasIndex(u => u.EmployeeId)
-            .IsUnique();
-
-        modelBuilder.Entity<User>()
-            .HasIndex(u => u.Email)
             .IsUnique();
 
         // DEPARTMENT -> USER
@@ -109,7 +106,7 @@ public class ApplicationDbContext : DbContext
             .HasForeignKey(h => h.ChangedBy)
             .OnDelete(DeleteBehavior.Restrict);
 
-        // TICKET -> FEEDBACK (one-to-zero/one)
+        // TICKET -> FEEDBACK
         modelBuilder.Entity<Feedback>()
             .HasOne(f => f.Ticket)
             .WithOne(t => t.Feedback)

@@ -1,30 +1,20 @@
-﻿namespace rsit.Models;
+﻿using Microsoft.AspNetCore.Identity;
 
-public class User
+namespace rsit.Models;
+
+public class User : IdentityUser<int>
 {
-    public int UserId { get; set; }
-
+    // Custom ResolveIT fields
     public string EmployeeId { get; set; } = string.Empty;
-
     public string Name { get; set; } = string.Empty;
-
-    public string Email { get; set; } = string.Empty;
-
-    public string Mobile { get; set; } = string.Empty;
-
-    public string PasswordHash { get; set; } = string.Empty;
-
-    public string Role { get; set; } = string.Empty;
-
     public string AccountStatus { get; set; } = string.Empty;
-
     public DateTime CreatedAt { get; set; }
 
     // Department relationship
     public int DepartmentId { get; set; }
     public Department Department { get; set; } = null!;
 
-    // Navigation properties
+    // ResolveIT relationships
     public ICollection<Ticket> Tickets { get; set; } = new List<Ticket>();
     public ICollection<Attachment> Attachments { get; set; } = new List<Attachment>();
     public ICollection<Assignment> Assignments { get; set; } = new List<Assignment>();
