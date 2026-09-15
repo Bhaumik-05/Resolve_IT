@@ -2,7 +2,7 @@
 
 public class TicketHistory
 {
-    public int HistoryId { get; set; }
+    public int TicketHistoryId { get; set; }
 
     public string OldStatus { get; set; } = string.Empty;
 
