@@ -1,6 +1,22 @@
-﻿namespace rsit.Repositories
+﻿using Microsoft.EntityFrameworkCore;
+using rsit.Data;
+using rsit.Repositories.Interfaces;
+
+namespace rsit.Repositories
 {
-    public class DepartmentRepository
+    public class DepartmentRepository:IDepartmentRepository
     {
+        private readonly ApplicationDbContext _context;
+
+        public DepartmentRepository(ApplicationDbContext context)
+        {
+            _context = context;
+        }
+
+        public async Task<bool> ExistsAsync(int departmentId)
+        {
+            return await _context.Departments
+                .AnyAsync(d => d.DepartmentId == departmentId);
+        }
     }
 }

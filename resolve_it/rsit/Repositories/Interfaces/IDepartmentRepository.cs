@@ -2,5 +2,6 @@
 {
     public interface IDepartmentRepository
     {
+        Task<bool> ExistsAsync(int departmentId);
     }
 }
