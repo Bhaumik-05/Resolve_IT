@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using rsit.Services.Interfaces;
 using rsit.ViewModels;
 
@@ -13,23 +14,75 @@ public class AccountController : Controller
         _accountService = accountService;
     }
 
-
-    // GET: /Account/Register
+    // GET: /Account/Login
+    [AllowAnonymous]
     [HttpGet]
-    public IActionResult Register()
+    public IActionResult Login()
     {
-        return View();
+        if (User.Identity?.IsAuthenticated == true)
+        {
+            return RedirectToAction("Index", "Home");
+        }
+
+        return View(new LoginViewModel());
     }
 
-
-    // POST: /Account/Register
+    // POST: /Account/Login
+    [AllowAnonymous]
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Register(
-        RegisterViewModel model)
+    public async Task<IActionResult> Login(LoginViewModel model)
     {
         if (!ModelState.IsValid)
         {
+            return View(model);
+        }
+
+        var result = await _accountService.LoginAsync(model);
+
+        if (!result.Succeeded)
+        {
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError(string.Empty, error);
+            }
+
+            return View(model);
+        }
+
+        return RedirectToAction("Index", "Home");
+    }
+
+    // GET: /Account/Register
+    [AllowAnonymous]
+    [HttpGet]
+    public async Task<IActionResult> Register()
+    {
+        if (User.Identity?.IsAuthenticated == true)
+        {
+            return RedirectToAction("Index", "Home");
+        }
+
+        var model = new RegisterViewModel();
+
+        // Load departments for dropdown
+        model.Departments =
+            await _accountService.GetDepartmentsAsync();
+
+        return View(model);
+    }
+
+    // POST: /Account/Register
+    [AllowAnonymous]
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Register(RegisterViewModel model)
+    {
+        if (!ModelState.IsValid)
+        {
+            model.Departments =
+                await _accountService.GetDepartmentsAsync();
+
             return View(model);
         }
 
@@ -40,10 +93,11 @@ public class AccountController : Controller
         {
             foreach (var error in result.Errors)
             {
-                ModelState.AddModelError(
-                    string.Empty,
-                    error);
+                ModelState.AddModelError(string.Empty, error);
             }
+
+            model.Departments =
+                await _accountService.GetDepartmentsAsync();
 
             return View(model);
         }
@@ -54,76 +108,8 @@ public class AccountController : Controller
         return RedirectToAction(nameof(Login));
     }
 
-
-    // GET: /Account/Login
-    [HttpGet]
-    public IActionResult Login(string? returnUrl = null)
-    {
-        ViewData["ReturnUrl"] = returnUrl;
-
-        return View();
-    }
-
-
-    // POST: /Account/Login
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Login(
-        LoginViewModel model,
-        string? returnUrl = null)
-    {
-        ViewData["ReturnUrl"] = returnUrl;
-
-        if (!ModelState.IsValid)
-        {
-            return View(model);
-        }
-
-        var result =
-            await _accountService.LoginAsync(model);
-
-        if (!result.Succeeded)
-        {
-            foreach (var error in result.Errors)
-            {
-                ModelState.AddModelError(
-                    string.Empty,
-                    error);
-            }
-
-            return View(model);
-        }
-
-        // Prevent open redirect attacks.
-        if (!string.IsNullOrWhiteSpace(returnUrl) &&
-            Url.IsLocalUrl(returnUrl))
-        {
-            return Redirect(returnUrl);
-        }
-
-        // Temporary dashboard routing.
-        // We'll replace these with actual dashboards later.
-        if (User.IsInRole("Admin"))
-        {
-            return RedirectToAction(
-                "Index",
-                "Admin");
-        }
-
-        if (User.IsInRole("Support Staff"))
-        {
-            return RedirectToAction(
-                "Index",
-                "Support");
-        }
-
-        return RedirectToAction(
-            "Index",
-            "Employee");
-    }
-
-
     // POST: /Account/Logout
+    [Authorize]
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Logout()
@@ -131,11 +117,5 @@ public class AccountController : Controller
         await _accountService.LogoutAsync();
 
         return RedirectToAction(nameof(Login));
-    }
-
-    [HttpGet]
-    public IActionResult AccessDenied()
-    {
-        return View();
     }
 }

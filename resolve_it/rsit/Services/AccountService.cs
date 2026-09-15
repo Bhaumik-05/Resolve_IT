@@ -268,4 +268,9 @@ public class AccountService : IAccountService
     {
         await _signInManager.SignOutAsync();
     }
+
+    public async Task<List<Department>> GetDepartmentsAsync()
+    {
+        return await _departmentRepository.GetAllAsync();
+    }
 }

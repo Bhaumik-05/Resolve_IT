@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using rsit.Data;
+using rsit.Models;
 using rsit.Repositories.Interfaces;
 
 namespace rsit.Repositories
@@ -17,6 +18,12 @@ namespace rsit.Repositories
         {
             return await _context.Departments
                 .AnyAsync(d => d.DepartmentId == departmentId);
+        }
+        public async Task<List<Department>> GetAllAsync()
+        {
+            return await _context.Departments
+                .Where(d => d.Status == "Active")
+                .ToListAsync();
         }
     }
 }

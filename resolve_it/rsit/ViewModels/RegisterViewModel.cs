@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using rsit.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace rsit.ViewModels
 {
@@ -48,5 +49,7 @@ namespace rsit.ViewModels
         [Range(1, int.MaxValue, ErrorMessage = "Please select a valid department.")]
         [Display(Name = "Department")]
         public int DepartmentId { get; set; }
+
+        public List<Department> Departments { get; set; } = new();
     }
 }
