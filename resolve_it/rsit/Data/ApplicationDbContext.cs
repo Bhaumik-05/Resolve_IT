@@ -1,7 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using rsit.Models;
-using System.Net.Mail;
-using System.Net.Sockets;
 
 namespace rsit.Data;
 
@@ -16,7 +14,7 @@ public class ApplicationDbContext : DbContext
     public DbSet<Department> Departments { get; set; }
     public DbSet<Category> Categories { get; set; }
     public DbSet<Ticket> Tickets { get; set; }
-    public DbSet<System.Net.Mail.Attachment> Attachments { get; set; }
+    public DbSet<Attachment> Attachments { get; set; }
     public DbSet<Assignment> Assignments { get; set; }
     public DbSet<TicketHistory> TicketHistories { get; set; }
     public DbSet<Feedback> Feedbacks { get; set; }
@@ -63,17 +61,17 @@ public class ApplicationDbContext : DbContext
             .OnDelete(DeleteBehavior.Restrict);
 
         // TICKET -> ATTACHMENT
-        modelBuilder.Entity<System.Net.Mail.Attachment>()
+        modelBuilder.Entity<Attachment>()
             .HasOne(a => a.Ticket)
-            .WithMany((object t) => t.Attachments)
-            .HasForeignKey((object a) => a.TicketId)
+            .WithMany(t => t.Attachments)
+            .HasForeignKey(a => a.TicketId)
             .OnDelete(DeleteBehavior.Cascade);
 
         // USER -> ATTACHMENT
-        modelBuilder.Entity<System.Net.Mail.Attachment>()
+        modelBuilder.Entity<Attachment>()
             .HasOne(a => a.Uploader)
-            .WithMany((object u) => u.Attachments)
-            .HasForeignKey((object a) => a.UploadedBy)
+            .WithMany(u => u.Attachments)
+            .HasForeignKey(a => a.UploadedBy)
             .OnDelete(DeleteBehavior.Restrict);
 
         // TICKET -> ASSIGNMENT

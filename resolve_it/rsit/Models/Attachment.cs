@@ -18,6 +18,7 @@ public class Attachment
 
     public int UploadedBy { get; set; }
 
+    // Navigation properties
     public Ticket Ticket { get; set; } = null!;
 
     public User Uploader { get; set; } = null!;
