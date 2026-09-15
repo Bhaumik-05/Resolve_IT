@@ -1,4 +1,8 @@
-﻿* {
+﻿/* =========================================================
+   GLOBAL
+   ========================================================= */
+
+* {
     box-sizing: border-box;
 }
 
@@ -9,6 +13,11 @@ body {
     background: #f4f6f9;
 }
 
+
+/* =========================================================
+   AUTH WRAPPER
+   ========================================================= */
+
 .auth-wrapper {
     min-height: 100vh;
     display: flex;
@@ -16,6 +25,11 @@ body {
     justify-content: center;
     padding: 30px;
 }
+
+
+/* =========================================================
+   AUTH CONTAINER
+   ========================================================= */
 
 .auth-container {
     width: 100%;
@@ -27,9 +41,13 @@ body {
     border-radius: 14px;
     overflow: hidden;
     box-shadow: 0 15px 50px rgba(0, 0, 0, 0.10);
+    animation: authAppear 0.45s ease-out;
 }
 
-/* BRAND */
+
+/* =========================================================
+   BRAND PANEL
+   ========================================================= */
 
 .auth-brand {
     padding: 60px 45px;
@@ -59,10 +77,16 @@ body {
 }
 
 .auth-brand > p {
-    color: rgba(255,255,255,.72);
+    color: rgba(255, 255, 255, 0.72);
     line-height: 1.7;
     max-width: 330px;
+    margin-bottom: 0;
 }
+
+
+/* =========================================================
+   BRAND FEATURES
+   ========================================================= */
 
 .brand-features {
     margin-top: 45px;
@@ -73,7 +97,7 @@ body {
         align-items: center;
         gap: 15px;
         margin-bottom: 22px;
-        color: rgba(255,255,255,.85);
+        color: rgba(255, 255, 255, 0.85);
     }
 
     .brand-features i {
@@ -81,7 +105,9 @@ body {
     }
 
 
-/* FORM */
+/* =========================================================
+   FORM CONTAINER
+   ========================================================= */
 
 .auth-form-container {
     display: flex;
@@ -108,7 +134,9 @@ body {
 }
 
 
-/* INPUTS */
+/* =========================================================
+   FORM GROUP
+   ========================================================= */
 
 .form-group {
     margin-bottom: 22px;
@@ -122,6 +150,11 @@ body {
         margin-bottom: 8px;
     }
 
+
+/* =========================================================
+   INPUT WRAPPER
+   ========================================================= */
+
 .input-wrapper {
     position: relative;
 }
@@ -133,27 +166,163 @@ body {
         transform: translateY(-50%);
         color: #9aa6ad;
         z-index: 2;
+        pointer-events: none;
+        transition: color 0.2s ease;
     }
 
+
+    /* =========================================================
+   INPUTS
+   ========================================================= */
+
     .input-wrapper .form-control {
+        width: 100%;
         height: 50px;
         padding-left: 45px;
         border: 1px solid #e0e5e8;
         border-radius: 6px;
+        background: #fff;
         box-shadow: none;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
     }
 
-        .input-wrapper .form-control:focus {
-            border-color: #26a69a;
-            box-shadow: 0 0 0 3px rgba(38,166,154,.10);
+        .input-wrapper .form-control::placeholder {
+            color: #aab3b8;
         }
 
 
-/* OPTIONS */
+        /* =========================================================
+   INPUT FOCUS
+   ========================================================= */
+
+        .input-wrapper .form-control:focus {
+            border-color: #26a69a;
+            box-shadow: 0 0 0 3px rgba(38, 166, 154, 0.10);
+            outline: none;
+        }
+
+    .input-wrapper:focus-within i {
+        color: #26a69a;
+    }
+
+
+    /* =========================================================
+   SELECT / DEPARTMENT
+   ========================================================= */
+
+    .input-wrapper select.form-control {
+        padding-left: 45px;
+        appearance: auto;
+        cursor: pointer;
+    }
+
+
+/* =========================================================
+   VALIDATION
+   ========================================================= */
+
+.text-danger {
+    display: block;
+    margin-top: 5px;
+    font-size: 12px;
+    color: #e53935 !important;
+}
+
+
+/* =========================================================
+   INVALID INPUT
+   ASP.NET CORE VALIDATION
+   ========================================================= */
+
+/*
+    asp-validation-for generates an error message and
+    asp-for adds the "input-validation-error" class
+    when ModelState is invalid.
+*/
+
+.form-control.input-validation-error {
+    border-color: #e53935 !important;
+    background-color: #fffafa;
+    box-shadow: 0 0 0 3px rgba(229, 57, 53, 0.08) !important;
+}
+
+
+    /* =========================================================
+   INVALID EMAIL / PASSWORD SHAKE
+   ========================================================= */
+
+    /*
+    Shake the actual textbox when it is invalid.
+*/
+
+    .form-control.input-validation-error[type="email"],
+    .form-control.input-validation-error[type="password"] {
+        animation: invalidShake 0.35s ease-in-out;
+    }
+
+
+/*
+    If the browser has not generated the type attribute
+    as expected, this also catches inputs based on their
+    ASP.NET validation classes.
+*/
+
+input[name="Email"].input-validation-error,
+input[name="Password"].input-validation-error,
+input[name="ConfirmPassword"].input-validation-error {
+    animation: invalidShake 0.35s ease-in-out;
+}
+
+
+/* =========================================================
+   INVALID ICON
+   ========================================================= */
+
+.input-wrapper:has(.form-control.input-validation-error) i {
+    color: #e53935;
+}
+
+
+/* =========================================================
+   ERROR SUMMARY
+   ========================================================= */
+
+.auth-form .validation-summary-errors {
+    margin-bottom: 20px;
+    padding: 0;
+    color: #e53935;
+    font-size: 13px;
+}
+
+    .auth-form .validation-summary-errors ul {
+        margin: 0;
+        padding-left: 18px;
+    }
+
+
+/*
+    Bootstrap alert used by the controller for
+    server-side errors.
+*/
+
+.auth-form .alert-danger {
+    font-size: 13px;
+    border-radius: 6px;
+    margin-bottom: 22px;
+    border: 1px solid #f1b8b5;
+    background: #fff5f5;
+    color: #c62828;
+}
+
+
+/* =========================================================
+   OPTIONS
+   ========================================================= */
 
 .login-options {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     margin-bottom: 25px;
 }
 
@@ -165,8 +334,14 @@ body {
     color: #607d8b;
 }
 
+    .remember-me input {
+        cursor: pointer;
+    }
 
-/* BUTTON */
+
+/* =========================================================
+   LOGIN BUTTON
+   ========================================================= */
 
 .btn-login {
     width: 100%;
@@ -181,15 +356,20 @@ body {
     align-items: center;
     justify-content: center;
     gap: 12px;
-    transition: .2s;
+    transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
 }
 
     .btn-login:hover {
         background: #218f85;
+        box-shadow: 0 5px 15px rgba(38, 166, 154, 0.20);
+    }
+
+    .btn-login:active {
+        transform: translateY(1px);
     }
 
     .btn-login i {
-        transition: .2s;
+        transition: transform 0.2s ease;
     }
 
     .btn-login:hover i {
@@ -197,7 +377,9 @@ body {
     }
 
 
-/* REGISTER */
+/* =========================================================
+   REGISTER LINK / BUTTON
+   ========================================================= */
 
 .auth-divider {
     text-align: center;
@@ -215,24 +397,119 @@ body {
     border: 1px solid #26a69a;
     border-radius: 6px;
     color: #26a69a;
+    background: transparent;
     text-decoration: none;
     font-weight: 600;
+    transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
 }
 
     .btn-register:hover {
         background: #26a69a;
         color: white;
+        box-shadow: 0 5px 15px rgba(38, 166, 154, 0.15);
     }
 
 
-/* MOBILE */
+/* =========================================================
+   REGISTER PAGE
+   ========================================================= */
+
+.register-container {
+    max-width: 1150px;
+}
+
+.register-form-container {
+    padding: 45px 55px;
+}
+
+.register-form {
+    max-width: 650px;
+}
+
+
+/* =========================================================
+   REGISTER TWO-COLUMN ROW
+   ========================================================= */
+
+.register-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+}
+
+
+/* =========================================================
+   REGISTER BUTTON
+   ========================================================= */
+
+.register-button {
+    margin-top: 5px;
+    cursor: pointer;
+}
+
+
+/* =========================================================
+   MOBILE BRAND
+   ========================================================= */
 
 .mobile-brand {
     display: none;
 }
 
 
-/* RESPONSIVE */
+/* =========================================================
+   PAGE ENTRY ANIMATION
+   ========================================================= */
+
+@keyframes authAppear {
+
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+/* =========================================================
+   INVALID FIELD SHAKE
+   ========================================================= */
+
+@keyframes invalidShake {
+
+    0% {
+        transform: translateX(0);
+    }
+
+    20% {
+        transform: translateX(-6px);
+    }
+
+    40% {
+        transform: translateX(6px);
+    }
+
+    60% {
+        transform: translateX(-5px);
+    }
+
+    80% {
+        transform: translateX(5px);
+    }
+
+    100% {
+        transform: translateX(0);
+    }
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
 
 @media (max-width: 850px) {
 
@@ -264,5 +541,64 @@ body {
 
     .auth-form-container {
         padding: 40px 30px;
+    }
+}
+
+
+@media (max-width: 600px) {
+
+    .auth-wrapper {
+        padding: 15px;
+    }
+
+    .auth-container {
+        min-height: auto;
+        border-radius: 10px;
+    }
+
+    .auth-form-container {
+        padding: 35px 22px;
+    }
+
+    .auth-form h2 {
+        font-size: 26px;
+    }
+
+    .register-form {
+        max-width: 100%;
+    }
+
+    .register-row {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 400px) {
+
+    .auth-wrapper {
+        padding: 10px;
+    }
+
+    .auth-form-container {
+        padding: 30px 18px;
+    }
+
+    .auth-form h2 {
+        font-size: 24px;
+    }
+
+    .auth-subtitle {
+        font-size: 14px;
+        margin-bottom: 28px;
     }
 }
