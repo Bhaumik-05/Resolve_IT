@@ -4,6 +4,8 @@ using rsit.Data;
 using rsit.Models;
 using rsit.Repositories;
 using rsit.Repositories.Interfaces;
+using rsit.Services;
+using rsit.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +19,9 @@ builder.Services.AddControllersWithViews();
 // Repositories
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
+
+// Services
+builder.Services.AddScoped<IAccountService, AccountService>();
 
 // ASP.NET Core Identity
 builder.Services
@@ -39,6 +44,24 @@ builder.Services.Configure<IdentityOptions>(options =>
     // Lockout settings
     options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
     options.Lockout.MaxFailedAccessAttempts = 5;
+});
+
+/*
+ This means an unauthenticated user attempting:
+
+    /Employee/Index
+
+will eventually be sent to:
+
+    /Account/Login
+ */
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/Account/Login";
+    options.AccessDeniedPath = "/Account/AccessDenied";
+
+    options.ExpireTimeSpan = TimeSpan.FromHours(8);
+    options.SlidingExpiration = true;
 });
 
 var app = builder.Build();
