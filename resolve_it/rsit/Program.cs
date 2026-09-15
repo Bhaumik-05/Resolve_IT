@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using rsit.Data;
+using rsit.Middleware;
 using rsit.Models;
 using rsit.Repositories;
 using rsit.Repositories.Interfaces;
@@ -74,6 +75,8 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseMiddleware<ValidationMiddleware>();
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseRouting();
 
 // Authentication must come before Authorization
