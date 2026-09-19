@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using rsit.Models;
 using rsit.Services.Interfaces;
 using rsit.ViewModels;
 
@@ -14,6 +15,11 @@ public class AccountController : Controller
         _accountService = accountService;
     }
 
+
+    // =========================================================
+    // LOGIN
+    // =========================================================
+
     // GET: /Account/Login
     [AllowAnonymous]
     [HttpGet]
@@ -21,11 +27,12 @@ public class AccountController : Controller
     {
         if (User.Identity?.IsAuthenticated == true)
         {
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction(nameof(RouteToDashboard));
         }
 
         return View(new LoginViewModel());
     }
+
 
     // POST: /Account/Login
     [AllowAnonymous]
@@ -50,8 +57,43 @@ public class AccountController : Controller
             return View(model);
         }
 
-        return RedirectToAction("Index", "Home");
+        // Authentication cookie has been created.
+        // Determine the role on the next request.
+        return RedirectToAction(nameof(RouteToDashboard));
     }
+
+
+    // =========================================================
+    // ROLE-BASED DASHBOARD ROUTING
+    // =========================================================
+
+    [Authorize]
+    [HttpGet]
+    public IActionResult RouteToDashboard()
+    {
+        if (User.IsInRole(UserRoles.Admin))
+        {
+            return RedirectToAction("Index", "Admin");
+        }
+
+        if (User.IsInRole(UserRoles.SupportStaff))
+        {
+            return RedirectToAction("Index", "Support");
+        }
+
+        if (User.IsInRole(UserRoles.Employee))
+        {
+            return RedirectToAction("Index", "Employee");
+        }
+
+        // User is authenticated but has no recognized role.
+        return RedirectToAction(nameof(AccessDenied));
+    }
+
+
+    // =========================================================
+    // REGISTER
+    // =========================================================
 
     // GET: /Account/Register
     [AllowAnonymous]
@@ -60,7 +102,7 @@ public class AccountController : Controller
     {
         if (User.Identity?.IsAuthenticated == true)
         {
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction(nameof(RouteToDashboard));
         }
 
         var model = new RegisterViewModel();
@@ -71,6 +113,7 @@ public class AccountController : Controller
 
         return View(model);
     }
+
 
     // POST: /Account/Register
     [AllowAnonymous]
@@ -107,6 +150,23 @@ public class AccountController : Controller
 
         return RedirectToAction(nameof(Login));
     }
+
+
+    // =========================================================
+    // ACCESS DENIED
+    // =========================================================
+
+    [AllowAnonymous]
+    [HttpGet]
+    public IActionResult AccessDenied()
+    {
+        return View();
+    }
+
+
+    // =========================================================
+    // LOGOUT
+    // =========================================================
 
     // POST: /Account/Logout
     [Authorize]

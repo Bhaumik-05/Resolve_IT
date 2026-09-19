@@ -67,6 +67,15 @@ builder.Services.ConfigureApplicationCookie(options =>
 
 var app = builder.Build();
 
+using (var scope = app.Services.CreateScope())
+{
+    var roleManager =
+        scope.ServiceProvider
+            .GetRequiredService<RoleManager<IdentityRole<int>>>();
+
+    await IdentitySeeder.SeedRolesAsync(roleManager);
+}
+
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
