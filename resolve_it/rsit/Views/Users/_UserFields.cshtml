@@ -1,0 +1,68 @@
+@model UserFormViewModel
+
+<div class="row g-3">
+
+    <div class="col-md-6">
+        <label asp-for="Name" class="form-label"></label>
+        <input asp-for="Name" class="form-control" autocomplete="off" />
+        <span asp-validation-for="Name" class="text-danger small"></span>
+    </div>
+
+    <div class="col-md-6">
+        <label asp-for="Email" class="form-label"></label>
+        <input asp-for="Email" type="email" class="form-control" autocomplete="off" />
+        <span asp-validation-for="Email" class="text-danger small"></span>
+    </div>
+
+    <div class="col-md-6">
+        <label asp-for="Mobile" class="form-label"></label>
+        <input asp-for="Mobile" class="form-control" maxlength="10" inputmode="numeric" autocomplete="off" />
+        <span asp-validation-for="Mobile" class="text-danger small"></span>
+    </div>
+
+    <div class="col-md-6">
+        <label asp-for="DepartmentId" class="form-label"></label>
+        <select asp-for="DepartmentId" asp-items="Model.Departments" class="form-select">
+            <option value="">Select department</option>
+        </select>
+        <span asp-validation-for="DepartmentId" class="text-danger small"></span>
+    </div>
+
+    <div class="col-md-6">
+        <label asp-for="Role" class="form-label"></label>
+        @if (Model.IsSelf)
+        {
+            <select asp-for="Role" asp-items="Model.Roles" class="form-select" disabled></select>
+            <input type="hidden" asp-for="Role" />
+            <div class="form-text">You cannot change your own role.</div>
+        }
+        else
+        {
+            <select asp-for="Role" asp-items="Model.Roles" class="form-select">
+                <option value="">Select role</option>
+            </select>
+        }
+        <span asp-validation-for="Role" class="text-danger small"></span>
+    </div>
+
+    <div class="col-md-6">
+        <label asp-for="AccountStatus" class="form-label"></label>
+        @if (Model.IsSelf)
+        {
+            <select class="form-select" disabled>
+                <option>Active</option>
+            </select>
+            <input type="hidden" asp-for="AccountStatus" />
+            <div class="form-text">You cannot deactivate your own account.</div>
+        }
+        else
+        {
+            <select asp-for="AccountStatus" class="form-select">
+                <option value="Active">Active</option>
+                <option value="Inactive">Inactive</option>
+            </select>
+        }
+        <span asp-validation-for="AccountStatus" class="text-danger small"></span>
+    </div>
+
+</div>

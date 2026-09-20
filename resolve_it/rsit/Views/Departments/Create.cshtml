@@ -1,0 +1,26 @@
+@model DepartmentFormViewModel
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Add Department";
+}
+
+<div class="page-header">
+    <div><h1>Add Department</h1></div>
+    <a class="btn btn-outline-secondary" asp-action="Index"><i class="bi bi-arrow-left me-1"></i> Back to departments</a>
+</div>
+
+<div class="card-panel form-card">
+    <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+    <form asp-action="Create" method="post" novalidate>
+        <partial name="_DepartmentFields" model="Model" />
+        <div class="mt-4 d-flex gap-2">
+            <button type="submit" class="btn btn-teal"><i class="bi bi-plus-lg me-1"></i> Create Department</button>
+            <a class="btn btn-outline-secondary" asp-action="Index">Cancel</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

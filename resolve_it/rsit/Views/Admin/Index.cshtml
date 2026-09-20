@@ -1,17 +1,190 @@
-﻿@{
-    ViewData["Title"] = "Admin Dashboard";
+@model AdminDashboardViewModel
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Dashboard";
+    var d = Model.Data;
+
+    string Hours(double? h)
+    {
+        if (h == null) return "-";
+        return h < 48 ? $"{h:0.#} h" : $"{h / 24:0.#} d";
+    }
 }
 
-<div class="container py-5">
-
-    <h1>Admin Dashboard</h1>
-
-    <p class="text-muted">
-        Welcome to the ResolveIT administration dashboard.
-    </p>
-
-    <div class="alert alert-warning">
-        You are logged in as an Administrator.
+<div class="page-header">
+    <div>
+        <h1>Admin Dashboard</h1>
+        <p>Ticket statistics and system overview.</p>
     </div>
+    <div class="d-flex gap-2">
+        <a class="btn btn-teal" asp-controller="Users" asp-action="Create"><i class="bi bi-person-plus me-1"></i> Add User</a>
+    </div>
+</div>
 
+<!-- ============ TICKET HEADLINE NUMBERS ============ -->
+<div class="row g-3 mb-3">
+    <div class="col-6 col-xl-3">
+        <div class="stat-card">
+            <div class="stat-icon tone-blue"><i class="bi bi-ticket-detailed"></i></div>
+            <div><div class="stat-value">@d.TotalTickets</div><div class="stat-label">Total tickets</div></div>
+        </div>
+    </div>
+    <div class="col-6 col-xl-3">
+        <div class="stat-card">
+            <div class="stat-icon tone-amber"><i class="bi bi-hourglass-split"></i></div>
+            <div><div class="stat-value">@d.OpenTickets</div><div class="stat-label">Open tickets</div></div>
+        </div>
+    </div>
+    <div class="col-6 col-xl-3">
+        <div class="stat-card">
+            <div class="stat-icon tone-red"><i class="bi bi-person-exclamation"></i></div>
+            <div><div class="stat-value">@d.UnassignedTickets</div><div class="stat-label">Unassigned open tickets</div></div>
+        </div>
+    </div>
+    <div class="col-6 col-xl-3">
+        <div class="stat-card">
+            <div class="stat-icon tone-teal"><i class="bi bi-check2-circle"></i></div>
+            <div><div class="stat-value">@d.FinishedTickets</div><div class="stat-label">Resolved / closed</div></div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-6 col-xl-3">
+        <div class="stat-card">
+            <div class="stat-icon tone-purple"><i class="bi bi-calendar-week"></i></div>
+            <div><div class="stat-value">@d.CreatedLast7Days</div><div class="stat-label">Created in last 7 days</div></div>
+        </div>
+    </div>
+    <div class="col-6 col-xl-3">
+        <div class="stat-card">
+            <div class="stat-icon tone-slate"><i class="bi bi-stopwatch"></i></div>
+            <div><div class="stat-value">@Hours(d.AverageResolutionHours)</div><div class="stat-label">Avg. resolution time</div></div>
+        </div>
+    </div>
+    <div class="col-6 col-xl-3">
+        <div class="stat-card">
+            <div class="stat-icon tone-amber"><i class="bi bi-star"></i></div>
+            <div>
+                <div class="stat-value">@(d.AverageRating.HasValue ? d.AverageRating.Value.ToString("0.0") + " / 5" : "-")</div>
+                <div class="stat-label">Avg. feedback rating</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-xl-3">
+        <div class="stat-card">
+            <div class="stat-icon tone-teal"><i class="bi bi-people"></i></div>
+            <div><div class="stat-value">@d.ActiveUsers<span class="fs-6 text-muted"> / @d.TotalUsers</span></div><div class="stat-label">Active users</div></div>
+        </div>
+    </div>
+</div>
+
+<!-- ============ TREND + STATUS/PRIORITY ============ -->
+<div class="row g-3 mb-3">
+    <div class="col-lg-7">
+        <div class="card-panel">
+            <h2>Tickets created - last @d.Trend.Count days</h2>
+            <div class="trend">
+                @foreach (var day in d.Trend)
+                {
+                    var h = Model.TrendMax == 0 ? 0 : (int)Math.Round(day.Count * 100.0 / Model.TrendMax);
+                    <div class="trend-col" title="@($"{day.Date:dd MMM}: {day.Count}")">
+                        <span class="trend-num">@(day.Count > 0 ? day.Count.ToString() : "")</span>
+                        <div class="trend-bar @(day.Count == 0 ? "zero" : "")" style="height:@(day.Count == 0 ? 3 : Math.Max(h, 4))%"></div>
+                        <span class="trend-day">@day.Date.ToString("dd")</span>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-5">
+        <div class="card-panel">
+            <h2>By status</h2>
+            <partial name="_BarList" model='new BarListViewModel(d.ByStatus, "blue")' />
+        </div>
+    </div>
+</div>
+
+<div class="row g-3 mb-3">
+    <div class="col-lg-4">
+        <div class="card-panel">
+            <h2>By priority</h2>
+            <partial name="_BarList" model='new BarListViewModel(d.ByPriority, "amber")' />
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="card-panel">
+            <h2>Top departments</h2>
+            <partial name="_BarList" model='new BarListViewModel(d.ByDepartment, "purple")' />
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="card-panel">
+            <h2>Top categories</h2>
+            <partial name="_BarList" model='new BarListViewModel(d.ByCategory)' />
+        </div>
+    </div>
+</div>
+
+<!-- ============ SYSTEM OVERVIEW ============ -->
+<div class="row g-3 mb-3">
+    <div class="col-lg-4">
+        <div class="card-panel">
+            <h2>Users by role</h2>
+            <partial name="_BarList" model='new BarListViewModel(d.UsersByRole, "navy")' />
+            <a class="btn btn-sm btn-outline-secondary mt-2" asp-controller="Users" asp-action="Index">Manage users</a>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="card-panel">
+            <h2>Departments</h2>
+            <div class="stat-value">@d.ActiveDepartments<span class="fs-6 text-muted"> active of @d.TotalDepartments</span></div>
+            <a class="btn btn-sm btn-outline-secondary mt-3" asp-controller="Departments" asp-action="Index">Manage departments</a>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="card-panel">
+            <h2>Complaint categories</h2>
+            <div class="stat-value">@d.ActiveCategories<span class="fs-6 text-muted"> active of @d.TotalCategories</span></div>
+            <a class="btn btn-sm btn-outline-secondary mt-3" asp-controller="Categories" asp-action="Index">Manage categories</a>
+        </div>
+    </div>
+</div>
+
+<!-- ============ RECENT TICKETS ============ -->
+<div class="card-panel">
+    <h2>Recent tickets</h2>
+
+    @if (d.RecentTickets.Count == 0)
+    {
+        <div class="empty-note">No tickets have been raised yet.</div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table admin-table align-middle">
+                <thead>
+                    <tr>
+                        <th>#</th><th>Title</th><th>Raised by</th><th>Department</th>
+                        <th>Priority</th><th>Status</th><th>Created</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var t in d.RecentTickets)
+                    {
+                        var statusClass = t.Status.Replace(" ", "");
+                        <tr>
+                            <td>@t.TicketId</td>
+                            <td>@t.Title</td>
+                            <td>@t.EmployeeName</td>
+                            <td>@t.DepartmentName</td>
+                            <td><span class="pill pill-prio-@t.Priority">@t.Priority</span></td>
+                            <td><span class="pill pill-@statusClass">@t.Status</span></td>
+                            <td>@($"{t.CreatedAt.ToLocalTime():dd MMM yyyy, HH:mm}")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
 </div>

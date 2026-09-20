@@ -1,0 +1,46 @@
+@model CreateUserViewModel
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Add User";
+}
+
+<div class="page-header">
+    <div>
+        <h1>Add User</h1>
+        <p>The Employee ID is generated automatically from the selected role.</p>
+    </div>
+    <a class="btn btn-outline-secondary" asp-action="Index"><i class="bi bi-arrow-left me-1"></i> Back to users</a>
+</div>
+
+<div class="card-panel form-card">
+
+    <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+    <form asp-action="Create" method="post" novalidate>
+
+        <partial name="_UserFields" model="Model" />
+
+        <div class="row g-3 mt-0">
+            <div class="col-md-6">
+                <label asp-for="Password" class="form-label"></label>
+                <input asp-for="Password" class="form-control" autocomplete="new-password" />
+                <span asp-validation-for="Password" class="text-danger small"></span>
+            </div>
+            <div class="col-md-6">
+                <label asp-for="ConfirmPassword" class="form-label"></label>
+                <input asp-for="ConfirmPassword" class="form-control" autocomplete="new-password" />
+                <span asp-validation-for="ConfirmPassword" class="text-danger small"></span>
+            </div>
+        </div>
+
+        <div class="mt-4 d-flex gap-2">
+            <button type="submit" class="btn btn-teal"><i class="bi bi-person-plus me-1"></i> Create User</button>
+            <a class="btn btn-outline-secondary" asp-action="Index">Cancel</a>
+        </div>
+
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

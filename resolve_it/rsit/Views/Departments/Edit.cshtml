@@ -1,0 +1,26 @@
+@model DepartmentFormViewModel
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Edit Department";
+}
+
+<div class="page-header">
+    <div><h1>Edit Department</h1></div>
+    <a class="btn btn-outline-secondary" asp-action="Index"><i class="bi bi-arrow-left me-1"></i> Back to departments</a>
+</div>
+
+<div class="card-panel form-card">
+    <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+    <form asp-action="Edit" asp-route-id="@Model.Id" method="post" novalidate>
+        <partial name="_DepartmentFields" model="Model" />
+        <div class="mt-4 d-flex gap-2">
+            <button type="submit" class="btn btn-teal"><i class="bi bi-check2 me-1"></i> Save Changes</button>
+            <a class="btn btn-outline-secondary" asp-action="Index">Cancel</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

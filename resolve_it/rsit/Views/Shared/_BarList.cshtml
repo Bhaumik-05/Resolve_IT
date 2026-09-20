@@ -1,0 +1,24 @@
+@model BarListViewModel
+@{
+    var tone = Model.Tone;
+    var items = Model.Items;
+    var max = items.Count == 0 ? 0 : items.Max(m => m.Count);
+}
+
+@if (items.Count == 0)
+{
+    <div class="empty-note">No data yet.</div>
+}
+else
+{
+    foreach (var item in items)
+    {
+        var pct = max == 0 ? 0 : (int)Math.Round(item.Count * 100.0 / max);
+
+        <div class="bar-row bar-@tone">
+            <span class="bar-label" title="@item.Label">@UserRoles.DisplayName(item.Label)</span>
+            <div class="bar-track"><div class="bar-fill" style="width:@(pct)%"></div></div>
+            <span class="bar-value">@item.Count</span>
+        </div>
+    }
+}

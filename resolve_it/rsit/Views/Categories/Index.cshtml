@@ -1,0 +1,84 @@
+@model CategoryListViewModel
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Complaint Categories";
+    var hasFilters = !string.IsNullOrWhiteSpace(Model.Search)
+        || !string.IsNullOrWhiteSpace(Model.Type) || !string.IsNullOrWhiteSpace(Model.Status);
+}
+
+<div class="page-header">
+    <div>
+        <h1>Complaint Categories</h1>
+        <p>Only active categories are offered when a ticket is created.</p>
+    </div>
+    <a class="btn btn-teal" asp-action="Create"><i class="bi bi-plus-lg me-1"></i> Add Category</a>
+</div>
+
+<div class="card-panel">
+
+    <form method="get" asp-action="Index" class="filter-bar">
+        <input type="search" name="search" value="@Model.Search" class="form-control search-box" placeholder="Search categories" />
+        <select name="type" class="form-select">
+            <option value="">All types</option>
+            @foreach (var t in CategoryTypes.All)
+            {
+                <option value="@t" selected="@(t == Model.Type)">@t</option>
+            }
+        </select>
+        <select name="status" class="form-select">
+            <option value="">Any status</option>
+            <option value="Active" selected="@(Model.Status == "Active")">Active</option>
+            <option value="Inactive" selected="@(Model.Status == "Inactive")">Inactive</option>
+        </select>
+        <button type="submit" class="btn btn-teal"><i class="bi bi-search me-1"></i> Filter</button>
+        @if (hasFilters)
+        {
+            <a class="btn btn-outline-secondary" asp-action="Index">Clear</a>
+        }
+    </form>
+
+    @if (Model.Categories.Count == 0)
+    {
+        <div class="empty-note">No categories found.</div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table table-hover admin-table">
+                <thead>
+                    <tr>
+                        <th>Name</th><th>Type</th><th>Description</th>
+                        <th class="text-center">Tickets</th><th>Status</th><th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var c in Model.Categories)
+                    {
+                        var active = c.Status == "Active";
+                        <tr>
+                            <td class="fw-semibold">@c.Name</td>
+                            <td><span class="pill pill-role">@c.Type</span></td>
+                            <td class="text-muted">@c.Description</td>
+                            <td class="text-center">@c.TicketCount</td>
+                            <td><span class="pill @(active ? "pill-active" : "pill-inactive")">@c.Status</span></td>
+                            <td>
+                                <div class="table-actions">
+                                    <a class="btn btn-sm btn-outline-secondary" asp-action="Edit" asp-route-id="@c.CategoryId">
+                                        <i class="bi bi-pencil"></i> Edit
+                                    </a>
+                                    <form asp-action="SetStatus" asp-route-id="@c.CategoryId" method="post"
+                                          onsubmit="return confirm('@(active ? "Deactivate" : "Activate") this category?');">
+                                        <input type="hidden" name="activate" value="@((!active).ToString().ToLower())" />
+                                        <button type="submit" class="btn btn-sm @(active ? "btn-outline-danger" : "btn-outline-success")">
+                                            @(active ? "Deactivate" : "Activate")
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
