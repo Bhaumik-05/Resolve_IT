@@ -1,3 +1,4 @@
 <Solution>
+  <Project Path="rsit.Tests/rsit.Tests.csproj" Id="067d4498-2882-4110-a138-7d8640f71cb3" />
   <Project Path="rsit/rsit.csproj" />
 </Solution>
