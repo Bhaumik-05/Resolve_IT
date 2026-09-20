@@ -93,6 +93,10 @@ public static class IdentitySeeder
     // =========================
     // SEED USERS
     // =========================
+    // Note: Employee IDs here follow the same PREFIX+D4 format that
+    // AccountService.GenerateEmployeeIdAsync produces at runtime
+    // (EMP/ADM/STF + 4-digit sequence), so seeded accounts don't
+    // collide with or look inconsistent next to admin-registered ones.
     public static async Task SeedUsersAsync(
         UserManager<User> userManager,
         ApplicationDbContext context)
@@ -110,46 +114,46 @@ public static class IdentitySeeder
         // =========================
         // ADMIN
         // =========================
-        await CreateUserAsync(
-            userManager,
-            email: "admin@resolveit.com",
-            password: "Admin@123",
-            employeeId: "EMP001",
-            name: "System Admin",
-            accountStatus: "Active",
-            departmentId: itDepartment.DepartmentId,
-            role: UserRoles.Admin
-        );
+        //await CreateUserAsync(
+        //    userManager,
+        //    email: "admin@resolveit.com",
+        //    password: "Admin@123",
+        //    employeeId: "ADM0001",
+        //    name: "System Admin",
+        //    accountStatus: "Active",
+        //    departmentId: itDepartment.DepartmentId,
+        //    role: UserRoles.Admin
+        //);
 
 
         // =========================
         // SUPPORT STAFF
         // =========================
-        await CreateUserAsync(
-            userManager,
-            email: "staff@resolveit.com",
-            password: "Staff@123",
-            employeeId: "EMP002",
-            name: "Support Staff",
-            accountStatus: "Active",
-            departmentId: supportDepartment.DepartmentId,
-            role: UserRoles.SupportStaff
-        );
+        //await CreateUserAsync(
+        //    userManager,
+        //    email: "staff@resolveit.com",
+        //    password: "Staff@123",
+        //    employeeId: "STF0001",
+        //    name: "Support Staff",
+        //    accountStatus: "Active",
+        //    departmentId: supportDepartment.DepartmentId,
+        //    role: UserRoles.SupportStaff
+        //);
 
 
         // =========================
         // EMPLOYEE
         // =========================
-        await CreateUserAsync(
-            userManager,
-            email: "employee@resolveit.com",
-            password: "Employee@123",
-            employeeId: "EMP003",
-            name: "Test Employee",
-            accountStatus: "Active",
-            departmentId: hrDepartment.DepartmentId,
-            role: UserRoles.Employee
-        );
+        //await CreateUserAsync(
+        //    userManager,
+        //    email: "employee@resolveit.com",
+        //    password: "Employee@123",
+        //    employeeId: "EMP0001",
+        //    name: "Test Employee",
+        //    accountStatus: "Active",
+        //    departmentId: hrDepartment.DepartmentId,
+        //    role: UserRoles.Employee
+        //);
     }
 
     // =========================

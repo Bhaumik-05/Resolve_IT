@@ -14,15 +14,17 @@ public class RegisterViewModelTests
         return results;
     }
 
+    // Note: EmployeeId is no longer part of this model — it's generated
+    // server-side by AccountService, not entered by the admin.
     private static RegisterViewModel ValidModel() => new()
     {
         Name = "Jane Doe",
-        EmployeeId = "EMP1023",
         Email = "jane.doe@example.com",
         Mobile = "9876543210",
         Password = "Passw0rd!",
         ConfirmPassword = "Passw0rd!",
-        DepartmentId = 1
+        DepartmentId = 1,
+        Role = "Employee"
     };
 
     [Fact]
@@ -33,19 +35,18 @@ public class RegisterViewModelTests
     }
 
     [Theory]
-    [InlineData("EMP1023", true)]   // valid
-    [InlineData("emp1023", false)]  // lowercase letters not allowed
-    [InlineData("12345", false)]    // must start with letters
-    [InlineData("EMP", false)]      // no digits
-    [InlineData("EMP!!23", false)]  // symbols not allowed
-    public void EmployeeId_RegexValidation(string employeeId, bool expectedValid)
+    [InlineData("Employee", true)]
+    [InlineData("Admin", true)]
+    [InlineData("SupportStaff", true)]
+    [InlineData("", false)]           // required
+    public void Role_RequiredValidation(string role, bool expectedValid)
     {
         var model = ValidModel();
-        model.EmployeeId = employeeId;
+        model.Role = role;
 
         var results = Validate(model);
 
-        Assert.Equal(expectedValid, results.All(r => !r.MemberNames.Contains(nameof(model.EmployeeId))));
+        Assert.Equal(expectedValid, results.All(r => !r.MemberNames.Contains(nameof(model.Role))));
     }
 
     [Theory]
@@ -116,5 +117,16 @@ public class RegisterViewModelTests
         var results = Validate(model);
 
         Assert.Contains(results, r => r.MemberNames.Contains(nameof(model.Email)));
+    }
+
+    [Fact]
+    public void InvalidDepartmentId_FailsRangeValidation()
+    {
+        var model = ValidModel();
+        model.DepartmentId = 0;
+
+        var results = Validate(model);
+
+        Assert.Contains(results, r => r.MemberNames.Contains(nameof(model.DepartmentId)));
     }
 }

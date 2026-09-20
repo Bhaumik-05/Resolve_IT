@@ -9,5 +9,7 @@ namespace rsit.Repositories.Interfaces
         Task<User?> GetByEmployeeIdAsync(string employeeId);
 
         Task<bool> EmployeeIdExistsAsync(string employeeId);
+
+        Task<int> GetNextSequenceAsync(string prefix);
     }
 }

@@ -96,7 +96,7 @@ public class AccountController : Controller
     // =========================================================
 
     // GET: /Account/Register
-    [AllowAnonymous]
+    [AllowAnonymous] // here to change to [Authorize(Roles = UserRoles.Admin)] if you want only admins to register new users
     [HttpGet]
     public async Task<IActionResult> Register()
     {
@@ -116,7 +116,7 @@ public class AccountController : Controller
 
 
     // POST: /Account/Register
-    [AllowAnonymous]
+    [AllowAnonymous] // here to change to [Authorize(Roles = UserRoles.Admin)] if you want only admins to register new users
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Register(RegisterViewModel model)

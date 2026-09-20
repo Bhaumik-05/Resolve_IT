@@ -8,7 +8,13 @@ namespace rsit.Services;
 
 public class AccountService : IAccountService
 {
-    private const string EmployeeRole = "Employee";
+    // Role -> Employee ID prefix mapping used for auto-generated IDs.
+    private static readonly Dictionary<string, string> RolePrefixes = new()
+    {
+        { UserRoles.Employee, "EMP" },
+        { UserRoles.Admin, "ADM" },
+        { UserRoles.SupportStaff, "STF" }
+    };
 
     private readonly IDepartmentRepository _departmentRepository;
     private readonly UserManager<User> _userManager;
@@ -31,7 +37,7 @@ public class AccountService : IAccountService
     }
 
     // =========================================================
-    // REGISTER
+    // REGISTER (Admin only — called from an [Authorize(Roles = Admin)] action)
     // =========================================================
 
     public async Task<ServiceResult> RegisterAsync(
@@ -39,12 +45,22 @@ public class AccountService : IAccountService
     {
         // Normalize input
         var email = model.Email.Trim().ToLowerInvariant();
-        var employeeId = model.EmployeeId.Trim();
         var name = model.Name.Trim();
         var mobile = model.Mobile.Trim();
+        var role = model.Role.Trim();
 
         // -----------------------------------------------------
-        // 1. Check duplicate email
+        // 1. Check the requested role is valid
+        // -----------------------------------------------------
+
+        if (!RolePrefixes.TryGetValue(role, out var prefix))
+        {
+            return ServiceResult.Failure(
+                "Please select a valid role.");
+        }
+
+        // -----------------------------------------------------
+        // 2. Check duplicate email
         // -----------------------------------------------------
 
         var existingEmail =
@@ -54,19 +70,6 @@ public class AccountService : IAccountService
         {
             return ServiceResult.Failure(
                 "An account with this email already exists.");
-        }
-
-        // -----------------------------------------------------
-        // 2. Check duplicate employee ID
-        // -----------------------------------------------------
-
-        var employeeExists =
-            await _userRepository.EmployeeIdExistsAsync(employeeId);
-
-        if (employeeExists)
-        {
-            return ServiceResult.Failure(
-                "An account with this employee ID already exists.");
         }
 
         // -----------------------------------------------------
@@ -84,7 +87,14 @@ public class AccountService : IAccountService
         }
 
         // -----------------------------------------------------
-        // 4. Create Identity User
+        // 4. Auto-generate the Employee ID based on role
+        // -----------------------------------------------------
+
+        var employeeId =
+            await GenerateEmployeeIdAsync(prefix);
+
+        // -----------------------------------------------------
+        // 5. Create Identity User
         // -----------------------------------------------------
 
         var user = new User
@@ -104,7 +114,7 @@ public class AccountService : IAccountService
         };
 
         // -----------------------------------------------------
-        // 5. Create user using ASP.NET Core Identity
+        // 6. Create user using ASP.NET Core Identity
         // -----------------------------------------------------
 
         var identityResult =
@@ -122,14 +132,14 @@ public class AccountService : IAccountService
         }
 
         // -----------------------------------------------------
-        // 6. Make sure Employee role exists
+        // 7. Make sure the selected role exists
         // -----------------------------------------------------
 
-        if (!await _roleManager.RoleExistsAsync(EmployeeRole))
+        if (!await _roleManager.RoleExistsAsync(role))
         {
             var roleResult =
                 await _roleManager.CreateAsync(
-                    new IdentityRole<int>(EmployeeRole));
+                    new IdentityRole<int>(role));
 
             if (!roleResult.Succeeded)
             {
@@ -146,13 +156,13 @@ public class AccountService : IAccountService
         }
 
         // -----------------------------------------------------
-        // 7. Assign Employee role
+        // 8. Assign the selected role
         // -----------------------------------------------------
 
         var roleAssignmentResult =
             await _userManager.AddToRoleAsync(
                 user,
-                EmployeeRole);
+                role);
 
         if (!roleAssignmentResult.Succeeded)
         {
@@ -167,10 +177,36 @@ public class AccountService : IAccountService
         }
 
         // -----------------------------------------------------
-        // 8. Registration successful
+        // 9. Registration successful
         // -----------------------------------------------------
 
         return ServiceResult.Success();
+    }
+
+
+    // =========================================================
+    // EMPLOYEE ID GENERATION
+    // =========================================================
+
+    // Generates the next sequential ID for a given role prefix,
+    // e.g. "EMP0004", "ADM0002", "STF0007".
+    private async Task<string> GenerateEmployeeIdAsync(string prefix)
+    {
+        var nextSequence =
+            await _userRepository.GetNextSequenceAsync(prefix);
+
+        var candidateId = $"{prefix}{nextSequence:D4}";
+
+        // Safety net in case of a race condition between the
+        // sequence lookup and the insert (two admins registering
+        // at the same moment). Keep incrementing until free.
+        while (await _userRepository.EmployeeIdExistsAsync(candidateId))
+        {
+            nextSequence++;
+            candidateId = $"{prefix}{nextSequence:D4}";
+        }
+
+        return candidateId;
     }
 
 

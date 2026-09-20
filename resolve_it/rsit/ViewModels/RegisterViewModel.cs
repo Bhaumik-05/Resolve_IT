@@ -12,15 +12,6 @@ namespace rsit.ViewModels
         [Display(Name = "Employee Name")]
         public string Name { get; set; } = string.Empty;
 
-
-        [Required(ErrorMessage = "Employee ID is required.")]
-        [StringLength(20, MinimumLength = 2,
-            ErrorMessage = "Employee ID must be between 2 and 20 characters.")]
-        [RegularExpression(@"^[A-Z]{2,4}\d{3,6}$", ErrorMessage = "Employee ID format is invalid (e.g. EMP1023).")]
-        [Display(Name = "Employee ID")]
-        public string EmployeeId { get; set; } = string.Empty;
-
-
         [Required(ErrorMessage = "Email address is required.")]
         [EmailAddress(ErrorMessage = "Enter a valid email address.")]
         [StringLength(150)]
@@ -54,6 +45,10 @@ namespace rsit.ViewModels
         [Range(1, int.MaxValue, ErrorMessage = "Please select a valid department.")]
         [Display(Name = "Department")]
         public int DepartmentId { get; set; }
+
+        [Required(ErrorMessage = "Please select a role.")]
+        [Display(Name = "Role")]
+        public string Role { get; set; } = string.Empty;
 
         public List<Department> Departments { get; set; } = new();
     }

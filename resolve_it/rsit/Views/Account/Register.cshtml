@@ -49,7 +49,7 @@
 
                     <div>
                         <i class="bi bi-person-plus"></i>
-                        <span>Create your employee account</span>
+                        <span>Create a new user account</span>
                     </div>
 
                     <div>
@@ -89,7 +89,7 @@
                     <h2>Create Account</h2>
 
                     <p class="auth-subtitle">
-                        Register as an employee to get started
+                        Admin: register a new user. Their Employee ID will be generated automatically.
                     </p>
 
 
@@ -108,7 +108,7 @@
                         @Html.AntiForgeryToken()
 
 
-                        <!-- NAME + EMPLOYEE ID -->
+                        <!-- NAME + ROLE -->
 
                         <div class="register-row">
 
@@ -124,7 +124,7 @@
 
                                     <input asp-for="Name"
                                            class="form-control"
-                                           placeholder="Enter your name" />
+                                           placeholder="Enter full name" />
 
                                 </div>
 
@@ -137,21 +137,27 @@
 
                             <div class="form-group">
 
-                                <label asp-for="EmployeeId">
-                                    Employee ID
+                                <label asp-for="Role">
+                                    Role
                                 </label>
 
                                 <div class="input-wrapper">
 
                                     <i class="bi bi-person-badge"></i>
 
-                                    <input asp-for="EmployeeId"
-                                           class="form-control"
-                                           placeholder="Enter employee ID" />
+                                    <select asp-for="Role"
+                                            class="form-control">
+
+                                        <option value="">Select Role</option>
+                                        <option value="Employee">Employee</option>
+                                        <option value="SupportStaff">Support Staff</option>
+                                        <option value="Admin">Admin</option>
+
+                                    </select>
 
                                 </div>
 
-                                <span asp-validation-for="EmployeeId"
+                                <span asp-validation-for="Role"
                                       class="text-danger">
                                 </span>
 
@@ -160,6 +166,9 @@
                         </div>
 
 
+                        <!-- Note: Employee ID is no longer entered here.
+                             It is auto-generated server-side based on the
+                             selected Role (e.g. EMP0004, STF0002, ADM0003). -->
                         <!-- EMAIL + MOBILE -->
 
                         <div class="register-row">
@@ -176,7 +185,7 @@
 
                                     <input asp-for="Email"
                                            class="form-control"
-                                           placeholder="Enter your email" />
+                                           placeholder="Enter email address" />
 
                                 </div>
 
@@ -263,7 +272,7 @@
 
                                     <input asp-for="Password"
                                            class="form-control"
-                                           placeholder="Create a password" />
+                                           placeholder="Set an initial password" />
 
                                 </div>
 
@@ -286,7 +295,7 @@
 
                                     <input asp-for="ConfirmPassword"
                                            class="form-control"
-                                           placeholder="Confirm your password" />
+                                           placeholder="Confirm password" />
 
                                 </div>
 
@@ -313,18 +322,18 @@
                     </form>
 
 
-                    <!-- LOGIN -->
+                    <!-- BACK TO DASHBOARD -->
 
                     <div class="auth-divider">
-                        <span>Already have an account?</span>
+                        <span>Done adding users?</span>
                     </div>
 
 
                     <a asp-controller="Account"
-                       asp-action="Login"
+                       asp-action="RouteToDashboard"
                        class="btn-register">
 
-                        Sign In
+                        Back to Dashboard
 
                     </a>
 
