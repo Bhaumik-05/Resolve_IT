@@ -15,8 +15,9 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(
         builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Add services to the container.
+// Add services to the container
 builder.Services.AddControllersWithViews();
+
 // Repositories
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
@@ -55,7 +56,7 @@ builder.Services.Configure<IdentityOptions>(options =>
 will eventually be sent to:
 
     /Account/Login
- */
+*/
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.LoginPath = "/Account/Login";
@@ -66,6 +67,11 @@ builder.Services.ConfigureApplicationCookie(options =>
 });
 
 var app = builder.Build();
+
+
+// ======================================================
+// DATABASE SEEDING
+// ======================================================
 
 using (var scope = app.Services.CreateScope())
 {
@@ -90,27 +96,57 @@ using (var scope = app.Services.CreateScope())
     await IdentitySeeder.SeedUsersAsync(userManager, context);
 }
 
-// Configure the HTTP request pipeline.
+
+// ======================================================
+// HTTP REQUEST PIPELINE
+// ======================================================
+
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
 }
 
+
+// ======================================================
+// STATUS CODE ERROR PAGE
+// Handles 400, 401, 403, 404, 405, etc.
+// ======================================================
+
+app.UseStatusCodePagesWithReExecute(
+    "/Error",
+    "?statusCode={0}"
+);
+
+
 app.UseHttpsRedirection();
+
+
+// ======================================================
+// CUSTOM MIDDLEWARE
+// ======================================================
+
 app.UseMiddleware<ValidationMiddleware>();
+
 app.UseMiddleware<ExceptionHandlingMiddleware>();
+
+
 app.UseRouting();
+
 
 // Authentication must come before Authorization
 app.UseAuthentication();
+
 app.UseAuthorization();
 
+
 app.MapStaticAssets();
+
 
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Account}/{action=Login}/{id?}")
     .WithStaticAssets();
+
 
 app.Run();
