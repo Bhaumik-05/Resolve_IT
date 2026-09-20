@@ -69,11 +69,25 @@ var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
 {
-    var roleManager =
-        scope.ServiceProvider
-            .GetRequiredService<RoleManager<IdentityRole<int>>>();
+    var services = scope.ServiceProvider;
 
+    var roleManager =
+        services.GetRequiredService<RoleManager<IdentityRole<int>>>();
+
+    var userManager =
+        services.GetRequiredService<UserManager<User>>();
+
+    var context =
+        services.GetRequiredService<ApplicationDbContext>();
+
+    // 1. Seed roles
     await IdentitySeeder.SeedRolesAsync(roleManager);
+
+    // 2. Seed departments
+    await IdentitySeeder.SeedDepartmentsAsync(context);
+
+    // 3. Seed users
+    await IdentitySeeder.SeedUsersAsync(userManager, context);
 }
 
 // Configure the HTTP request pipeline.
