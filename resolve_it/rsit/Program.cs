@@ -18,7 +18,9 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 // Add services to the container
 builder.Services.AddControllersWithViews();
 
+
 // Repositories
+builder.Services.AddScoped<IAdminTicketRepository, AdminTicketRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
@@ -30,6 +32,7 @@ builder.Services.AddScoped<IUserManagementService, UserManagementService>();
 builder.Services.AddScoped<IDepartmentService, DepartmentService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IDashboardService, DashboardService>();
+builder.Services.AddScoped<IAdminTicketService, AdminTicketService>();
 
 // ASP.NET Core Identity
 builder.Services

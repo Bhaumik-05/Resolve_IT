@@ -31,13 +31,28 @@
                 </a>
 
                 <div class="admin-nav-label">Management</div>
-                <a class="@Active("Users")" asp-controller="Users" asp-action="Index">
+
+                <a class="@Active("AdminTickets")"
+                   asp-controller="AdminTickets"
+                   asp-action="Index">
+                    <i class="bi bi-ticket-detailed"></i> Tickets
+                </a>
+
+                <a class="@Active("Users")"
+                   asp-controller="Users"
+                   asp-action="Index">
                     <i class="bi bi-people"></i> Users
                 </a>
-                <a class="@Active("Departments")" asp-controller="Departments" asp-action="Index">
+
+                <a class="@Active("Departments")"
+                   asp-controller="Departments"
+                   asp-action="Index">
                     <i class="bi bi-diagram-3"></i> Departments
                 </a>
-                <a class="@Active("Categories")" asp-controller="Categories" asp-action="Index">
+
+                <a class="@Active("Categories")"
+                   asp-controller="Categories"
+                   asp-action="Index">
                     <i class="bi bi-tags"></i> Categories
                 </a>
             </nav>
