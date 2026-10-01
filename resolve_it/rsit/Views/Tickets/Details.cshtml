@@ -1,0 +1,1823 @@
+﻿@model rsit.Models.Ticket
+
+@{
+    ViewData["Title"] = $"Ticket #{Model.TicketId}";
+}
+
+<style>
+    /* =========================================================
+           ResolveIT - Ticket Details
+           ========================================================= */
+
+    :root {
+        --rit-navy: #14213d;
+        --rit-navy-light: #1d3158;
+        --rit-blue: #2563eb;
+        --rit-blue-dark: #1d4ed8;
+        --rit-blue-soft: #eff6ff;
+        --rit-blue-border: #bfdbfe;
+        --rit-bg: #f3f6fa;
+        --rit-surface: #ffffff;
+        --rit-text: #172033;
+        --rit-text-secondary: #475467;
+        --rit-muted: #667085;
+        --rit-subtle: #98a2b3;
+        --rit-border: #dfe4ea;
+        --rit-border-light: #eaecf0;
+        --rit-green: #027a48;
+        --rit-green-soft: #ecfdf3;
+        --rit-yellow: #b54708;
+        --rit-yellow-soft: #fffaeb;
+        --rit-orange: #c4320a;
+        --rit-orange-soft: #fff6ed;
+        --rit-red: #b42318;
+        --rit-red-soft: #fef3f2;
+    }
+
+
+    /* =========================================================
+           PAGE
+           ========================================================= */
+
+    .rit-details-page {
+        min-height: calc(100vh - 120px);
+        background: linear-gradient( 180deg, #eef3f9 0, #f5f7fa 220px, #f5f7fa 100% );
+        padding: 30px 0 55px;
+    }
+
+    .rit-details-container {
+        max-width: 1180px;
+        margin: 0 auto;
+    }
+
+
+    /* =========================================================
+           BREADCRUMB
+           ========================================================= */
+
+    .rit-breadcrumb {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 13px;
+        color: var(--rit-muted);
+        font-size: 12px;
+        font-weight: 500;
+    }
+
+        .rit-breadcrumb i {
+            font-size: 9px;
+            color: #98a2b3;
+        }
+
+        .rit-breadcrumb .active {
+            color: var(--rit-blue);
+            font-weight: 600;
+        }
+
+
+    /* =========================================================
+           TICKET HEADER
+           ========================================================= */
+
+    .rit-ticket-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 25px;
+        margin-bottom: 22px;
+    }
+
+    .rit-ticket-heading {
+        min-width: 0;
+    }
+
+    .rit-ticket-id {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        margin-bottom: 7px;
+        color: var(--rit-blue);
+        font-size: 12px;
+        font-weight: 650;
+    }
+
+        .rit-ticket-id i {
+            font-size: 13px;
+        }
+
+    .rit-ticket-title {
+        margin: 0;
+        color: var(--rit-navy);
+        font-size: 27px;
+        line-height: 1.3;
+        font-weight: 700;
+        letter-spacing: -0.4px;
+        word-break: break-word;
+    }
+
+    .rit-ticket-created {
+        margin: 7px 0 0;
+        color: var(--rit-muted);
+        font-size: 12px;
+    }
+
+    .rit-header-actions {
+        display: flex;
+        gap: 8px;
+        flex-shrink: 0;
+    }
+
+
+    /* =========================================================
+           BUTTONS
+           ========================================================= */
+
+    .rit-btn {
+        min-height: 39px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 7px;
+        padding: 0 15px;
+        border-radius: 7px;
+        font-size: 12px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: background-color .15s ease, border-color .15s ease;
+    }
+
+    .rit-btn-outline {
+        border: 1px solid #cfd5dd;
+        background: #fff;
+        color: #344054;
+    }
+
+        .rit-btn-outline:hover {
+            background: #f8fafc;
+            color: #1f2937;
+        }
+
+    .rit-btn-primary {
+        border: 1px solid var(--rit-blue);
+        background: var(--rit-blue);
+        color: #fff;
+    }
+
+        .rit-btn-primary:hover {
+            border-color: var(--rit-blue-dark);
+            background: var(--rit-blue-dark);
+            color: #fff;
+        }
+
+
+    /* =========================================================
+           STATUS BAR
+           ========================================================= */
+
+    .rit-status-bar {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        margin-bottom: 22px;
+        padding: 14px 18px;
+        background: #fff;
+        border: 1px solid var(--rit-border);
+        border-radius: 9px;
+        box-shadow: 0 1px 2px rgba(16, 24, 40, .03);
+    }
+
+    .rit-status-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .rit-status-label {
+        color: var(--rit-muted);
+        font-size: 11px;
+        font-weight: 500;
+    }
+
+    .rit-divider {
+        width: 1px;
+        height: 22px;
+        background: #e4e7ec;
+    }
+
+
+    /* =========================================================
+           BADGES
+           ========================================================= */
+
+    .rit-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 5px 9px;
+        border-radius: 5px;
+        font-size: 11px;
+        font-weight: 650;
+    }
+
+    .rit-status-new {
+        background: var(--rit-blue-soft);
+        color: var(--rit-blue-dark);
+    }
+
+    .rit-status-assigned {
+        background: #f0f9ff;
+        color: #0369a1;
+    }
+
+    .rit-status-progress {
+        background: var(--rit-yellow-soft);
+        color: var(--rit-yellow);
+    }
+
+    .rit-status-resolved {
+        background: var(--rit-green-soft);
+        color: var(--rit-green);
+    }
+
+    .rit-status-closed {
+        background: #f2f4f7;
+        color: #475467;
+    }
+
+    .rit-status-reopened {
+        background: var(--rit-orange-soft);
+        color: var(--rit-orange);
+    }
+
+    .rit-priority-low {
+        background: var(--rit-green-soft);
+        color: var(--rit-green);
+    }
+
+    .rit-priority-medium {
+        background: var(--rit-yellow-soft);
+        color: var(--rit-yellow);
+    }
+
+    .rit-priority-high {
+        background: var(--rit-orange-soft);
+        color: var(--rit-orange);
+    }
+
+    .rit-priority-critical {
+        background: var(--rit-red-soft);
+        color: var(--rit-red);
+    }
+
+
+    /* =========================================================
+           MAIN GRID
+           ========================================================= */
+
+    .rit-main-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 310px;
+        gap: 22px;
+        align-items: start;
+    }
+
+
+    /* =========================================================
+           CARD
+           ========================================================= */
+
+    .rit-card {
+        overflow: hidden;
+        margin-bottom: 18px;
+        background: #fff;
+        border: 1px solid var(--rit-border);
+        border-radius: 9px;
+        box-shadow: 0 1px 2px rgba(16, 24, 40, .03);
+    }
+
+        .rit-card:last-child {
+            margin-bottom: 0;
+        }
+
+    .rit-card-header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 16px 19px;
+        border-bottom: 1px solid var(--rit-border-light);
+    }
+
+    .rit-card-header-icon {
+        width: 31px;
+        height: 31px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 6px;
+        background: var(--rit-blue-soft);
+        color: var(--rit-blue);
+        font-size: 14px;
+    }
+
+    .rit-card-header h2 {
+        margin: 0;
+        color: var(--rit-navy);
+        font-size: 13.5px;
+        font-weight: 650;
+    }
+
+    .rit-card-header span {
+        margin-left: auto;
+        color: var(--rit-muted);
+        font-size: 10.5px;
+    }
+
+    .rit-card-body {
+        padding: 19px;
+    }
+
+
+    /* =========================================================
+           DESCRIPTION
+           ========================================================= */
+
+    .rit-description {
+        color: #344054;
+        font-size: 13px;
+        line-height: 1.75;
+        white-space: pre-wrap;
+        word-break: break-word;
+    }
+
+
+    /* =========================================================
+           DETAILS GRID
+           ========================================================= */
+
+    .rit-meta-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0;
+        border: 1px solid #eaecf0;
+        border-radius: 7px;
+        overflow: hidden;
+    }
+
+    .rit-meta-item {
+        padding: 14px 15px;
+        background: #fff;
+        border-bottom: 1px solid #eaecf0;
+    }
+
+        .rit-meta-item:nth-child(odd) {
+            border-right: 1px solid #eaecf0;
+        }
+
+        .rit-meta-item:nth-last-child(-n+2) {
+            border-bottom: 0;
+        }
+
+    .rit-meta-label {
+        display: block;
+        margin-bottom: 5px;
+        color: var(--rit-muted);
+        font-size: 10.5px;
+        font-weight: 500;
+    }
+
+    .rit-meta-value {
+        color: #344054;
+        font-size: 12.5px;
+        font-weight: 600;
+    }
+
+
+    /* =========================================================
+           ASSIGNMENT
+           ========================================================= */
+
+    .rit-assignment {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 13px;
+        margin-bottom: 10px;
+        border: 1px solid #eaecf0;
+        border-radius: 7px;
+        background: #fafbfc;
+    }
+
+        .rit-assignment:last-child {
+            margin-bottom: 0;
+        }
+
+    .rit-avatar {
+        width: 38px;
+        height: 38px;
+        flex: 0 0 38px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        background: #e8f0ff;
+        color: var(--rit-blue);
+        font-size: 14px;
+        font-weight: 700;
+    }
+
+    .rit-assignment-name {
+        color: #344054;
+        font-size: 12px;
+        font-weight: 650;
+    }
+
+    .rit-assignment-date {
+        margin-top: 3px;
+        color: var(--rit-muted);
+        font-size: 10.5px;
+    }
+
+
+    /* =========================================================
+           EMPTY STATE
+           ========================================================= */
+
+    .rit-empty {
+        padding: 25px 15px;
+        text-align: center;
+        color: var(--rit-muted);
+        font-size: 11.5px;
+    }
+
+        .rit-empty i {
+            display: block;
+            margin-bottom: 8px;
+            color: #b4bdc9;
+            font-size: 23px;
+        }
+
+
+    /* =========================================================
+           ATTACHMENTS
+           ========================================================= */
+
+    .rit-attachment {
+        display: flex;
+        align-items: center;
+        gap: 11px;
+        padding: 11px 12px;
+        margin-bottom: 9px;
+        border: 1px solid #eaecf0;
+        border-radius: 7px;
+        background: #fff;
+    }
+
+        .rit-attachment:last-child {
+            margin-bottom: 0;
+        }
+
+    .rit-file-icon {
+        width: 34px;
+        height: 34px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex: 0 0 34px;
+        border-radius: 6px;
+        background: #f1f5f9;
+        color: #64748b;
+        font-size: 14px;
+    }
+
+    .rit-file-info {
+        min-width: 0;
+    }
+
+    .rit-file-name {
+        display: block;
+        overflow: hidden;
+        color: #344054;
+        font-size: 11.5px;
+        font-weight: 600;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .rit-file-date {
+        display: block;
+        margin-top: 3px;
+        color: var(--rit-muted);
+        font-size: 10px;
+    }
+
+
+    /* =========================================================
+           HISTORY TIMELINE
+           ========================================================= */
+
+    .rit-timeline {
+        position: relative;
+        padding-left: 8px;
+    }
+
+    .rit-history-item {
+        position: relative;
+        display: flex;
+        gap: 13px;
+        padding-bottom: 22px;
+    }
+
+        .rit-history-item:last-child {
+            padding-bottom: 0;
+        }
+
+        .rit-history-item:not(:last-child)::before {
+            content: "";
+            position: absolute;
+            left: 10px;
+            top: 23px;
+            width: 1px;
+            height: calc(100% - 13px);
+            background: #dce2ea;
+        }
+
+    .rit-history-dot {
+        position: relative;
+        z-index: 1;
+        width: 21px;
+        height: 21px;
+        flex: 0 0 21px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid #bcd0f5;
+        border-radius: 50%;
+        background: #eff6ff;
+        color: var(--rit-blue);
+        font-size: 9px;
+    }
+
+    .rit-history-content {
+        min-width: 0;
+    }
+
+    .rit-history-status {
+        color: #344054;
+        font-size: 12px;
+        font-weight: 650;
+    }
+
+        .rit-history-status span {
+            color: var(--rit-blue);
+        }
+
+    .rit-history-meta {
+        margin-top: 3px;
+        color: var(--rit-muted);
+        font-size: 10.5px;
+    }
+
+    .rit-history-remarks {
+        margin-top: 7px;
+        padding: 8px 10px;
+        border-left: 2px solid #dbe5f5;
+        background: #f8fafc;
+        color: #667085;
+        font-size: 11px;
+        line-height: 1.5;
+    }
+
+
+    /* =========================================================
+           FEEDBACK
+           ========================================================= */
+
+    .rit-rating {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        margin-bottom: 9px;
+    }
+
+        .rit-rating i {
+            color: #f59e0b;
+            font-size: 15px;
+        }
+
+    .rit-feedback-text {
+        margin: 0;
+        color: #475467;
+        font-size: 12px;
+        line-height: 1.6;
+    }
+
+
+    /* =========================================================
+           SIDEBAR
+           ========================================================= */
+
+    .rit-sidebar-card {
+        overflow: hidden;
+        margin-bottom: 15px;
+        background: #fff;
+        border: 1px solid var(--rit-border);
+        border-radius: 9px;
+        box-shadow: 0 1px 2px rgba(16, 24, 40, .03);
+    }
+
+        .rit-sidebar-card:last-child {
+            margin-bottom: 0;
+        }
+
+    .rit-sidebar-header {
+        padding: 15px 17px;
+        border-bottom: 1px solid var(--rit-border-light);
+    }
+
+        .rit-sidebar-header h3 {
+            margin: 0;
+            color: var(--rit-navy);
+            font-size: 13px;
+            font-weight: 650;
+        }
+
+    .rit-sidebar-body {
+        padding: 17px;
+    }
+
+
+    /* =========================================================
+           PEOPLE / EMPLOYEE
+           ========================================================= */
+
+    .rit-person {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .rit-person-avatar {
+        width: 39px;
+        height: 39px;
+        flex: 0 0 39px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        background: var(--rit-blue-soft);
+        color: var(--rit-blue);
+        font-size: 13px;
+        font-weight: 700;
+    }
+
+    .rit-person-name {
+        color: #344054;
+        font-size: 12px;
+        font-weight: 650;
+    }
+
+    .rit-person-detail {
+        margin-top: 3px;
+        color: var(--rit-muted);
+        font-size: 10.5px;
+    }
+
+
+    /* =========================================================
+           SIDEBAR META
+           ========================================================= */
+
+    .rit-side-meta {
+        display: flex;
+        justify-content: space-between;
+        gap: 15px;
+        padding: 10px 0;
+        border-bottom: 1px solid #eef0f3;
+    }
+
+        .rit-side-meta:first-child {
+            padding-top: 0;
+        }
+
+        .rit-side-meta:last-child {
+            padding-bottom: 0;
+            border-bottom: 0;
+        }
+
+        .rit-side-meta span:first-child {
+            color: var(--rit-muted);
+            font-size: 10.5px;
+        }
+
+        .rit-side-meta span:last-child {
+            color: #344054;
+            font-size: 11px;
+            font-weight: 600;
+            text-align: right;
+        }
+
+
+    /* =========================================================
+           RESOLUTION DATES
+           ========================================================= */
+
+    .rit-date-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 9px 0;
+        border-bottom: 1px solid #eef0f3;
+    }
+
+        .rit-date-row:last-child {
+            border-bottom: 0;
+        }
+
+    .rit-date-icon {
+        width: 28px;
+        height: 28px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 6px;
+        background: #f1f5f9;
+        color: #64748b;
+        font-size: 12px;
+    }
+
+    .rit-date-label {
+        display: block;
+        color: var(--rit-muted);
+        font-size: 10px;
+    }
+
+    .rit-date-value {
+        display: block;
+        margin-top: 2px;
+        color: #344054;
+        font-size: 11px;
+        font-weight: 600;
+    }
+
+
+    /* =========================================================
+           RESPONSIVE
+           ========================================================= */
+
+    @@media (max-width: 950px) {
+
+        .rit-main-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .rit-sidebar {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .rit-sidebar-card {
+            margin-bottom: 0;
+        }
+    }
+
+    @@media (max-width: 700px) {
+
+        .rit-details-page {
+            padding: 22px 0 35px;
+        }
+
+        .rit-ticket-header {
+            flex-direction: column;
+        }
+
+        .rit-ticket-title {
+            font-size: 23px;
+        }
+
+        .rit-header-actions {
+            width: 100%;
+        }
+
+            .rit-header-actions .rit-btn {
+                flex: 1;
+            }
+
+        .rit-status-bar {
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .rit-divider {
+            display: none;
+        }
+
+        .rit-meta-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .rit-meta-item:nth-child(odd) {
+            border-right: 0;
+        }
+
+        .rit-meta-item:nth-last-child(-n+2) {
+            border-bottom: 1px solid #eaecf0;
+        }
+
+        .rit-meta-item:last-child {
+            border-bottom: 0;
+        }
+
+        .rit-sidebar {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+
+<div class="rit-details-page">
+
+    <div class="container rit-details-container">
+
+        <!-- =====================================================
+             BREADCRUMB
+             ===================================================== -->
+
+        <div class="rit-breadcrumb">
+
+            <span>Helpdesk</span>
+
+            <i class="bi bi-chevron-right"></i>
+
+            <span>Tickets</span>
+
+            <i class="bi bi-chevron-right"></i>
+
+            <span class="active">
+                #@Model.TicketId
+            </span>
+
+        </div>
+
+
+        <!-- =====================================================
+             TICKET HEADER
+             ===================================================== -->
+
+        <div class="rit-ticket-header">
+
+            <div class="rit-ticket-heading">
+
+                <div class="rit-ticket-id">
+                    <i class="bi bi-ticket-detailed"></i>
+                    Ticket #@Model.TicketId
+                </div>
+
+                <h1 class="rit-ticket-title">
+                    @Model.Title
+                </h1>
+
+                <p class="rit-ticket-created">
+                    Created on
+                    @Model.CreatedAt
+                    .ToLocalTime()
+                    .ToString("dd MMM yyyy, hh:mm tt")
+                </p>
+
+            </div>
+
+
+            <div class="rit-header-actions">
+
+                <a asp-action="Create"
+                   class="rit-btn rit-btn-outline">
+
+                    <i class="bi bi-plus-lg"></i>
+
+                    New Ticket
+
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             STATUS BAR
+             ===================================================== -->
+
+        <div class="rit-status-bar">
+
+
+            <!-- Status -->
+
+            <div class="rit-status-item">
+
+                <span class="rit-status-label">
+                    Status
+                </span>
+
+                @{
+                    var statusClass = Model.Status switch
+                    {
+                        TicketStatuses.New => "rit-status-new",
+                        TicketStatuses.Assigned => "rit-status-assigned",
+                        TicketStatuses.InProgress => "rit-status-progress",
+                        TicketStatuses.Resolved => "rit-status-resolved",
+                        TicketStatuses.Closed => "rit-status-closed",
+                        TicketStatuses.Reopened => "rit-status-reopened",
+                        _ => "rit-status-closed"
+                    };
+                }
+
+                <span class="rit-badge @statusClass">
+
+                    <i class="bi bi-circle-fill"
+                       style="font-size:6px;">
+                    </i>
+
+                    @Model.Status
+
+                </span>
+
+            </div>
+
+
+            <div class="rit-divider"></div>
+
+
+            <!-- Priority -->
+
+            <div class="rit-status-item">
+
+                <span class="rit-status-label">
+                    Priority
+                </span>
+
+                @{
+                    var priorityClass = Model.Priority switch
+                    {
+                        "Low" => "rit-priority-low",
+                        "Medium" => "rit-priority-medium",
+                        "High" => "rit-priority-high",
+                        "Critical" => "rit-priority-critical",
+                        _ => "rit-priority-medium"
+                    };
+                }
+
+                <span class="rit-badge @priorityClass">
+                    @Model.Priority
+                </span>
+
+            </div>
+
+
+            <div class="rit-divider"></div>
+
+
+            <!-- Category -->
+
+            <div class="rit-status-item">
+
+                <span class="rit-status-label">
+                    Category
+                </span>
+
+                <span class="rit-badge rit-status-closed">
+                    @Model.Category.Name
+                </span>
+
+            </div>
+
+
+            <div class="rit-divider"></div>
+
+
+            <!-- Department -->
+
+            <div class="rit-status-item">
+
+                <span class="rit-status-label">
+                    Department
+                </span>
+
+                <span class="rit-badge rit-status-closed">
+                    @Model.Department.Name
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             MAIN GRID
+             ===================================================== -->
+
+        <div class="rit-main-grid">
+
+
+            <!-- =================================================
+                 LEFT CONTENT
+                 ================================================= -->
+
+            <main>
+
+
+                <!-- =================================================
+                     DESCRIPTION
+                     ================================================= -->
+
+                <div class="rit-card">
+
+                    <div class="rit-card-header">
+
+                        <div class="rit-card-header-icon">
+                            <i class="bi bi-file-text"></i>
+                        </div>
+
+                        <h2>
+                            Issue description
+                        </h2>
+
+                    </div>
+
+                    <div class="rit-card-body">
+
+                        <div class="rit-description">
+                            @Model.Description
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     TICKET INFORMATION
+                     ================================================= -->
+
+                <div class="rit-card">
+
+                    <div class="rit-card-header">
+
+                        <div class="rit-card-header-icon">
+                            <i class="bi bi-info-circle"></i>
+                        </div>
+
+                        <h2>
+                            Ticket information
+                        </h2>
+
+                    </div>
+
+                    <div class="rit-card-body">
+
+                        <div class="rit-meta-grid">
+
+
+                            <div class="rit-meta-item">
+
+                                <span class="rit-meta-label">
+                                    Ticket ID
+                                </span>
+
+                                <span class="rit-meta-value">
+                                    #@Model.TicketId
+                                </span>
+
+                            </div>
+
+
+                            <div class="rit-meta-item">
+
+                                <span class="rit-meta-label">
+                                    Created by
+                                </span>
+
+                                <span class="rit-meta-value">
+                                    @Model.Employee.Name
+                                </span>
+
+                            </div>
+
+
+                            <div class="rit-meta-item">
+
+                                <span class="rit-meta-label">
+                                    Employee ID
+                                </span>
+
+                                <span class="rit-meta-value">
+                                    @Model.Employee.EmployeeId
+                                </span>
+
+                            </div>
+
+
+                            <div class="rit-meta-item">
+
+                                <span class="rit-meta-label">
+                                    Created
+                                </span>
+
+                                <span class="rit-meta-value">
+                                    @Model.CreatedAt
+                                    .ToLocalTime()
+                                    .ToString("dd MMM yyyy, hh:mm tt")
+                                </span>
+
+                            </div>
+
+
+                            <div class="rit-meta-item">
+
+                                <span class="rit-meta-label">
+                                    Category
+                                </span>
+
+                                <span class="rit-meta-value">
+                                    @Model.Category.Name
+                                </span>
+
+                            </div>
+
+
+                            <div class="rit-meta-item">
+
+                                <span class="rit-meta-label">
+                                    Department
+                                </span>
+
+                                <span class="rit-meta-value">
+                                    @Model.Department.Name
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     ASSIGNMENTS
+                     ================================================= -->
+
+                <div class="rit-card">
+
+                    <div class="rit-card-header">
+
+                        <div class="rit-card-header-icon">
+                            <i class="bi bi-person-check"></i>
+                        </div>
+
+                        <h2>
+                            Assignment
+                        </h2>
+
+                        <span>
+                            @Model.Assignments.Count assignment(s)
+                        </span>
+
+                    </div>
+
+
+                    <div class="rit-card-body">
+
+
+                        @if (Model.Assignments.Any())
+                        {
+
+                            @foreach (var assignment in Model.Assignments)
+                            {
+
+                                <div class="rit-assignment">
+
+                                    <div class="rit-avatar">
+
+                                        @{
+                                            var staffName = assignment.Staff.Name ?? "Staff";
+                                            var initial = staffName.Length > 0
+                                                ? staffName.Substring(0, 1).ToUpper()
+                                                : "S";
+                                        }
+
+                                        @initial
+
+                                    </div>
+
+                                    <div>
+
+                                        <div class="rit-assignment-name">
+                                            @assignment.Staff.Name
+                                        </div>
+
+                                        <div class="rit-assignment-date">
+
+                                            Assigned on
+                                            @assignment.AssignedAt
+                                            .ToLocalTime()
+                                            .ToString("dd MMM yyyy, hh:mm tt")
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            }
+
+                        }
+                        else
+                        {
+
+                            <div class="rit-empty">
+
+                                <i class="bi bi-person-dash"></i>
+
+                                This ticket has not been assigned
+                                to support staff yet.
+
+                            </div>
+
+                        }
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     ATTACHMENTS
+                     ================================================= -->
+
+                <div class="rit-card">
+
+                    <div class="rit-card-header">
+
+                        <div class="rit-card-header-icon">
+                            <i class="bi bi-paperclip"></i>
+                        </div>
+
+                        <h2>
+                            Attachments
+                        </h2>
+
+                        <span>
+                            @Model.Attachments.Count file(s)
+                        </span>
+
+                    </div>
+
+
+                    <div class="rit-card-body">
+
+
+                        @if (Model.Attachments.Any())
+                        {
+
+                            @foreach (var attachment in Model.Attachments)
+                            {
+
+                                <div class="rit-attachment">
+
+                                    <div class="rit-file-icon">
+                                        <i class="bi bi-file-earmark"></i>
+                                    </div>
+
+                                    <div class="rit-file-info">
+
+                                        <span class="rit-file-name">
+                                            @attachment.FileName
+                                        </span>
+
+                                        <span class="rit-file-date">
+
+                                            Uploaded
+                                            @attachment.UploadedAt
+                                            .ToLocalTime()
+                                            .ToString("dd MMM yyyy, hh:mm tt")
+
+                                        </span>
+
+                                    </div>
+
+                                </div>
+
+                            }
+
+                        }
+                        else
+                        {
+
+                            <div class="rit-empty">
+
+                                <i class="bi bi-paperclip"></i>
+
+                                No attachments have been added
+                                to this ticket.
+
+                            </div>
+
+                        }
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     HISTORY
+                     ================================================= -->
+
+                <div class="rit-card">
+
+                    <div class="rit-card-header">
+
+                        <div class="rit-card-header-icon">
+                            <i class="bi bi-clock-history"></i>
+                        </div>
+
+                        <h2>
+                            Ticket activity
+                        </h2>
+
+                        <span>
+                            @Model.History.Count event(s)
+                        </span>
+
+                    </div>
+
+
+                    <div class="rit-card-body">
+
+
+                        @if (Model.History.Any())
+                        {
+
+                            <div class="rit-timeline">
+
+                                @foreach (var history in Model.History
+                                    .OrderByDescending(h => h.ChangedAt))
+                                {
+
+                                    <div class="rit-history-item">
+
+                                        <div class="rit-history-dot">
+
+                                            <i class="bi bi-arrow-right"></i>
+
+                                        </div>
+
+
+                                        <div class="rit-history-content">
+
+                                            <div class="rit-history-status">
+
+                                                Status changed from
+
+                                                <span>
+                                                    @history.OldStatus
+                                                </span>
+
+                                                to
+
+                                                <span>
+                                                    @history.NewStatus
+                                                </span>
+
+                                            </div>
+
+
+                                            <div class="rit-history-meta">
+
+                                                @history.ChangedAt
+                                                .ToLocalTime()
+                                                .ToString("dd MMM yyyy, hh:mm tt")
+
+                                            </div>
+
+
+                                            @if (!string.IsNullOrWhiteSpace(history.Remarks))
+                                            {
+
+                                                <div class="rit-history-remarks">
+
+                                                    @history.Remarks
+
+                                                </div>
+
+                                            }
+
+                                        </div>
+
+                                    </div>
+
+                                }
+
+                            </div>
+
+                        }
+                        else
+                        {
+
+                            <div class="rit-empty">
+
+                                <i class="bi bi-clock-history"></i>
+
+                                No status changes have been recorded yet.
+
+                            </div>
+
+                        }
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     FEEDBACK
+                     ================================================= -->
+
+                <div class="rit-card">
+
+                    <div class="rit-card-header">
+
+                        <div class="rit-card-header-icon">
+                            <i class="bi bi-chat-square-text"></i>
+                        </div>
+
+                        <h2>
+                            Feedback
+                        </h2>
+
+                    </div>
+
+
+                    <div class="rit-card-body">
+
+
+                        @if (Model.Feedback != null)
+                        {
+
+                            <div class="rit-rating">
+
+                                @for (var i = 1; i <= 5; i++)
+                                {
+                                    if (i <= Model.Feedback.Rating)
+                                    {
+                                        <i class="bi bi-star-fill"></i>
+                                    }
+                                    else
+                                    {
+                                        <i class="bi bi-star"></i>
+                                    }
+                                }
+
+                            </div>
+
+
+                            @if (!string.IsNullOrWhiteSpace(Model.Feedback.Comments))
+                            {
+                                <p class="rit-feedback-text">
+                                    @Model.Feedback.Comments
+                                </p>
+                            }
+
+                        }
+                        else
+                        {
+
+                            <div class="rit-empty">
+
+                                <i class="bi bi-chat-square"></i>
+
+                                No feedback has been submitted
+                                for this ticket yet.
+
+                            </div>
+
+                        }
+
+                    </div>
+
+                </div>
+
+            </main>
+
+
+            <!-- =================================================
+                 RIGHT SIDEBAR
+                 ================================================= -->
+
+            <aside>
+
+
+                <!-- =================================================
+                     REQUESTER
+                     ================================================= -->
+
+                <div class="rit-sidebar-card">
+
+                    <div class="rit-sidebar-header">
+
+                        <h3>
+                            Requester
+                        </h3>
+
+                    </div>
+
+
+                    <div class="rit-sidebar-body">
+
+                        <div class="rit-person">
+
+                            <div class="rit-person-avatar">
+
+                                @{
+                                    var employeeName = Model.Employee.Name ?? "Employee";
+
+                                    var employeeInitial =
+                                        employeeName.Length > 0
+                                            ? employeeName.Substring(0, 1).ToUpper()
+                                            : "E";
+                                }
+
+                                @employeeInitial
+
+                            </div>
+
+
+                            <div>
+
+                                <div class="rit-person-name">
+                                    @Model.Employee.Name
+                                </div>
+
+                                <div class="rit-person-detail">
+                                    Employee ID: @Model.Employee.EmployeeId
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     TICKET SUMMARY
+                     ================================================= -->
+
+                <div class="rit-sidebar-card">
+
+                    <div class="rit-sidebar-header">
+
+                        <h3>
+                            Ticket summary
+                        </h3>
+
+                    </div>
+
+
+                    <div class="rit-sidebar-body">
+
+
+                        <div class="rit-side-meta">
+
+                            <span>
+                                Status
+                            </span>
+
+                            <span>
+                                @Model.Status
+                            </span>
+
+                        </div>
+
+
+                        <div class="rit-side-meta">
+
+                            <span>
+                                Priority
+                            </span>
+
+                            <span>
+                                @Model.Priority
+                            </span>
+
+                        </div>
+
+
+                        <div class="rit-side-meta">
+
+                            <span>
+                                Category
+                            </span>
+
+                            <span>
+                                @Model.Category.Name
+                            </span>
+
+                        </div>
+
+
+                        <div class="rit-side-meta">
+
+                            <span>
+                                Department
+                            </span>
+
+                            <span>
+                                @Model.Department.Name
+                            </span>
+
+                        </div>
+
+
+                        <div class="rit-side-meta">
+
+                            <span>
+                                Attachments
+                            </span>
+
+                            <span>
+                                @Model.Attachments.Count
+                            </span>
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     IMPORTANT DATES
+                     ================================================= -->
+
+                <div class="rit-sidebar-card">
+
+                    <div class="rit-sidebar-header">
+
+                        <h3>
+                            Important dates
+                        </h3>
+
+                    </div>
+
+
+                    <div class="rit-sidebar-body">
+
+
+                        <div class="rit-date-row">
+
+                            <div class="rit-date-icon">
+                                <i class="bi bi-calendar-plus"></i>
+                            </div>
+
+                            <div>
+
+                                <span class="rit-date-label">
+                                    Created
+                                </span>
+
+                                <span class="rit-date-value">
+                                    @Model.CreatedAt
+                                    .ToLocalTime()
+                                    .ToString("dd MMM yyyy, hh:mm tt")
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        @if (Model.ResolvedAt.HasValue)
+                        {
+
+                            <div class="rit-date-row">
+
+                                <div class="rit-date-icon">
+                                    <i class="bi bi-check-circle"></i>
+                                </div>
+
+                                <div>
+
+                                    <span class="rit-date-label">
+                                        Resolved
+                                    </span>
+
+                                    <span class="rit-date-value">
+
+                                        @Model.ResolvedAt.Value
+                                        .ToLocalTime()
+                                        .ToString("dd MMM yyyy, hh:mm tt")
+
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+                        }
+
+
+                        @if (Model.ClosedAt.HasValue)
+                        {
+
+                            <div class="rit-date-row">
+
+                                <div class="rit-date-icon">
+                                    <i class="bi bi-lock"></i>
+                                </div>
+
+                                <div>
+
+                                    <span class="rit-date-label">
+                                        Closed
+                                    </span>
+
+                                    <span class="rit-date-value">
+
+                                        @Model.ClosedAt.Value
+                                        .ToLocalTime()
+                                        .ToString("dd MMM yyyy, hh:mm tt")
+
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+                        }
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     SUPPORT NOTE
+                     ================================================= -->
+
+                <div class="rit-info-box"
+                     style="
+                    margin-top:15px;
+                    padding:14px;
+                    border:1px solid #cfe0ff;
+                    border-radius:8px;
+                    background:#f5f9ff;
+                    ">
+
+                    <div style="
+                        display:flex;
+                        gap:9px;
+                        margin-bottom:7px;
+                        ">
+
+                        <div style="
+                            color:#2563eb;
+                            font-size:14px;
+                            ">
+                            <i class="bi bi-info-circle"></i>
+                        </div>
+
+                        <strong style="
+                            color:#24406e;
+                            font-size:11.5px;
+                            font-weight:650;
+                            ">
+                            Ticket tracking
+                        </strong>
+
+                    </div>
+
+                    <p style="
+                        margin:0;
+                        color:#5c6f8d;
+                        font-size:10.8px;
+                        line-height:1.55;
+                        ">
+                        Keep this ticket number available when contacting
+                        the IT support team about this issue.
+                    </p>
+
+                </div>
+
+            </aside>
+
+        </div>
+
+    </div>
+
+</div>
