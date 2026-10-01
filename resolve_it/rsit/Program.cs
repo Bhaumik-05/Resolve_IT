@@ -33,6 +33,8 @@ builder.Services.AddScoped<IDepartmentService, DepartmentService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IDashboardService, DashboardService>();
 builder.Services.AddScoped<IAdminTicketService, AdminTicketService>();
+builder.Services.AddScoped<IAdminFeedbackRepository, AdminFeedbackRepository>();
+builder.Services.AddScoped<IAdminFeedbackService, AdminFeedbackService>();
 
 // ASP.NET Core Identity
 builder.Services

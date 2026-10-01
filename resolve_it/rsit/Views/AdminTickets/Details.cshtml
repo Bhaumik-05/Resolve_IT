@@ -1,0 +1,668 @@
+﻿@model rsit.ViewModels.Admin.AdminTicketDetailsViewModel
+
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = $"Ticket #{Model.TicketId}";
+
+    var statusClass = Model.Status switch
+    {
+        "New" => "pill-New",
+        "Assigned" => "pill-Assigned",
+        "In Progress" => "pill-InProgress",
+        "Resolved" => "pill-Resolved",
+        "Closed" => "pill-Closed",
+        "Reopened" => "pill-Reopened",
+        _ => "pill-inactive"
+    };
+
+    var priorityClass = Model.Priority switch
+    {
+        "Low" => "pill-prio-Low",
+        "Medium" => "pill-prio-Medium",
+        "High" => "pill-prio-High",
+        "Critical" => "pill-prio-Critical",
+        _ => "pill-prio-Low"
+    };
+}
+
+
+<!-- Header -->
+<div class="page-header">
+
+    <div>
+
+        <div class="d-flex align-items-center gap-2">
+
+            <h1>
+                Ticket #@Model.TicketId
+            </h1>
+
+            <span class="pill @statusClass">
+                @Model.Status
+            </span>
+
+        </div>
+
+        <p>
+            @Model.Title
+        </p>
+
+    </div>
+
+
+    <div>
+
+        <a asp-action="Index"
+           class="btn btn-outline-secondary">
+
+            <i class="bi bi-arrow-left me-1"></i>
+            Back to Tickets
+
+        </a>
+
+    </div>
+
+</div>
+
+
+<div class="row g-4">
+
+
+    <!-- LEFT COLUMN -->
+    <div class="col-lg-8">
+
+
+        <!-- Ticket Information -->
+        <div class="card-panel mb-4">
+
+            <h2>Ticket Information</h2>
+
+            <div class="row g-4">
+
+                <div class="col-md-8">
+
+                    <div class="text-muted small mb-1">
+                        Title
+                    </div>
+
+                    <div class="fw-semibold">
+                        @Model.Title
+                    </div>
+
+                </div>
+
+
+                <div class="col-md-4">
+
+                    <div class="text-muted small mb-1">
+                        Priority
+                    </div>
+
+                    <span class="pill @priorityClass">
+                        @Model.Priority
+                    </span>
+
+                </div>
+
+
+                <div class="col-12">
+
+                    <div class="text-muted small mb-1">
+                        Description
+                    </div>
+
+                    <div style="white-space: pre-wrap;">
+                        @Model.Description
+                    </div>
+
+                </div>
+
+
+                <div class="col-md-4">
+
+                    <div class="text-muted small mb-1">
+                        Created
+                    </div>
+
+                    <div>
+                        @Model.CreatedAt.ToString("dd MMM yyyy, hh:mm tt")
+                    </div>
+
+                </div>
+
+
+                <div class="col-md-4">
+
+                    <div class="text-muted small mb-1">
+                        Resolved
+                    </div>
+
+                    <div>
+                        @(Model.ResolvedAt.HasValue
+                            ? Model.ResolvedAt.Value.ToString("dd MMM yyyy, hh:mm tt")
+                            : "-")
+                    </div>
+
+                </div>
+
+
+                <div class="col-md-4">
+
+                    <div class="text-muted small mb-1">
+                        Closed
+                    </div>
+
+                    <div>
+                        @(Model.ClosedAt.HasValue
+                            ? Model.ClosedAt.Value.ToString("dd MMM yyyy, hh:mm tt")
+                            : "-")
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Employee Information -->
+        <div class="card-panel mb-4">
+
+            <h2>Reported By</h2>
+
+            <div class="row g-4">
+
+                <div class="col-md-4">
+
+                    <div class="text-muted small mb-1">
+                        Name
+                    </div>
+
+                    <div class="fw-semibold">
+                        @Model.EmployeeName
+                    </div>
+
+                </div>
+
+
+                <div class="col-md-4">
+
+                    <div class="text-muted small mb-1">
+                        Employee ID
+                    </div>
+
+                    <code>
+                        @Model.EmployeeId
+                    </code>
+
+                </div>
+
+
+                <div class="col-md-4">
+
+                    <div class="text-muted small mb-1">
+                        Email
+                    </div>
+
+                    <div>
+                        @Model.EmployeeEmail
+                    </div>
+
+                </div>
+
+
+                <div class="col-md-6">
+
+                    <div class="text-muted small mb-1">
+                        Department
+                    </div>
+
+                    <div>
+                        @Model.DepartmentName
+                    </div>
+
+                </div>
+
+
+                <div class="col-md-6">
+
+                    <div class="text-muted small mb-1">
+                        Category
+                    </div>
+
+                    <div>
+                        @Model.CategoryName
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Assignment History -->
+        <div class="card-panel mb-4">
+
+            <h2>Assignment History</h2>
+
+            @if (Model.Assignments.Count == 0)
+            {
+                <div class="empty-note">
+                    This ticket has not been assigned yet.
+                </div>
+            }
+            else
+            {
+                <div class="table-responsive">
+
+                    <table class="table table-hover admin-table">
+
+                        <thead>
+
+                            <tr>
+                                <th>Support Staff</th>
+                                <th>Employee ID</th>
+                                <th>Assigned By</th>
+                                <th>Assigned At</th>
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            @foreach (var assignment in Model.Assignments)
+                            {
+                                <tr>
+
+                                    <td class="fw-semibold">
+                                        @assignment.StaffName
+                                    </td>
+
+                                    <td>
+                                        <code>
+                                            @assignment.StaffEmployeeId
+                                        </code>
+                                    </td>
+
+                                    <td>
+                                        @assignment.AssignedByName
+                                    </td>
+
+                                    <td>
+                                        @assignment.AssignedAt.ToString(
+                                            "dd MMM yyyy, hh:mm tt")
+                                    </td>
+
+                                </tr>
+                            }
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+            }
+
+        </div>
+
+
+        <!-- Attachments -->
+        <div class="card-panel mb-4">
+
+            <h2>Attachments</h2>
+
+            @if (Model.Attachments.Count == 0)
+            {
+                <div class="empty-note">
+                    No attachments were added to this ticket.
+                </div>
+            }
+            else
+            {
+                <div class="table-responsive">
+
+                    <table class="table table-hover admin-table">
+
+                        <thead>
+
+                            <tr>
+                                <th>File</th>
+                                <th>Type</th>
+                                <th>Size</th>
+                                <th>Uploaded By</th>
+                                <th>Uploaded At</th>
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            @foreach (var attachment in Model.Attachments)
+                            {
+                                <tr>
+
+                                    <td>
+
+                                        <a href="@attachment.FilePath"
+                                           target="_blank"
+                                           class="text-decoration-none">
+
+                                            <i class="bi bi-paperclip me-1"></i>
+
+                                            @attachment.FileName
+
+                                        </a>
+
+                                    </td>
+
+                                    <td>
+                                        @attachment.FileType
+                                    </td>
+
+                                    <td>
+                                        @FormatFileSize(attachment.FileSize)
+                                    </td>
+
+                                    <td>
+                                        @attachment.UploaderName
+                                    </td>
+
+                                    <td>
+                                        @attachment.UploadedAt.ToString(
+                                            "dd MMM yyyy, hh:mm tt")
+                                    </td>
+
+                                </tr>
+                            }
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+            }
+
+        </div>
+
+
+        <!-- Status History -->
+        <div class="card-panel">
+
+            <h2>Status History</h2>
+
+            @if (Model.History.Count == 0)
+            {
+                <div class="empty-note">
+                    No status changes have been recorded.
+                </div>
+            }
+            else
+            {
+                <div class="table-responsive">
+
+                    <table class="table table-hover admin-table">
+
+                        <thead>
+
+                            <tr>
+                                <th>From</th>
+                                <th>To</th>
+                                <th>Remarks</th>
+                                <th>Changed By</th>
+                                <th>Changed At</th>
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            @foreach (var history in Model.History)
+                            {
+                                <tr>
+
+                                    <td>
+                                        @if (string.IsNullOrWhiteSpace(history.OldStatus))
+                                        {
+                                            <span class="text-muted">-</span>
+                                        }
+                                        else
+                                        {
+                                            @history.OldStatus
+                                        }
+                                    </td>
+
+                                    <td>
+                                        <span class="pill @(
+                                            history.NewStatus switch
+                                            {
+                                                "New" => "pill-New",
+                                                "Assigned" => "pill-Assigned",
+                                                "In Progress" => "pill-InProgress",
+                                                "Resolved" => "pill-Resolved",
+                                                "Closed" => "pill-Closed",
+                                                "Reopened" => "pill-Reopened",
+                                                _ => "pill-inactive"
+                                            })">
+
+                                            @history.NewStatus
+
+                                        </span>
+                                    </td>
+
+                                    <td>
+                                        @history.Remarks
+                                    </td>
+
+                                    <td>
+                                        @history.ChangedByName
+                                    </td>
+
+                                    <td>
+                                        @history.ChangedAt.ToString(
+                                            "dd MMM yyyy, hh:mm tt")
+                                    </td>
+
+                                </tr>
+                            }
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+            }
+
+        </div>
+
+    </div>
+
+
+    <!-- RIGHT COLUMN -->
+    <div class="col-lg-4">
+
+
+        <!-- Assignment -->
+        <div class="card-panel mb-4">
+
+            <h2>Assign Ticket</h2>
+
+            <p class="text-muted small">
+                Assign this ticket to an active support staff member.
+            </p>
+
+
+            <form asp-action="Assign"
+                  asp-route-id="@Model.TicketId"
+                  method="post">
+
+                @Html.AntiForgeryToken()
+
+                <div class="mb-3">
+
+                    <label class="form-label">
+                        Support Staff
+                    </label>
+
+                    <select name="StaffId"
+                            class="form-select"
+                            required>
+
+                        <option value="">
+                            Select support staff
+                        </option>
+
+                        @foreach (var staff in Model.SupportStaff)
+                        {
+                            <option value="@staff.Value"
+                                    selected="@staff.Selected">
+
+                                @staff.Text
+
+                            </option>
+                        }
+
+                    </select>
+
+                </div>
+
+
+                <button type="submit"
+                        class="btn btn-teal w-100">
+
+                    <i class="bi bi-person-check me-1"></i>
+
+                    Assign Ticket
+
+                </button>
+
+            </form>
+
+        </div>
+
+
+        <!-- Current Assignment -->
+        <div class="card-panel mb-4">
+
+            <h2>Current Assignment</h2>
+
+            @if (Model.CurrentStaffId.HasValue)
+            {
+                var currentStaff = Model.SupportStaff
+                    .FirstOrDefault(x =>
+                        x.Value == Model.CurrentStaffId.Value.ToString());
+
+                if (currentStaff != null)
+                {
+                    <div class="d-flex align-items-center gap-3">
+
+                        <div class="stat-icon tone-teal">
+                            <i class="bi bi-person-check"></i>
+                        </div>
+
+                        <div>
+
+                            <div class="fw-semibold">
+                                @currentStaff.Text
+                            </div>
+
+                            <div class="text-muted small">
+                                Currently assigned
+                            </div>
+
+                        </div>
+
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="empty-note">
+                    <i class="bi bi-person-dash me-1"></i>
+                    This ticket is currently unassigned.
+                </div>
+            }
+
+        </div>
+
+
+        <!-- Ticket Summary -->
+        <div class="card-panel">
+
+            <h2>Ticket Summary</h2>
+
+            <div class="d-flex justify-content-between mb-3">
+
+                <span class="text-muted">
+                    Ticket ID
+                </span>
+
+                <code>
+                    #@Model.TicketId
+                </code>
+
+            </div>
+
+
+            <div class="d-flex justify-content-between mb-3">
+
+                <span class="text-muted">
+                    Status
+                </span>
+
+                <span class="pill @statusClass">
+                    @Model.Status
+                </span>
+
+            </div>
+
+
+            <div class="d-flex justify-content-between mb-3">
+
+                <span class="text-muted">
+                    Priority
+                </span>
+
+                <span class="pill @priorityClass">
+                    @Model.Priority
+                </span>
+
+            </div>
+
+
+            <div class="d-flex justify-content-between">
+
+                <span class="text-muted">
+                    Department
+                </span>
+
+                <span class="fw-semibold">
+                    @Model.DepartmentName
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+@functions {
+
+    string FormatFileSize(long bytes)
+    {
+        if (bytes < 1024)
+            return $"{bytes} B";
+
+        if (bytes < 1024 * 1024)
+            return $"{bytes / 1024.0:0.##} KB";
+
+        if (bytes < 1024 * 1024 * 1024)
+            return $"{bytes / (1024.0 * 1024):0.##} MB";
+
+        return $"{bytes / (1024.0 * 1024 * 1024):0.##} GB";
+    }
+
+}

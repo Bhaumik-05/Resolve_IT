@@ -1,0 +1,218 @@
+﻿@model rsit.ViewModels.Admin.AdminFeedbackListViewModel
+
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Feedback";
+
+    var hasFilters =
+        !string.IsNullOrWhiteSpace(Model.Search)
+        || Model.Rating.HasValue;
+}
+
+<div class="page-header">
+
+    <div>
+
+        <h1>Feedback</h1>
+
+        <p>
+            Review employee feedback and ratings for resolved tickets.
+        </p>
+
+    </div>
+
+</div>
+
+
+<div class="card-panel">
+
+    <!-- Filters -->
+    <form method="get"
+          asp-action="Index"
+          class="filter-bar">
+
+        <input type="search"
+               name="search"
+               value="@Model.Search"
+               class="form-control search-box"
+               placeholder="Search employee, ticket or comment" />
+
+
+        <select name="rating"
+                class="form-select">
+
+            <option value="">
+                All ratings
+            </option>
+
+            @for (var rating = 5; rating >= 1; rating--)
+            {
+                <option value="@rating"
+                        selected="@(Model.Rating == rating)">
+
+                    @rating star@(rating == 1 ? "" : "s")
+
+                </option>
+            }
+
+        </select>
+
+
+        <button type="submit"
+                class="btn btn-teal">
+
+            <i class="bi bi-search me-1"></i>
+            Filter
+
+        </button>
+
+
+        @if (hasFilters)
+        {
+            <a class="btn btn-outline-secondary"
+               asp-action="Index">
+
+                Clear
+
+            </a>
+        }
+
+    </form>
+
+
+    @if (Model.Feedbacks.Count == 0)
+    {
+        <div class="empty-note">
+            No feedback found.
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive">
+
+            <table class="table table-hover admin-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>Ticket</th>
+
+                        <th>Employee</th>
+
+                        <th>Rating</th>
+
+                        <th>Comments</th>
+
+                        <th>Submitted</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    @foreach (var feedback in Model.Feedbacks)
+                    {
+                        <tr>
+
+                            <!-- Ticket -->
+                            <td>
+
+                                <div class="fw-semibold">
+                                    #@feedback.TicketId
+                                </div>
+
+                                <div class="text-muted">
+                                    @feedback.TicketTitle
+                                </div>
+
+                            </td>
+
+
+                            <!-- Employee -->
+                            <td>
+
+                                <div class="fw-semibold">
+                                    @feedback.EmployeeName
+                                </div>
+
+                                <code>
+                                    @feedback.EmployeeId
+                                </code>
+
+                            </td>
+
+
+                            <!-- Rating -->
+                            <td>
+
+                                <span class="pill pill-prio-Medium">
+
+                                    @for (var i = 1; i <= 5; i++)
+                                    {
+                                        if (i <= feedback.Rating)
+                                        {
+                                            <i class="bi bi-star-fill"></i>
+                                        }
+                                        else
+                                        {
+                                            <i class="bi bi-star"></i>
+                                        }
+                                    }
+
+                                    <span class="ms-1">
+                                        @feedback.Rating / 5
+                                    </span>
+
+                                </span>
+
+                            </td>
+
+
+                            <!-- Comments -->
+                            <td>
+
+                                @if (string.IsNullOrWhiteSpace(feedback.Comments))
+                                {
+                                    <span class="text-muted">
+                                        No comment
+                                    </span>
+                                }
+                                else
+                                {
+                                    @feedback.Comments
+                                }
+
+                            </td>
+
+
+                            <!-- Submitted -->
+                            <td>
+
+                                <div>
+                                    @feedback.SubmittedAt
+                                        .ToLocalTime()
+                                        .ToString("dd MMM yyyy")
+                                </div>
+
+                                <div class="text-muted small">
+                                    @feedback.SubmittedAt
+                                        .ToLocalTime()
+                                        .ToString("hh:mm tt")
+                                </div>
+
+                            </td>
+
+                        </tr>
+                    }
+
+                </tbody>
+
+            </table>
+
+        </div>
+    }
+
+</div>
