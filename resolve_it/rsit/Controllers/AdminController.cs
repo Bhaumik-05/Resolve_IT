@@ -11,15 +11,23 @@ public class AdminController : Controller
 {
     private readonly IDashboardService _dashboardService;
 
-    public AdminController(IDashboardService dashboardService)
+    public AdminController(
+        IDashboardService dashboardService)
     {
         _dashboardService = dashboardService;
     }
 
     [HttpGet]
-    public async Task<IActionResult> Index()
+    public async Task<IActionResult> Index(
+        DateTime? fromDate,
+        DateTime? toDate)
     {
-        var model = await _dashboardService.GetAdminDashboardAsync();
+        var model =
+            await _dashboardService
+                .GetAdminDashboardAsync(
+                    fromDate,
+                    toDate);
+
         return View(model);
     }
 }

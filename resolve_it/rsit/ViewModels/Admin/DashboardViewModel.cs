@@ -7,7 +7,17 @@ namespace rsit.ViewModels.Admin
     {
         public DashboardData Data { get; set; } = new();
 
-        public int TrendMax => Data.Trend.Count == 0 ? 0 : Data.Trend.Max(t => t.Count);
+        public DateTime? FromDate { get; set; }
+
+        public DateTime? ToDate { get; set; }
+
+        public bool IsDateFiltered =>
+            FromDate.HasValue || ToDate.HasValue;
+
+        public int TrendMax =>
+            Data.Trend.Count == 0
+                ? 0
+                : Data.Trend.Max(t => t.Count);
     }
 }
 
@@ -16,7 +26,9 @@ namespace rsit.ViewModels.Admin
     /// <summary>Model for the _BarList partial.</summary>
     public class BarListViewModel
     {
-        public BarListViewModel(List<LabelCount> items, string tone = "")
+        public BarListViewModel(
+            List<LabelCount> items,
+            string tone = "")
         {
             Items = items;
             Tone = tone;
@@ -24,7 +36,6 @@ namespace rsit.ViewModels.Admin
 
         public List<LabelCount> Items { get; }
 
-        /// <summary>"", "blue", "amber", "purple" or "navy" (CSS bar-* class).</summary>
         public string Tone { get; }
     }
 }

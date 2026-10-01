@@ -1,6 +1,5 @@
 /* =========================================================
-   ADMIN AREA (FR-17 .. FR-20)
-   Palette follows auth.css: navy #1b2a41 / #243b53, teal #26a69a
+   RESOLVEIT - ADMIN AREA
    ========================================================= */
 
 :root {
@@ -14,23 +13,46 @@
     --adm-bg: #f4f6f9;
 }
 
-body.admin-body {
+/* =========================================================
+   GLOBAL
+   ========================================================= */
+
+html,
+body {
     margin: 0;
+    padding: 0;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+body.admin-body {
     background: var(--adm-bg);
     font-family: "Segoe UI", Arial, sans-serif;
     color: var(--adm-text);
 }
 
-/* ---------- Shell ---------- */
+/* =========================================================
+   SHELL
+   ========================================================= */
 
 .admin-shell {
     display: grid;
-    grid-template-columns: 250px 1fr;
+    grid-template-columns: 250px minmax(0, 1fr);
     min-height: 100vh;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: clip;
 }
 
 .admin-sidebar {
-    background: linear-gradient(170deg, var(--adm-navy-2), var(--adm-navy));
+    background: linear-gradient( 170deg, var(--adm-navy-2), var(--adm-navy) );
     color: #fff;
     display: flex;
     flex-direction: column;
@@ -38,6 +60,7 @@ body.admin-body {
     position: sticky;
     top: 0;
     height: 100vh;
+    min-width: 0;
 }
 
 .admin-brand {
@@ -49,6 +72,7 @@ body.admin-body {
     font-weight: 700;
     color: #fff;
     text-decoration: none;
+    min-width: 0;
 }
 
     .admin-brand i {
@@ -60,12 +84,14 @@ body.admin-body {
         border-radius: 10px;
         background: rgba(255, 255, 255, .12);
         font-size: 20px;
+        flex-shrink: 0;
     }
 
 .admin-nav {
     display: flex;
     flex-direction: column;
     gap: 4px;
+    min-width: 0;
 }
 
     .admin-nav a {
@@ -78,6 +104,7 @@ body.admin-body {
         text-decoration: none;
         font-size: 15px;
         transition: background-color .15s, color .15s;
+        min-width: 0;
     }
 
         .admin-nav a:hover {
@@ -105,6 +132,7 @@ body.admin-body {
     border-top: 1px solid rgba(255, 255, 255, .12);
     font-size: 13px;
     color: rgba(255, 255, 255, .7);
+    min-width: 0;
 }
 
     .admin-user strong {
@@ -113,6 +141,7 @@ body.admin-body {
         font-size: 14px;
         overflow: hidden;
         text-overflow: ellipsis;
+        white-space: nowrap;
     }
 
     .admin-user button {
@@ -130,16 +159,25 @@ body.admin-body {
             background: rgba(255, 255, 255, .18);
         }
 
+/* =========================================================
+   MAIN CONTENT
+   ========================================================= */
+
 .admin-main {
-    padding: 32px 36px 48px;
     min-width: 0;
+    width: 100%;
+    max-width: 100%;
+    padding: 32px 36px 48px;
+    overflow-x: clip;
 }
 
 .admin-topbar-mobile {
     display: none;
 }
 
-/* ---------- Page header ---------- */
+/* =========================================================
+   PAGE HEADER
+   ========================================================= */
 
 .page-header {
     display: flex;
@@ -148,6 +186,7 @@ body.admin-body {
     justify-content: space-between;
     gap: 12px;
     margin-bottom: 24px;
+    min-width: 0;
 }
 
     .page-header h1 {
@@ -168,6 +207,7 @@ body.admin-body {
     font-weight: 600;
     padding: 9px 18px;
     border-radius: 6px;
+    white-space: nowrap;
 }
 
     .btn-teal:hover {
@@ -175,7 +215,9 @@ body.admin-body {
         color: #fff;
     }
 
-/* ---------- Cards ---------- */
+/* =========================================================
+   CARDS
+   ========================================================= */
 
 .card-panel {
     background: #fff;
@@ -183,7 +225,8 @@ body.admin-body {
     border-radius: 12px;
     box-shadow: 0 2px 10px rgba(20, 40, 70, .04);
     padding: 22px;
-    height: 100%;
+    min-width: 0;
+    width: 100%;
 }
 
     .card-panel h2 {
@@ -191,6 +234,10 @@ body.admin-body {
         font-weight: 700;
         margin: 0 0 16px;
     }
+
+/* =========================================================
+   STAT CARDS
+   ========================================================= */
 
 .stat-card {
     display: flex;
@@ -200,7 +247,8 @@ body.admin-body {
     border: 1px solid var(--adm-border);
     border-radius: 12px;
     padding: 18px 20px;
-    height: 100%;
+    min-width: 0;
+    width: 100%;
 }
 
 .stat-icon {
@@ -218,25 +266,134 @@ body.admin-body {
     font-size: 26px;
     font-weight: 700;
     line-height: 1.1;
+    overflow-wrap: anywhere;
 }
 
 .stat-label {
     color: var(--adm-muted);
     font-size: 13px;
+    line-height: 1.25;
 }
 
-.tone-teal { background: rgba(38, 166, 154, .12); color: #1b8a80; }
-.tone-blue { background: rgba(52, 120, 246, .12); color: #2f6fdd; }
-.tone-amber { background: rgba(245, 166, 35, .15); color: #c77f0a; }
-.tone-red { background: rgba(229, 72, 77, .12); color: #cc3a3f; }
-.tone-purple { background: rgba(124, 92, 219, .12); color: #6544c9; }
-.tone-slate { background: rgba(36, 59, 83, .10); color: var(--adm-navy-2); }
+.tone-teal {
+    background: rgba(38, 166, 154, .12);
+    color: #1b8a80;
+}
 
-/* ---------- Tables ---------- */
+.tone-blue {
+    background: rgba(52, 120, 246, .12);
+    color: #2f6fdd;
+}
+
+.tone-amber {
+    background: rgba(245, 166, 35, .15);
+    color: #c77f0a;
+}
+
+.tone-red {
+    background: rgba(229, 72, 77, .12);
+    color: #cc3a3f;
+}
+
+.tone-purple {
+    background: rgba(124, 92, 219, .12);
+    color: #6544c9;
+}
+
+.tone-slate {
+    background: rgba(36, 59, 83, .10);
+    color: var(--adm-navy-2);
+}
+
+/* =========================================================
+   DASHBOARD
+   ========================================================= */
+
+.dashboard-filter {
+    height: auto;
+    margin-bottom: 24px;
+}
+
+/* ---------- 8 Statistics ---------- */
+
+.dashboard-stats {
+    display: grid;
+    grid-template-columns: repeat( 8, minmax(0, 1fr) );
+    gap: 12px;
+    width: 100%;
+    min-width: 0;
+    margin-bottom: 24px;
+}
+
+    .dashboard-stats .stat-card {
+        min-width: 0;
+        padding: 16px;
+        gap: 12px;
+    }
+
+    .dashboard-stats .stat-icon {
+        width: 42px;
+        height: 42px;
+        font-size: 19px;
+    }
+
+    .dashboard-stats .stat-value {
+        font-size: 23px;
+    }
+
+    .dashboard-stats .stat-label {
+        font-size: 12px;
+        line-height: 1.25;
+    }
+
+/* ---------- Dashboard two-column sections ---------- */
+
+.dashboard-row {
+    display: grid;
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    gap: 16px;
+    width: 100%;
+    min-width: 0;
+    margin-bottom: 16px;
+}
+
+    .dashboard-row.three-columns {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .dashboard-row > * {
+        min-width: 0;
+    }
+
+/* ---------- System overview ---------- */
+
+.dashboard-system {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+    width: 100%;
+    min-width: 0;
+    margin-bottom: 16px;
+}
+
+    .dashboard-system > * {
+        min-width: 0;
+    }
+
+/* ---------- Dashboard filter ---------- */
+
+.dashboard-filter .filter-bar {
+    margin-bottom: 0;
+}
+
+/* =========================================================
+   TABLES
+   ========================================================= */
 
 .admin-table {
     margin: 0;
     font-size: 14px;
+    width: 100%;
 }
 
     .admin-table thead th {
@@ -264,12 +421,21 @@ body.admin-body {
         display: inline;
     }
 
+/* =========================================================
+   FILTERS
+   ========================================================= */
+
 .filter-bar {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
     margin-bottom: 18px;
+    min-width: 0;
 }
+
+    .filter-bar > * {
+        min-width: 0;
+    }
 
     .filter-bar .form-control,
     .filter-bar .form-select {
@@ -281,7 +447,9 @@ body.admin-body {
         flex: 1 1 200px;
     }
 
-/* ---------- Badges ---------- */
+/* =========================================================
+   BADGES
+   ========================================================= */
 
 .pill {
     display: inline-block;
@@ -292,23 +460,74 @@ body.admin-body {
     white-space: nowrap;
 }
 
-.pill-active { background: rgba(38, 166, 154, .14); color: #1b8a80; }
-.pill-inactive { background: rgba(138, 150, 159, .18); color: #5f6b73; }
-.pill-role { background: rgba(36, 59, 83, .10); color: var(--adm-navy-2); }
+.pill-active {
+    background: rgba(38, 166, 154, .14);
+    color: #1b8a80;
+}
 
-.pill-New { background: rgba(52, 120, 246, .12); color: #2f6fdd; }
-.pill-Assigned { background: rgba(124, 92, 219, .12); color: #6544c9; }
-.pill-InProgress { background: rgba(245, 166, 35, .16); color: #b8740a; }
-.pill-Resolved { background: rgba(38, 166, 154, .14); color: #1b8a80; }
-.pill-Closed { background: rgba(138, 150, 159, .18); color: #5f6b73; }
-.pill-Reopened { background: rgba(229, 72, 77, .12); color: #cc3a3f; }
+.pill-inactive {
+    background: rgba(138, 150, 159, .18);
+    color: #5f6b73;
+}
 
-.pill-prio-Low { background: rgba(138, 150, 159, .18); color: #5f6b73; }
-.pill-prio-Medium { background: rgba(52, 120, 246, .12); color: #2f6fdd; }
-.pill-prio-High { background: rgba(245, 166, 35, .16); color: #b8740a; }
-.pill-prio-Critical { background: rgba(229, 72, 77, .14); color: #cc3a3f; }
+.pill-role {
+    background: rgba(36, 59, 83, .10);
+    color: var(--adm-navy-2);
+}
 
-/* ---------- Forms ---------- */
+.pill-New {
+    background: rgba(52, 120, 246, .12);
+    color: #2f6fdd;
+}
+
+.pill-Assigned {
+    background: rgba(124, 92, 219, .12);
+    color: #6544c9;
+}
+
+.pill-InProgress {
+    background: rgba(245, 166, 35, .16);
+    color: #b8740a;
+}
+
+.pill-Resolved {
+    background: rgba(38, 166, 154, .14);
+    color: #1b8a80;
+}
+
+.pill-Closed {
+    background: rgba(138, 150, 159, .18);
+    color: #5f6b73;
+}
+
+.pill-Reopened {
+    background: rgba(229, 72, 77, .12);
+    color: #cc3a3f;
+}
+
+.pill-prio-Low {
+    background: rgba(138, 150, 159, .18);
+    color: #5f6b73;
+}
+
+.pill-prio-Medium {
+    background: rgba(52, 120, 246, .12);
+    color: #2f6fdd;
+}
+
+.pill-prio-High {
+    background: rgba(245, 166, 35, .16);
+    color: #b8740a;
+}
+
+.pill-prio-Critical {
+    background: rgba(229, 72, 77, .14);
+    color: #cc3a3f;
+}
+
+/* =========================================================
+   FORMS
+   ========================================================= */
 
 .form-card {
     max-width: 780px;
@@ -329,15 +548,18 @@ body.admin-body {
     font-size: 14px;
 }
 
-/* ---------- Bar lists & trend ---------- */
+/* =========================================================
+   BAR LIST
+   ========================================================= */
 
 .bar-row {
     display: grid;
-    grid-template-columns: 130px 1fr 40px;
+    grid-template-columns: 130px minmax(0, 1fr) 40px;
     align-items: center;
     gap: 12px;
     margin-bottom: 12px;
     font-size: 14px;
+    min-width: 0;
 }
 
     .bar-row .bar-label {
@@ -356,6 +578,7 @@ body.admin-body {
     background: #eef1f5;
     border-radius: 999px;
     overflow: hidden;
+    min-width: 0;
 }
 
 .bar-fill {
@@ -364,20 +587,38 @@ body.admin-body {
     background: var(--adm-teal);
 }
 
-.bar-blue .bar-fill { background: #3478f6; }
-.bar-amber .bar-fill { background: #f5a623; }
-.bar-purple .bar-fill { background: #7c5cdb; }
-.bar-navy .bar-fill { background: var(--adm-navy-2); }
+.bar-blue .bar-fill {
+    background: #3478f6;
+}
+
+.bar-amber .bar-fill {
+    background: #f5a623;
+}
+
+.bar-purple .bar-fill {
+    background: #7c5cdb;
+}
+
+.bar-navy .bar-fill {
+    background: var(--adm-navy-2);
+}
+
+/* =========================================================
+   TREND
+   ========================================================= */
 
 .trend {
     display: flex;
     align-items: flex-end;
     gap: 6px;
     height: 150px;
+    width: 100%;
+    min-width: 0;
+    overflow: hidden;
 }
 
 .trend-col {
-    flex: 1;
+    flex: 1 1 0;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -394,10 +635,21 @@ body.admin-body {
     min-height: 3px;
 }
 
-.trend-bar.zero { background: #dfe5ea; }
+    .trend-bar.zero {
+        background: #dfe5ea;
+    }
 
-.trend-num { font-size: 11px; color: var(--adm-muted); margin-bottom: 3px; }
-.trend-day { font-size: 10px; color: var(--adm-muted); margin-top: 6px; }
+.trend-num {
+    font-size: 11px;
+    color: var(--adm-muted);
+    margin-bottom: 3px;
+}
+
+.trend-day {
+    font-size: 10px;
+    color: var(--adm-muted);
+    margin-top: 6px;
+}
 
 .empty-note {
     color: var(--adm-muted);
@@ -405,10 +657,38 @@ body.admin-body {
     padding: 12px 0;
 }
 
-/* ---------- Responsive ---------- */
+/* =========================================================
+   RESPONSIVE - DASHBOARD
+   ========================================================= */
+
+@media (max-width: 1400px) {
+
+    .dashboard-stats {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 1100px) {
+
+    .dashboard-row {
+        grid-template-columns: 1fr;
+    }
+
+        .dashboard-row.three-columns {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+    .dashboard-system {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
 
 @media (max-width: 991px) {
-    .admin-shell { grid-template-columns: 1fr; }
+
+    .admin-shell {
+        grid-template-columns: 1fr;
+        overflow-x: hidden;
+    }
 
     .admin-sidebar {
         position: static;
@@ -420,9 +700,18 @@ body.admin-body {
         padding: 12px 14px;
     }
 
-    .admin-brand { padding: 0 12px 0 0; }
-    .admin-nav { flex-direction: row; flex-wrap: wrap; }
-    .admin-nav-label { display: none; }
+    .admin-brand {
+        padding: 0 12px 0 0;
+    }
+
+    .admin-nav {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+
+    .admin-nav-label {
+        display: none;
+    }
 
     .admin-user {
         margin: 0 0 0 auto;
@@ -430,8 +719,74 @@ body.admin-body {
         padding: 0;
     }
 
-        .admin-user strong, .admin-user span { display: none; }
-        .admin-user button { margin: 0; width: auto; padding: 8px 14px; }
+        .admin-user strong,
+        .admin-user span {
+            display: none;
+        }
 
-    .admin-main { padding: 22px 16px 40px; }
+        .admin-user button {
+            margin: 0;
+            width: auto;
+            padding: 8px 14px;
+        }
+
+    .admin-main {
+        padding: 22px 16px 40px;
+        overflow-x: hidden;
+    }
+
+    .dashboard-system {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+
+    .dashboard-stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .dashboard-row.three-columns {
+        grid-template-columns: 1fr;
+    }
+
+    .page-header {
+        align-items: flex-start;
+    }
+
+        .page-header .btn-teal {
+            width: 100%;
+        }
+}
+
+@media (max-width: 480px) {
+
+    .dashboard-stats {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-main {
+        padding: 18px 12px 32px;
+    }
+
+    .card-panel {
+        padding: 18px;
+    }
+
+    .filter-bar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+        .filter-bar .form-control,
+        .filter-bar .form-select,
+        .filter-bar .search-box {
+            max-width: none;
+            width: 100%;
+        }
+
+    .bar-row {
+        grid-template-columns: 90px minmax(0, 1fr) 30px;
+        gap: 8px;
+    }
 }

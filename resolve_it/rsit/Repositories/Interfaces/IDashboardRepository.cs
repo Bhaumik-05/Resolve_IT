@@ -4,6 +4,9 @@ namespace rsit.Repositories.Interfaces
 {
     public interface IDashboardRepository
     {
-        Task<DashboardData> GetDashboardDataAsync(int trendDays);
+        Task<DashboardData> GetDashboardDataAsync(
+            int trendDays,
+            DateTime? fromDate = null,
+            DateTime? toDate = null);
     }
 }

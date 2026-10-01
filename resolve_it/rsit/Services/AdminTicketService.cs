@@ -96,8 +96,8 @@ public class AdminTicketService : IAdminTicketService
 
             CurrentStaffId = currentAssignment?.StaffId,
 
-            SupportStaff = staff.Select(s =>
-                new SelectListItem(
+            SupportStaff = staff
+                .Select(s => new SelectListItem(
                     $"{s.Name} ({s.EmployeeId})",
                     s.Id.ToString(),
                     s.Id == currentAssignment?.StaffId))

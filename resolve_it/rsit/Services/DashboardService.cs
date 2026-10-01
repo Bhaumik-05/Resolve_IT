@@ -8,35 +8,97 @@ namespace rsit.Services;
 
 public class DashboardService : IDashboardService
 {
-    private const int TrendDays = 14;
+    private const int DefaultTrendDays = 14;
 
     private readonly IDashboardRepository _repository;
 
-    public DashboardService(IDashboardRepository repository)
+    public DashboardService(
+        IDashboardRepository repository)
     {
         _repository = repository;
     }
 
-    public async Task<AdminDashboardViewModel> GetAdminDashboardAsync()
+    public async Task<AdminDashboardViewModel>
+        GetAdminDashboardAsync(
+            DateTime? fromDate = null,
+            DateTime? toDate = null)
     {
-        var data = await _repository.GetDashboardDataAsync(TrendDays);
+        // If only one side of the range is supplied,
+        // derive the other side.
 
-        // Show statuses / priorities in lifecycle order rather than alphabetically.
-        data.ByStatus = OrderBy(data.ByStatus, TicketStatuses.All);
-        data.ByPriority = OrderBy(data.ByPriority, TicketPriorities.All);
-        data.UsersByRole = OrderBy(data.UsersByRole, UserRoles.All);
+        if (fromDate.HasValue &&
+            toDate.HasValue &&
+            fromDate > toDate)
+        {
+            (fromDate, toDate) =
+                (toDate, fromDate);
+        }
 
-        return new AdminDashboardViewModel { Data = data };
+        var trendDays = DefaultTrendDays;
+
+        if (fromDate.HasValue || toDate.HasValue)
+        {
+            var from =
+                fromDate?.Date ??
+                toDate!.Value.Date.AddDays(
+                    -(DefaultTrendDays - 1));
+
+            var to =
+                toDate?.Date ??
+                DateTime.UtcNow.Date;
+
+            trendDays =
+                Math.Max(
+                    1,
+                    (to - from).Days + 1);
+        }
+
+        var data =
+            await _repository.GetDashboardDataAsync(
+                trendDays,
+                fromDate,
+                toDate);
+
+
+        // Known values first.
+        data.ByStatus =
+            OrderBy(
+                data.ByStatus,
+                TicketStatuses.All);
+
+        data.ByPriority =
+            OrderBy(
+                data.ByPriority,
+                TicketPriorities.All);
+
+        data.UsersByRole =
+            OrderBy(
+                data.UsersByRole,
+                UserRoles.All);
+
+
+        return new AdminDashboardViewModel
+        {
+            Data = data,
+            FromDate = fromDate,
+            ToDate = toDate
+        };
     }
 
-    // Known values first (in the given order); unknown values follow alphabetically.
-    private static List<LabelCount> OrderBy(List<LabelCount> items, string[] order)
+
+    private static List<LabelCount> OrderBy(
+        List<LabelCount> items,
+        string[] order)
     {
         return items
             .OrderBy(i =>
             {
-                var index = Array.IndexOf(order, i.Label);
-                return index < 0 ? int.MaxValue : index;
+                var index =
+                    Array.IndexOf(order, i.Label);
+
+                return index < 0
+                    ? int.MaxValue
+                    : index;
             })
             .ThenBy(i => i.Label)
             .ToList();
