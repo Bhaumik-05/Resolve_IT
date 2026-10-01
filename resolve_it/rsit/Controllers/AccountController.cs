@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using rsit.Models;
 using rsit.Services.Interfaces;
@@ -57,8 +58,6 @@ public class AccountController : Controller
             return View(model);
         }
 
-        // Authentication cookie has been created.
-        // Determine the role on the next request.
         return RedirectToAction(nameof(RouteToDashboard));
     }
 
@@ -86,69 +85,7 @@ public class AccountController : Controller
             return RedirectToAction("Index", "Employee");
         }
 
-        // User is authenticated but has no recognized role.
         return RedirectToAction(nameof(AccessDenied));
-    }
-
-
-    // =========================================================
-    // REGISTER
-    // =========================================================
-
-    // GET: /Account/Register
-    [AllowAnonymous] // here to change to [Authorize(Roles = UserRoles.Admin)] if you want only admins to register new users
-    [HttpGet]
-    public async Task<IActionResult> Register()
-    {
-        if (User.Identity?.IsAuthenticated == true)
-        {
-            return RedirectToAction(nameof(RouteToDashboard));
-        }
-
-        var model = new RegisterViewModel();
-
-        // Load departments for dropdown
-        model.Departments =
-            await _accountService.GetDepartmentsAsync();
-
-        return View(model);
-    }
-
-
-    // POST: /Account/Register
-    [AllowAnonymous] // here to change to [Authorize(Roles = UserRoles.Admin)] if you want only admins to register new users
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Register(RegisterViewModel model)
-    {
-        if (!ModelState.IsValid)
-        {
-            model.Departments =
-                await _accountService.GetDepartmentsAsync();
-
-            return View(model);
-        }
-
-        var result =
-            await _accountService.RegisterAsync(model);
-
-        if (!result.Succeeded)
-        {
-            foreach (var error in result.Errors)
-            {
-                ModelState.AddModelError(string.Empty, error);
-            }
-
-            model.Departments =
-                await _accountService.GetDepartmentsAsync();
-
-            return View(model);
-        }
-
-        TempData["SuccessMessage"] =
-            "Account created successfully. Please login.";
-
-        return RedirectToAction(nameof(Login));
     }
 
 
