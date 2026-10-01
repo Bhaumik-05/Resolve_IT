@@ -25,6 +25,7 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IDashboardRepository, DashboardRepository>();
+builder.Services.AddScoped<ITicketRepository, TicketRepository>();
 
 // Services
 builder.Services.AddScoped<IAccountService, AccountService>();
@@ -35,6 +36,7 @@ builder.Services.AddScoped<IDashboardService, DashboardService>();
 builder.Services.AddScoped<IAdminTicketService, AdminTicketService>();
 builder.Services.AddScoped<IAdminFeedbackRepository, AdminFeedbackRepository>();
 builder.Services.AddScoped<IAdminFeedbackService, AdminFeedbackService>();
+builder.Services.AddScoped<ITicketService, TicketService>();
 
 // ASP.NET Core Identity
 builder.Services

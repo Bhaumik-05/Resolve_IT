@@ -1,0 +1,58 @@
+﻿using rsit.Models;
+using rsit.ViewModels;
+
+namespace rsit.Services.Interfaces;
+
+public interface ITicketService
+{
+    // =========================================================
+    // CREATE TICKET
+    // =========================================================
+
+    Task<CreateTicketViewModel> GetCreateTicketModelAsync();
+
+    Task LoadCreateTicketDataAsync(
+        CreateTicketViewModel model);
+
+    Task<TicketCreateResult> CreateTicketAsync(
+        CreateTicketViewModel model,
+        int employeeId);
+
+
+    // =========================================================
+    // TICKET DETAILS
+    // =========================================================
+
+    Task<Ticket?> GetTicketDetailAsync(
+        int ticketId,
+        int employeeId);
+
+
+    // =========================================================
+    // EMPLOYEE TICKETS
+    // =========================================================
+
+    Task<List<Ticket>> GetTicketsForEmployeeAsync(
+        int employeeId);
+
+
+    // =========================================================
+    // DROPDOWN DATA
+    // =========================================================
+
+    Task<List<Category>> GetActiveCategoriesAsync();
+
+    Task<List<Department>> GetActiveDepartmentsAsync();
+
+
+    // =========================================================
+    // ATTACHMENTS
+    // =========================================================
+
+    Task<Attachment?> GetAttachmentAsync(
+        int attachmentId,
+        int employeeId);
+
+    Task<AttachmentFileResult> GetAttachmentFileAsync(
+        Attachment attachment);
+}

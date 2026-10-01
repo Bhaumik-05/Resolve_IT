@@ -1,115 +1,112 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using rsit.Data;
 using rsit.Models;
+using rsit.Services.Interfaces;
 using rsit.ViewModels;
 
 namespace rsit.Controllers;
 
-[Authorize]
+[Authorize(Roles = "Employee")]
 public class TicketsController : Controller
 {
-    private readonly ApplicationDbContext _context;
+    private readonly ITicketService _ticketService;
     private readonly UserManager<User> _userManager;
 
     public TicketsController(
-        ApplicationDbContext context,
+        ITicketService ticketService,
         UserManager<User> userManager)
     {
-        _context = context;
+        _ticketService = ticketService;
         _userManager = userManager;
     }
+
+    // =========================================================
+    // CREATE TICKET
+    // =========================================================
 
     // GET: /Tickets/Create
     [HttpGet]
     public async Task<IActionResult> Create()
     {
-        var model = new CreateTicketViewModel
-        {
-            Priorities = TicketPriorities.All,
-
-            Categories = await _context.Categories
-                .Where(c => c.Status == RecordStatus.Active)
-                .OrderBy(c => c.Name)
-                .ToListAsync(),
-
-            Departments = await _context.Departments
-                .Where(d => d.Status == RecordStatus.Active)
-                .OrderBy(d => d.Name)
-                .ToListAsync()
-        };
+        var model =
+            await _ticketService.GetCreateTicketModelAsync();
 
         return View(model);
     }
 
+
     // POST: /Tickets/Create
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create(CreateTicketViewModel model)
+    public async Task<IActionResult> Create(
+        CreateTicketViewModel model)
     {
-        if (!ModelState.IsValid)
-        {
-            model.Priorities = TicketPriorities.All;
-
-            model.Categories = await _context.Categories
-                .Where(c => c.Status == RecordStatus.Active)
-                .OrderBy(c => c.Name)
-                .ToListAsync();
-
-            model.Departments = await _context.Departments
-                .Where(d => d.Status == RecordStatus.Active)
-                .OrderBy(d => d.Name)
-                .ToListAsync();
-
-            return View(model);
-        }
-
-        var user = await _userManager.GetUserAsync(User);
+        var user =
+            await _userManager.GetUserAsync(User);
 
         if (user == null)
         {
             return Challenge();
         }
 
-        var ticket = new Ticket
+        if (!ModelState.IsValid)
         {
-            Title = model.Title.Trim(),
-            Description = model.Description.Trim(),
-            Priority = model.Priority,
-            Status = TicketStatuses.New,
-            CreatedAt = DateTime.UtcNow,
+            await _ticketService
+                .LoadCreateTicketDataAsync(model);
 
-            EmployeeId = user.Id,
-            CategoryId = model.CategoryId,
-            DepartmentId = model.DepartmentId
-        };
+            return View(model);
+        }
 
-        _context.Tickets.Add(ticket);
+        var result =
+            await _ticketService.CreateTicketAsync(
+                model,
+                user.Id);
 
-        await _context.SaveChangesAsync();
+        if (!result.Success)
+        {
+            ModelState.AddModelError(
+                string.Empty,
+                result.Message);
+
+            await _ticketService
+                .LoadCreateTicketDataAsync(model);
+
+            return View(model);
+        }
 
         TempData["SuccessMessage"] =
-            $"Ticket #{ticket.TicketId} created successfully.";
+            result.Message;
 
-        return RedirectToAction(nameof(Details), new { id = ticket.TicketId });
+        return RedirectToAction(
+            nameof(Details),
+            new
+            {
+                id = result.TicketId
+            });
     }
+
+
+    // =========================================================
+    // TICKET DETAILS
+    // =========================================================
 
     // GET: /Tickets/Details/5
     [HttpGet]
     public async Task<IActionResult> Details(int id)
     {
-        var ticket = await _context.Tickets
-            .Include(t => t.Category)
-            .Include(t => t.Department)
-            .Include(t => t.Employee)
-            .Include(t => t.Attachments)
-            .Include(t => t.Assignments)
-                .ThenInclude(a => a.Staff)
-            .Include(t => t.History)
-            .Include(t => t.Feedback)
-            .FirstOrDefaultAsync(t => t.TicketId == id);
+        var user =
+            await _userManager.GetUserAsync(User);
+
+        if (user == null)
+        {
+            return Challenge();
+        }
+
+        var ticket =
+            await _ticketService.GetTicketDetailAsync(
+                id,
+                user.Id);
 
         if (ticket == null)
         {
@@ -117,5 +114,91 @@ public class TicketsController : Controller
         }
 
         return View(ticket);
+    }
+
+
+    // =========================================================
+    // VIEW ATTACHMENT
+    // =========================================================
+
+    // GET: /Tickets/ViewAttachment/1
+    [HttpGet]
+    public async Task<IActionResult> ViewAttachment(int id)
+    {
+        var user =
+            await _userManager.GetUserAsync(User);
+
+        if (user == null)
+        {
+            return Challenge();
+        }
+
+        var attachment =
+            await _ticketService.GetAttachmentAsync(
+                id,
+                user.Id);
+
+        if (attachment == null)
+        {
+            return NotFound();
+        }
+
+        var result =
+            await _ticketService.GetAttachmentFileAsync(
+                attachment);
+
+        if (!result.Success)
+        {
+            return NotFound(result.Message);
+        }
+
+        return PhysicalFile(
+            result.PhysicalPath,
+            attachment.FileType,
+            enableRangeProcessing: true);
+    }
+
+
+    // =========================================================
+    // DOWNLOAD ATTACHMENT
+    // =========================================================
+
+    // GET: /Tickets/DownloadAttachment/1
+    [HttpGet]
+    public async Task<IActionResult> DownloadAttachment(
+        int id)
+    {
+        var user =
+            await _userManager.GetUserAsync(User);
+
+        if (user == null)
+        {
+            return Challenge();
+        }
+
+        var attachment =
+            await _ticketService.GetAttachmentAsync(
+                id,
+                user.Id);
+
+        if (attachment == null)
+        {
+            return NotFound();
+        }
+
+        var result =
+            await _ticketService.GetAttachmentFileAsync(
+                attachment);
+
+        if (!result.Success)
+        {
+            return NotFound(result.Message);
+        }
+
+        return PhysicalFile(
+            result.PhysicalPath,
+            attachment.FileType,
+            attachment.FileName,
+            enableRangeProcessing: true);
     }
 }
