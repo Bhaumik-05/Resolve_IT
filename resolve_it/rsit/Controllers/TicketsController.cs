@@ -201,4 +201,27 @@ public class TicketsController : Controller
             attachment.FileName,
             enableRangeProcessing: true);
     }
+
+    // GET: /Tickets/MyTickets
+    [HttpGet]
+    public async Task<IActionResult> MyTickets()
+    {
+        var user = await _userManager.GetUserAsync(User);
+
+        if (user == null)
+        {
+            return Challenge();
+        }
+
+        var tickets =
+            await _ticketService.GetTicketsForEmployeeAsync(
+                user.Id);
+
+        var model = new MyTicketsViewModel
+        {
+            Tickets = tickets
+        };
+
+        return View(model);
+    }
 }

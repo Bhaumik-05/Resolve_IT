@@ -1,0 +1,465 @@
+﻿@model rsit.ViewModels.MyTicketsViewModel
+
+@{
+    ViewData["Title"] = "My Tickets";
+}
+
+<link rel="stylesheet"
+      href="~/css/MyTickets.css"
+      asp-append-version="true" />
+
+<div class="rit-tickets-page">
+
+    <div class="container rit-tickets-container">
+
+        <!-- =====================================================
+             BREADCRUMB
+        ====================================================== -->
+
+        <div class="rit-breadcrumb">
+
+            <a asp-controller="Employee"
+               asp-action="Index"
+               class="rit-breadcrumb-link">
+                Employee Dashboard
+            </a>
+
+            <i class="bi bi-chevron-right"></i>
+
+            <span class="active">
+                My Tickets
+            </span>
+
+        </div>
+
+
+        <!-- =====================================================
+             PAGE HEADER
+        ====================================================== -->
+
+        <div class="rit-tickets-header">
+
+            <div class="rit-header-content">
+
+                <span class="rit-page-eyebrow">
+                    EMPLOYEE PORTAL
+                </span>
+
+                <h1 class="rit-page-title">
+                    My Tickets
+                </h1>
+
+                <p class="rit-page-subtitle">
+                    View and track the support requests you have
+                    submitted to the IT helpdesk.
+                </p>
+
+            </div>
+
+
+            <a asp-controller="Tickets"
+               asp-action="Create"
+               class="rit-create-ticket-btn">
+
+                <i class="bi bi-plus-lg"></i>
+
+                <span>
+                    Create Ticket
+                </span>
+
+            </a>
+
+        </div>
+
+<!-- =====================================================
+     TICKET SUMMARY
+====================================================== -->
+
+<div class="rit-ticket-summary">
+
+    <!-- TOTAL TICKETS -->
+    <div class="rit-summary-card">
+
+        <div class="rit-summary-icon rit-summary-total">
+            <i class="bi bi-ticket-detailed-fill"></i>
+        </div>
+
+        <div class="rit-summary-content">
+
+            <span class="rit-summary-label">
+                Total Tickets
+            </span>
+
+            <strong class="rit-summary-value">
+                @Model.TotalTickets
+            </strong>
+
+        </div>
+
+    </div>
+
+
+    <!-- ACTIVE -->
+    <div class="rit-summary-card">
+
+        <div class="rit-summary-icon rit-summary-active">
+            <i class="bi bi-hourglass-split"></i>
+        </div>
+
+        <div class="rit-summary-content">
+
+            <span class="rit-summary-label">
+                Active
+            </span>
+
+            <strong class="rit-summary-value">
+                @Model.OpenTickets
+            </strong>
+
+        </div>
+
+    </div>
+
+
+    <!-- RESOLVED -->
+    <div class="rit-summary-card">
+
+        <div class="rit-summary-icon rit-summary-resolved">
+            <i class="bi bi-check-circle-fill"></i>
+        </div>
+
+        <div class="rit-summary-content">
+
+            <span class="rit-summary-label">
+                Resolved
+            </span>
+
+            <strong class="rit-summary-value">
+                @Model.ResolvedTickets
+            </strong>
+
+        </div>
+
+    </div>
+
+
+    <!-- CLOSED -->
+    <div class="rit-summary-card">
+
+        <div class="rit-summary-icon rit-summary-closed">
+            <i class="bi bi-check2-all"></i>
+        </div>
+
+        <div class="rit-summary-content">
+
+            <span class="rit-summary-label">
+                Closed
+            </span>
+
+            <strong class="rit-summary-value">
+                @Model.ClosedTickets
+            </strong>
+
+        </div>
+
+    </div>
+
+</div>
+
+        <!-- =====================================================
+             TICKET LIST CARD
+        ====================================================== -->
+
+        <div class="rit-ticket-list-card">
+
+
+            <!-- =================================================
+                 LIST HEADER
+            ================================================== -->
+
+            <div class="rit-list-header">
+
+                <div class="rit-list-heading">
+
+                    <h2>
+                        Submitted Tickets
+                    </h2>
+
+                    <p>
+                        Your recent support requests
+                    </p>
+
+                </div>
+
+
+                <span class="rit-ticket-count">
+
+                    @Model.TotalTickets
+
+                    @(Model.TotalTickets == 1
+                        ? "ticket"
+                        : "tickets")
+
+                </span>
+
+            </div>
+
+
+            <!-- =================================================
+                 EMPTY STATE
+            ================================================== -->
+
+            @if (Model.Tickets == null || Model.Tickets.Count == 0)
+            {
+                <div class="rit-empty-state">
+
+                    <div class="rit-empty-icon">
+
+                        <i class="bi bi-ticket-perforated"></i>
+
+                    </div>
+
+
+                    <h3>
+                        No tickets yet
+                    </h3>
+
+
+                    <p>
+                        You have not submitted any support requests.
+                        Create a ticket to report an IT issue or
+                        request assistance.
+                    </p>
+
+
+                    <a asp-controller="Tickets"
+                       asp-action="Create"
+                       class="rit-empty-btn">
+
+                        <i class="bi bi-plus-lg"></i>
+
+                        Create Your First Ticket
+
+                    </a>
+
+                </div>
+            }
+            else
+            {
+
+                <!-- =============================================
+                     TABLE
+                ============================================== -->
+
+                <div class="rit-table-wrapper">
+
+                    <table class="rit-ticket-table">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>
+                                    Ticket
+                                </th>
+
+                                <th>
+                                    Issue
+                                </th>
+
+                                <th>
+                                    Category
+                                </th>
+
+                                <th>
+                                    Priority
+                                </th>
+
+                                <th>
+                                    Status
+                                </th>
+
+                                <th>
+                                    Created
+                                </th>
+
+                                <th class="rit-action-column">
+                                    Action
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody>
+
+                            @foreach (var ticket in Model.Tickets)
+                            {
+                                var priorityClass =
+                                    string.IsNullOrWhiteSpace(ticket.Priority)
+                                        ? "unknown"
+                                        : ticket.Priority
+                                            .ToLowerInvariant()
+                                            .Replace(" ", "-");
+
+                                var statusClass =
+                                    string.IsNullOrWhiteSpace(ticket.Status)
+                                        ? "unknown"
+                                        : ticket.Status
+                                            .ToLowerInvariant()
+                                            .Replace(" ", "-");
+
+
+                                <tr>
+
+                                    <!-- =================================
+                                         TICKET ID
+                                    ================================== -->
+
+                                    <td>
+
+                                        <span class="rit-ticket-id">
+                                            #@ticket.TicketId
+                                        </span>
+
+                                    </td>
+
+
+                                    <!-- =================================
+                                         ISSUE
+                                    ================================== -->
+
+                                    <td>
+
+                                        <div class="rit-issue-cell">
+
+                                            <span class="rit-issue-title">
+                                                @ticket.Title
+                                            </span>
+
+
+                                            @if (ticket.Department != null)
+                                            {
+                                                <span class="rit-issue-department">
+                                                    @ticket.Department.Name
+                                                </span>
+                                            }
+
+                                        </div>
+
+                                    </td>
+
+
+                                    <!-- =================================
+                                         CATEGORY
+                                    ================================== -->
+
+                                    <td>
+
+                                        @if (ticket.Category != null)
+                                        {
+                                            <span class="rit-category">
+                                                @ticket.Category.Name
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="rit-muted">
+                                                —
+                                            </span>
+                                        }
+
+                                    </td>
+
+
+                                    <!-- =================================
+                                         PRIORITY
+                                    ================================== -->
+
+                                    <td>
+
+                                        <span class="rit-priority priority-@priorityClass">
+
+                                            <span class="rit-priority-dot"></span>
+
+                                            @ticket.Priority
+
+                                        </span>
+
+                                    </td>
+
+
+                                    <!-- =================================
+                                         STATUS
+                                    ================================== -->
+
+                                    <td>
+
+                                        <span class="rit-status status-@statusClass">
+                                            @ticket.Status
+                                        </span>
+
+                                    </td>
+
+
+                                    <!-- =================================
+                                         CREATED DATE
+                                    ================================== -->
+
+                                    <td>
+
+                                        <span class="rit-created-date">
+                                            @(ticket.CreatedAt
+                                                .ToLocalTime()
+                                                .ToString("dd MMM yyyy"))
+                                        </span>
+
+                                    </td>
+
+
+                                    <!-- =================================
+                                         ACTION
+                                    ================================== -->
+
+                                    <td class="rit-action-column">
+
+                                        <a asp-controller="Tickets"
+                                           asp-action="Details"
+                                           asp-route-id="@ticket.TicketId"
+                                           class="rit-view-btn">
+
+                                            <span>
+                                                View
+                                            </span>
+
+                                            <i class="bi bi-arrow-right"></i>
+
+                                        </a>
+
+                                    </td>
+
+                                </tr>
+                            }
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            }
+
+        </div>
+
+    </div>
+
+</div>
+
+
+@section Scripts {
+
+    <script src="~/js/MyTickets.js"
+            asp-append-version="true"></script>
+
+}
