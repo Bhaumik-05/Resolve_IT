@@ -813,3 +813,97 @@
             flex-direction: column;
         }
     }
+
+/* =========================================================
+   EMPLOYEE - CLOSE TICKET
+   ========================================================= */
+
+.rit-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+
+/* =========================================================
+   Header Action Buttons
+   ========================================================= */
+
+.rit-header-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border: 1px solid #d7d9e0;
+    border-radius: 10px;
+    background: #ffffff;
+    color: #374151;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+    .rit-header-btn:hover {
+        background: #f8f9ff;
+        border-color: #6366f1;
+        color: #4f46e5;
+        text-decoration: none;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+    }
+
+    .rit-header-btn:active {
+        transform: translateY(0);
+    }
+
+
+/* =========================================================
+   Close Ticket Button
+   ========================================================= */
+
+.rit-header-actions form .rit-header-btn {
+    border-color: #c7d2fe;
+    background: #eef2ff;
+    color: #4338ca;
+}
+
+    .rit-header-actions form .rit-header-btn:hover {
+        border-color: #818cf8;
+        background: #e0e7ff;
+        color: #3730a3;
+        box-shadow: 0 4px 12px rgba(79, 70, 229, 0.15);
+    }
+
+
+/* =========================================================
+   Icons
+   ========================================================= */
+
+.rit-header-btn i {
+    font-size: 15px;
+}
+
+
+/* =========================================================
+   Mobile
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+    .rit-header-actions {
+        width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+        .rit-header-actions form {
+            width: 100%;
+        }
+
+        .rit-header-actions .rit-header-btn {
+            width: 100%;
+        }
+}

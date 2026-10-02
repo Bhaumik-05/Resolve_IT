@@ -10,29 +10,44 @@
         .Replace(" ", "-") ?? "unknown";
 }
 
-<link rel="stylesheet" href="~/css/TicketDetails.css" asp-append-version="true" />
-
+<link rel="stylesheet"
+      href="~/css/TicketDetails.css"
+      asp-append-version="true" />
 
 
 <div class="rit-details-page">
 
     <div class="container rit-details-container">
 
+        <!-- =====================================================
+             SUCCESS MESSAGE
+             ===================================================== -->
         @if (TempData["SuccessMessage"] != null)
         {
             <div class="alert alert-success" role="alert">
+
                 <i class="bi bi-check-circle me-2"></i>
+
                 @TempData["SuccessMessage"]
+
             </div>
         }
 
+
+        <!-- =====================================================
+             ERROR MESSAGE
+             ===================================================== -->
         @if (TempData["ErrorMessage"] != null)
         {
             <div class="alert alert-danger" role="alert">
+
                 <i class="bi bi-exclamation-triangle me-2"></i>
+
                 @TempData["ErrorMessage"]
+
             </div>
         }
+
 
         <!-- =====================================================
              BREADCRUMB
@@ -40,11 +55,15 @@
 
         <div class="rit-breadcrumb">
 
-            <span>Helpdesk</span>
+            <span>
+                Helpdesk
+            </span>
 
             <i class="bi bi-chevron-right"></i>
 
-            <span>Tickets</span>
+            <span>
+                Tickets
+            </span>
 
             <i class="bi bi-chevron-right"></i>
 
@@ -72,9 +91,11 @@
                 </h1>
 
                 <div class="rit-ticket-date">
+
                     Created
                     @Model.CreatedAt.ToLocalTime()
                     .ToString("dd MMM yyyy, hh:mm tt")
+
                 </div>
 
             </div>
@@ -82,7 +103,12 @@
 
             <div class="rit-header-actions">
 
-                @if (Model.Status == rsit.Models.TicketStatuses.Resolved)
+                <!-- =================================================
+                     CLOSE TICKET
+                     Employee can close only a Resolved ticket.
+                     ================================================= -->
+                @if (Model.Status ==
+                                    rsit.Models.TicketStatuses.Resolved)
                 {
                     <form asp-action="Close"
                           method="post"
@@ -106,6 +132,9 @@
 
                     </form>
                 }
+
+
+                <!-- NEW TICKET -->
 
                 <a asp-action="Create"
                    class="rit-header-btn">
@@ -186,7 +215,9 @@
                     <div class="rit-card-body">
 
                         <div class="rit-description">
+
                             @Model.Description
+
                         </div>
 
                     </div>
@@ -226,6 +257,8 @@
                         <div class="rit-info-grid">
 
 
+                            <!-- PRIORITY -->
+
                             <div class="rit-info-item">
 
                                 <div class="rit-info-label">
@@ -247,6 +280,8 @@
                             </div>
 
 
+                            <!-- CATEGORY -->
+
                             <div class="rit-info-item">
 
                                 <div class="rit-info-label">
@@ -260,6 +295,8 @@
                             </div>
 
 
+                            <!-- DEPARTMENT -->
+
                             <div class="rit-info-item">
 
                                 <div class="rit-info-label">
@@ -272,6 +309,8 @@
 
                             </div>
 
+
+                            <!-- TICKET ID -->
 
                             <div class="rit-info-item">
 
@@ -361,6 +400,7 @@
 
                                     <div class="rit-attachment">
 
+
                                         <div class="rit-attachment-icon">
 
                                             <i class="bi @iconClass"></i>
@@ -399,6 +439,7 @@
 
 
                                         <div class="rit-attachment-actions">
+
 
                                             <!-- VIEW -->
 
@@ -613,8 +654,11 @@
                                                 @if (history.ChangedByUser != null)
                                                 {
                                                     <span>
+
                                                         ·
+
                                                         @history.ChangedByUser.Name
+
                                                     </span>
                                                 }
 
@@ -653,8 +697,8 @@
 
 
                 <!-- =================================================
-     FEEDBACK
-     ================================================= -->
+                     FEEDBACK
+                     ================================================= -->
 
                 <section class="rit-card">
 
@@ -686,8 +730,8 @@
                         @if (Model.Feedback != null)
                         {
                             <!-- =============================================
-                 FEEDBACK ALREADY SUBMITTED
-                 ============================================= -->
+                                 FEEDBACK ALREADY SUBMITTED
+                                 ============================================= -->
 
                             <div class="rit-feedback-rating">
 
@@ -722,6 +766,7 @@
                             <div class="text-muted small mt-2">
 
                                 Submitted
+
                                 @Model.Feedback.SubmittedAt
                                 .ToLocalTime()
                                 .ToString(
@@ -736,8 +781,8 @@
                                 rsit.Models.TicketStatuses.Closed)
                         {
                             <!-- =============================================
-                 SUBMIT FEEDBACK
-                 ============================================= -->
+                                 SUBMIT FEEDBACK
+                                 ============================================= -->
 
                             <form asp-action="SubmitFeedback"
                                   method="post">
@@ -908,9 +953,7 @@
                                 </div>
 
                                 <div class="rit-requester-email">
-
                                     @Model.Employee?.Email
-
                                 </div>
 
                             </div>
@@ -1027,6 +1070,8 @@
                     <div class="rit-side-body">
 
 
+                        <!-- CREATED -->
+
                         <div class="rit-side-item">
 
                             <div class="rit-side-label">
@@ -1054,6 +1099,7 @@
                         </div>
 
 
+                        <!-- RESOLVED -->
                         @if (Model.ResolvedAt.HasValue)
                         {
                             <div class="rit-side-item">
@@ -1084,6 +1130,7 @@
                         }
 
 
+                        <!-- CLOSED -->
                         @if (Model.ClosedAt.HasValue)
                         {
                             <div class="rit-side-item">

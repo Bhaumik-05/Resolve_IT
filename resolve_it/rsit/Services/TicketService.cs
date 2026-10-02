@@ -560,6 +560,10 @@ public class TicketService : ITicketService
                     ticketId);
 
 
+        // -----------------------------------------------------
+        // Verify ticket and ownership
+        // -----------------------------------------------------
+
         if (ticket == null ||
             ticket.EmployeeId != employeeId)
         {
@@ -593,16 +597,24 @@ public class TicketService : ITicketService
 
 
         // -----------------------------------------------------
-        // Update ticket
+        // Store old status
         // -----------------------------------------------------
 
         var oldStatus =
             ticket.Status;
 
 
+        // -----------------------------------------------------
+        // Update ticket status
+        // -----------------------------------------------------
+
         ticket.Status =
             TicketStatuses.Closed;
 
+
+        // -----------------------------------------------------
+        // Store closed date/time
+        // -----------------------------------------------------
 
         ticket.ClosedAt =
             DateTime.UtcNow;
@@ -635,6 +647,10 @@ public class TicketService : ITicketService
                         employeeId
                 });
 
+
+        // -----------------------------------------------------
+        // Save changes
+        // -----------------------------------------------------
 
         await _ticketRepository
             .SaveChangesAsync();
