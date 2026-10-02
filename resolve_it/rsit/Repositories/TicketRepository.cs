@@ -9,16 +9,19 @@ public class TicketRepository : ITicketRepository
 {
     private readonly ApplicationDbContext _context;
 
-    public TicketRepository(ApplicationDbContext context)
+    public TicketRepository(
+        ApplicationDbContext context)
     {
         _context = context;
     }
+
 
     // =========================================================
     // TICKET CREATION
     // =========================================================
 
-    public async Task AddTicketAsync(Ticket ticket)
+    public async Task AddTicketAsync(
+        Ticket ticket)
     {
         await _context.Tickets.AddAsync(ticket);
     }
@@ -28,11 +31,15 @@ public class TicketRepository : ITicketRepository
     // GET TICKET DETAILS
     // =========================================================
 
-    public async Task<Ticket?> GetTicketByIdAsync(int ticketId)
+    public async Task<Ticket?> GetTicketByIdAsync(
+        int ticketId)
     {
         return await _context.Tickets
+
             .Include(t => t.Category)
+
             .Include(t => t.Department)
+
             .Include(t => t.Employee)
 
             .Include(t => t.Attachments)
@@ -41,10 +48,12 @@ public class TicketRepository : ITicketRepository
                 .ThenInclude(a => a.Staff)
 
             .Include(t => t.History)
+                .ThenInclude(h => h.ChangedByUser)
 
             .Include(t => t.Feedback)
 
-            .FirstOrDefaultAsync(t => t.TicketId == ticketId);
+            .FirstOrDefaultAsync(
+                t => t.TicketId == ticketId);
     }
 
 
@@ -52,15 +61,24 @@ public class TicketRepository : ITicketRepository
     // GET EMPLOYEE TICKETS
     // =========================================================
 
-    public async Task<List<Ticket>> GetTicketsForEmployeeAsync(
-        int employeeId)
+    public async Task<List<Ticket>>
+        GetTicketsForEmployeeAsync(
+            int employeeId)
     {
         return await _context.Tickets
+
             .Include(t => t.Category)
+
             .Include(t => t.Department)
+
             .Include(t => t.Attachments)
-            .Where(t => t.EmployeeId == employeeId)
-            .OrderByDescending(t => t.CreatedAt)
+
+            .Where(t =>
+                t.EmployeeId == employeeId)
+
+            .OrderByDescending(
+                t => t.CreatedAt)
+
             .ToListAsync();
     }
 
@@ -69,18 +87,21 @@ public class TicketRepository : ITicketRepository
     // ATTACHMENTS
     // =========================================================
 
-    public async Task AddAttachmentAsync(Attachment attachment)
+    public async Task AddAttachmentAsync(
+        Attachment attachment)
     {
-        await _context.Attachments.AddAsync(attachment);
+        await _context.Attachments
+            .AddAsync(attachment);
     }
 
 
-    public async Task<Attachment?> GetAttachmentByIdAsync(
-        int attachmentId)
+    public async Task<Attachment?>
+        GetAttachmentByIdAsync(
+            int attachmentId)
     {
         return await _context.Attachments
-            .FirstOrDefaultAsync(a =>
-                a.AttachmentId == attachmentId);
+            .FirstOrDefaultAsync(
+                a => a.AttachmentId == attachmentId);
     }
 
 
@@ -88,11 +109,16 @@ public class TicketRepository : ITicketRepository
     // ACTIVE CATEGORIES
     // =========================================================
 
-    public async Task<List<Category>> GetActiveCategoriesAsync()
+    public async Task<List<Category>>
+        GetActiveCategoriesAsync()
     {
         return await _context.Categories
-            .Where(c => c.Status == RecordStatus.Active)
+
+            .Where(c =>
+                c.Status == RecordStatus.Active)
+
             .OrderBy(c => c.Name)
+
             .ToListAsync();
     }
 
@@ -101,12 +127,41 @@ public class TicketRepository : ITicketRepository
     // ACTIVE DEPARTMENTS
     // =========================================================
 
-    public async Task<List<Department>> GetActiveDepartmentsAsync()
+    public async Task<List<Department>>
+        GetActiveDepartmentsAsync()
     {
         return await _context.Departments
-            .Where(d => d.Status == RecordStatus.Active)
+
+            .Where(d =>
+                d.Status == RecordStatus.Active)
+
             .OrderBy(d => d.Name)
+
             .ToListAsync();
+    }
+
+
+    // =========================================================
+    // EMPLOYEE FEEDBACK
+    // =========================================================
+
+    public async Task AddFeedbackAsync(
+        Feedback feedback)
+    {
+        await _context.Feedbacks
+            .AddAsync(feedback);
+    }
+
+
+    // =========================================================
+    // TICKET HISTORY
+    // =========================================================
+
+    public async Task AddHistoryAsync(
+        TicketHistory history)
+    {
+        await _context.TicketHistories
+            .AddAsync(history);
     }
 
 

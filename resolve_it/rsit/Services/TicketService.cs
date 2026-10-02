@@ -12,7 +12,9 @@ public class TicketService : ITicketService
     private readonly IWebHostEnvironment _environment;
 
     private const int MaxAttachments = 5;
-    private const long MaxFileSize = 5 * 1024 * 1024; // 5 MB
+
+    private const long MaxFileSize =
+        5 * 1024 * 1024; // 5 MB
 
     private static readonly string[] AllowedExtensions =
     {
@@ -23,6 +25,7 @@ public class TicketService : ITicketService
         ".docx",
         ".xlsx"
     };
+
 
     public TicketService(
         ITicketRepository ticketRepository,
@@ -37,9 +40,11 @@ public class TicketService : ITicketService
     // CREATE TICKET MODEL
     // =========================================================
 
-    public async Task<CreateTicketViewModel> GetCreateTicketModelAsync()
+    public async Task<CreateTicketViewModel>
+        GetCreateTicketModelAsync()
     {
-        var model = new CreateTicketViewModel();
+        var model =
+            new CreateTicketViewModel();
 
         await LoadCreateTicketDataAsync(model);
 
@@ -54,13 +59,16 @@ public class TicketService : ITicketService
     public async Task LoadCreateTicketDataAsync(
         CreateTicketViewModel model)
     {
-        model.Priorities = TicketPriorities.All;
+        model.Priorities =
+            TicketPriorities.All;
 
         model.Categories =
-            await _ticketRepository.GetActiveCategoriesAsync();
+            await _ticketRepository
+                .GetActiveCategoriesAsync();
 
         model.Departments =
-            await _ticketRepository.GetActiveDepartmentsAsync();
+            await _ticketRepository
+                .GetActiveDepartmentsAsync();
     }
 
 
@@ -68,20 +76,24 @@ public class TicketService : ITicketService
     // CREATE TICKET
     // =========================================================
 
-    public async Task<TicketCreateResult> CreateTicketAsync(
-        CreateTicketViewModel model,
-        int employeeId)
+    public async Task<TicketCreateResult>
+        CreateTicketAsync(
+            CreateTicketViewModel model,
+            int employeeId)
     {
         // -----------------------------------------------------
         // Validate priority
         // -----------------------------------------------------
 
-        if (!TicketPriorities.All.Contains(model.Priority))
+        if (!TicketPriorities.All.Contains(
+                model.Priority))
         {
             return new TicketCreateResult
             {
                 Success = false,
-                Message = "Invalid ticket priority."
+
+                Message =
+                    "Invalid ticket priority."
             };
         }
 
@@ -91,18 +103,22 @@ public class TicketService : ITicketService
         // -----------------------------------------------------
 
         var categories =
-            await _ticketRepository.GetActiveCategoriesAsync();
+            await _ticketRepository
+                .GetActiveCategoriesAsync();
 
         var categoryExists =
             categories.Any(c =>
-                c.CategoryId == model.CategoryId);
+                c.CategoryId ==
+                model.CategoryId);
 
         if (!categoryExists)
         {
             return new TicketCreateResult
             {
                 Success = false,
-                Message = "Please select a valid category."
+
+                Message =
+                    "Please select a valid category."
             };
         }
 
@@ -112,18 +128,22 @@ public class TicketService : ITicketService
         // -----------------------------------------------------
 
         var departments =
-            await _ticketRepository.GetActiveDepartmentsAsync();
+            await _ticketRepository
+                .GetActiveDepartmentsAsync();
 
         var departmentExists =
             departments.Any(d =>
-                d.DepartmentId == model.DepartmentId);
+                d.DepartmentId ==
+                model.DepartmentId);
 
         if (!departmentExists)
         {
             return new TicketCreateResult
             {
                 Success = false,
-                Message = "Please select a valid department."
+
+                Message =
+                    "Please select a valid department."
             };
         }
 
@@ -132,13 +152,17 @@ public class TicketService : ITicketService
         // Validate attachments
         // -----------------------------------------------------
 
-        var attachments = model.Attachments ?? [];
+        var attachments =
+            model.Attachments ?? [];
 
-        if (attachments.Count > MaxAttachments)
+
+        if (attachments.Count >
+            MaxAttachments)
         {
             return new TicketCreateResult
             {
                 Success = false,
+
                 Message =
                     $"You can upload a maximum of {MaxAttachments} files."
             };
@@ -147,32 +171,41 @@ public class TicketService : ITicketService
 
         foreach (var file in attachments)
         {
-            if (file == null || file.Length == 0)
+            if (file == null ||
+                file.Length == 0)
             {
                 continue;
             }
 
+
             // File size
-            if (file.Length > MaxFileSize)
+            if (file.Length >
+                MaxFileSize)
             {
                 return new TicketCreateResult
                 {
                     Success = false,
+
                     Message =
                         $"The file '{file.FileName}' exceeds the 5 MB limit."
                 };
             }
 
+
             // File extension
             var extension =
-                Path.GetExtension(file.FileName)
+                Path.GetExtension(
+                    file.FileName)
                     .ToLowerInvariant();
 
-            if (!AllowedExtensions.Contains(extension))
+
+            if (!AllowedExtensions.Contains(
+                    extension))
             {
                 return new TicketCreateResult
                 {
                     Success = false,
+
                     Message =
                         $"The file type '{extension}' is not allowed."
                 };
@@ -186,28 +219,40 @@ public class TicketService : ITicketService
 
         var ticket = new Ticket
         {
-            Title = model.Title.Trim(),
+            Title =
+                model.Title.Trim(),
 
             Description =
                 model.Description.Trim(),
 
-            Priority = model.Priority,
+            Priority =
+                model.Priority,
 
-            Status = TicketStatuses.New,
+            Status =
+                TicketStatuses.New,
 
-            CreatedAt = DateTime.UtcNow,
+            CreatedAt =
+                DateTime.UtcNow,
 
-            EmployeeId = employeeId,
+            EmployeeId =
+                employeeId,
 
-            CategoryId = model.CategoryId,
+            CategoryId =
+                model.CategoryId,
 
-            DepartmentId = model.DepartmentId
+            DepartmentId =
+                model.DepartmentId
         };
 
-        await _ticketRepository.AddTicketAsync(ticket);
 
-        // Save first so SQL Server generates TicketId.
-        await _ticketRepository.SaveChangesAsync();
+        await _ticketRepository
+            .AddTicketAsync(ticket);
+
+
+        // Save first so SQL Server
+        // generates TicketId.
+        await _ticketRepository
+            .SaveChangesAsync();
 
 
         // -----------------------------------------------------
@@ -216,29 +261,34 @@ public class TicketService : ITicketService
 
         if (attachments.Count > 0)
         {
-            var uploadDirectory = Path.Combine(
-                _environment.WebRootPath,
-                "uploads",
-                "tickets",
-                ticket.TicketId.ToString());
+            var uploadDirectory =
+                Path.Combine(
+                    _environment.WebRootPath,
+                    "uploads",
+                    "tickets",
+                    ticket.TicketId.ToString());
 
-            Directory.CreateDirectory(uploadDirectory);
+
+            Directory.CreateDirectory(
+                uploadDirectory);
 
 
             foreach (var file in attachments)
             {
-                if (file == null || file.Length == 0)
+                if (file == null ||
+                    file.Length == 0)
                 {
                     continue;
                 }
 
+
                 var extension =
-                    Path.GetExtension(file.FileName)
+                    Path.GetExtension(
+                        file.FileName)
                         .ToLowerInvariant();
 
 
-                // Generate a safe storage filename.
-                // Original filename is NOT used for storage.
+                // Generate safe storage filename.
                 var storedFileName =
                     $"{Guid.NewGuid():N}{extension}";
 
@@ -250,49 +300,60 @@ public class TicketService : ITicketService
 
 
                 // Save physical file.
-                await using (var stream =
-                    new FileStream(
-                        physicalPath,
-                        FileMode.Create))
+                await using (
+                    var stream =
+                        new FileStream(
+                            physicalPath,
+                            FileMode.Create))
                 {
-                    await file.CopyToAsync(stream);
+                    await file.CopyToAsync(
+                        stream);
                 }
 
 
-                // Save attachment information in database.
-                var attachment = new Attachment
-                {
-                    FileName =
-                        Path.GetFileName(file.FileName),
+                // Save attachment information.
+                var attachment =
+                    new Attachment
+                    {
+                        FileName =
+                            Path.GetFileName(
+                                file.FileName),
 
-                    FilePath = Path.Combine(
-                        "uploads",
-                        "tickets",
-                        ticket.TicketId.ToString(),
-                        storedFileName),
+                        FilePath =
+                            Path.Combine(
+                                "uploads",
+                                "tickets",
+                                ticket.TicketId.ToString(),
+                                storedFileName),
 
-                    FileType =
-                        string.IsNullOrWhiteSpace(
-                            file.ContentType)
-                            ? "application/octet-stream"
-                            : file.ContentType,
+                        FileType =
+                            string.IsNullOrWhiteSpace(
+                                file.ContentType)
+                                ? "application/octet-stream"
+                                : file.ContentType,
 
-                    FileSize = file.Length,
+                        FileSize =
+                            file.Length,
 
-                    UploadedAt = DateTime.UtcNow,
+                        UploadedAt =
+                            DateTime.UtcNow,
 
-                    TicketId = ticket.TicketId,
+                        TicketId =
+                            ticket.TicketId,
 
-                    UploadedBy = employeeId
-                };
+                        UploadedBy =
+                            employeeId
+                    };
 
 
                 await _ticketRepository
-                    .AddAttachmentAsync(attachment);
+                    .AddAttachmentAsync(
+                        attachment);
             }
 
 
-            await _ticketRepository.SaveChangesAsync();
+            await _ticketRepository
+                .SaveChangesAsync();
         }
 
 
@@ -304,7 +365,8 @@ public class TicketService : ITicketService
         {
             Success = true,
 
-            TicketId = ticket.TicketId,
+            TicketId =
+                ticket.TicketId,
 
             Message =
                 $"Ticket #{ticket.TicketId} created successfully."
@@ -316,13 +378,15 @@ public class TicketService : ITicketService
     // GET TICKET DETAILS
     // =========================================================
 
-    public async Task<Ticket?> GetTicketDetailAsync(
-        int ticketId,
-        int employeeId)
+    public async Task<Ticket?>
+        GetTicketDetailAsync(
+            int ticketId,
+            int employeeId)
     {
         var ticket =
             await _ticketRepository
-                .GetTicketByIdAsync(ticketId);
+                .GetTicketByIdAsync(
+                    ticketId);
 
 
         if (ticket == null)
@@ -331,8 +395,10 @@ public class TicketService : ITicketService
         }
 
 
-        // Employee can only view their own tickets.
-        if (ticket.EmployeeId != employeeId)
+        // Employee can only view
+        // their own tickets.
+        if (ticket.EmployeeId !=
+            employeeId)
         {
             return null;
         }
@@ -346,11 +412,235 @@ public class TicketService : ITicketService
     // GET EMPLOYEE TICKETS
     // =========================================================
 
-    public async Task<List<Ticket>> GetTicketsForEmployeeAsync(
-        int employeeId)
+    public async Task<List<Ticket>>
+        GetTicketsForEmployeeAsync(
+            int employeeId)
     {
         return await _ticketRepository
-            .GetTicketsForEmployeeAsync(employeeId);
+            .GetTicketsForEmployeeAsync(
+                employeeId);
+    }
+
+
+    // =========================================================
+    // SUBMIT EMPLOYEE FEEDBACK
+    // =========================================================
+
+    public async Task<ServiceResult>
+        SubmitFeedbackAsync(
+            int ticketId,
+            int employeeId,
+            int rating,
+            string? comments)
+    {
+        // -----------------------------------------------------
+        // Validate rating
+        // -----------------------------------------------------
+
+        if (rating < 1 ||
+            rating > 5)
+        {
+            return ServiceResult.Failure(
+                "Please select a rating between 1 and 5.");
+        }
+
+
+        // -----------------------------------------------------
+        // Get ticket
+        // -----------------------------------------------------
+
+        var ticket =
+            await _ticketRepository
+                .GetTicketByIdAsync(
+                    ticketId);
+
+
+        if (ticket == null ||
+            ticket.EmployeeId != employeeId)
+        {
+            return ServiceResult.Failure(
+                "Ticket not found.");
+        }
+
+
+        // -----------------------------------------------------
+        // Feedback only after resolution
+        // -----------------------------------------------------
+
+        if (ticket.Status !=
+                TicketStatuses.Resolved &&
+            ticket.Status !=
+                TicketStatuses.Closed)
+        {
+            return ServiceResult.Failure(
+                "Feedback can only be submitted after the ticket is resolved.");
+        }
+
+
+        // -----------------------------------------------------
+        // Only one feedback per ticket
+        // -----------------------------------------------------
+
+        if (ticket.Feedback != null)
+        {
+            return ServiceResult.Failure(
+                "Feedback has already been submitted for this ticket.");
+        }
+
+
+        // -----------------------------------------------------
+        // Validate comments
+        // -----------------------------------------------------
+
+        if (!string.IsNullOrWhiteSpace(
+                comments) &&
+            comments.Trim().Length > 1000)
+        {
+            return ServiceResult.Failure(
+                "Feedback comments cannot exceed 1000 characters.");
+        }
+
+
+        // -----------------------------------------------------
+        // Create feedback
+        // -----------------------------------------------------
+
+        var feedback =
+            new Feedback
+            {
+                TicketId =
+                    ticket.TicketId,
+
+                EmployeeId =
+                    employeeId,
+
+                Rating =
+                    rating,
+
+                Comments =
+                    string.IsNullOrWhiteSpace(
+                        comments)
+                        ? string.Empty
+                        : comments.Trim(),
+
+                SubmittedAt =
+                    DateTime.UtcNow
+            };
+
+
+        await _ticketRepository
+            .AddFeedbackAsync(
+                feedback);
+
+
+        await _ticketRepository
+            .SaveChangesAsync();
+
+
+        return ServiceResult.Success();
+    }
+
+
+    // =========================================================
+    // CLOSE EMPLOYEE TICKET
+    // =========================================================
+
+    public async Task<ServiceResult>
+        CloseTicketAsync(
+            int ticketId,
+            int employeeId)
+    {
+        // -----------------------------------------------------
+        // Get ticket
+        // -----------------------------------------------------
+
+        var ticket =
+            await _ticketRepository
+                .GetTicketByIdAsync(
+                    ticketId);
+
+
+        if (ticket == null ||
+            ticket.EmployeeId != employeeId)
+        {
+            return ServiceResult.Failure(
+                "Ticket not found.");
+        }
+
+
+        // -----------------------------------------------------
+        // Already closed
+        // -----------------------------------------------------
+
+        if (ticket.Status ==
+            TicketStatuses.Closed)
+        {
+            return ServiceResult.Failure(
+                "This ticket is already closed.");
+        }
+
+
+        // -----------------------------------------------------
+        // Only resolved tickets can be closed
+        // -----------------------------------------------------
+
+        if (ticket.Status !=
+            TicketStatuses.Resolved)
+        {
+            return ServiceResult.Failure(
+                "Only resolved tickets can be closed.");
+        }
+
+
+        // -----------------------------------------------------
+        // Update ticket
+        // -----------------------------------------------------
+
+        var oldStatus =
+            ticket.Status;
+
+
+        ticket.Status =
+            TicketStatuses.Closed;
+
+
+        ticket.ClosedAt =
+            DateTime.UtcNow;
+
+
+        // -----------------------------------------------------
+        // Record closure in history
+        // -----------------------------------------------------
+
+        await _ticketRepository
+            .AddHistoryAsync(
+                new TicketHistory
+                {
+                    TicketId =
+                        ticket.TicketId,
+
+                    OldStatus =
+                        oldStatus,
+
+                    NewStatus =
+                        TicketStatuses.Closed,
+
+                    Remarks =
+                        "Ticket closed by employee.",
+
+                    ChangedAt =
+                        DateTime.UtcNow,
+
+                    ChangedBy =
+                        employeeId
+                });
+
+
+        await _ticketRepository
+            .SaveChangesAsync();
+
+
+        return ServiceResult.Success();
     }
 
 
@@ -358,7 +648,8 @@ public class TicketService : ITicketService
     // GET ACTIVE CATEGORIES
     // =========================================================
 
-    public async Task<List<Category>> GetActiveCategoriesAsync()
+    public async Task<List<Category>>
+        GetActiveCategoriesAsync()
     {
         return await _ticketRepository
             .GetActiveCategoriesAsync();
@@ -369,7 +660,8 @@ public class TicketService : ITicketService
     // GET ACTIVE DEPARTMENTS
     // =========================================================
 
-    public async Task<List<Department>> GetActiveDepartmentsAsync()
+    public async Task<List<Department>>
+        GetActiveDepartmentsAsync()
     {
         return await _ticketRepository
             .GetActiveDepartmentsAsync();
@@ -380,13 +672,15 @@ public class TicketService : ITicketService
     // GET ATTACHMENT
     // =========================================================
 
-    public async Task<Attachment?> GetAttachmentAsync(
-        int attachmentId,
-        int employeeId)
+    public async Task<Attachment?>
+        GetAttachmentAsync(
+            int attachmentId,
+            int employeeId)
     {
         var attachment =
             await _ticketRepository
-                .GetAttachmentByIdAsync(attachmentId);
+                .GetAttachmentByIdAsync(
+                    attachmentId);
 
 
         if (attachment == null)
@@ -395,7 +689,7 @@ public class TicketService : ITicketService
         }
 
 
-        // Get the ticket to verify ownership.
+        // Get ticket to verify ownership.
         var ticket =
             await _ticketRepository
                 .GetTicketByIdAsync(
@@ -408,9 +702,11 @@ public class TicketService : ITicketService
         }
 
 
-        // Employee can only access attachments
-        // belonging to their own ticket.
-        if (ticket.EmployeeId != employeeId)
+        // Employee can only access
+        // attachments belonging to
+        // their own ticket.
+        if (ticket.EmployeeId !=
+            employeeId)
         {
             return null;
         }
@@ -428,162 +724,54 @@ public class TicketService : ITicketService
         GetAttachmentFileAsync(
             Attachment attachment)
     {
-        // -----------------------------------------------------
-        // Check database path
-        // -----------------------------------------------------
-
         if (string.IsNullOrWhiteSpace(
                 attachment.FilePath))
         {
             return new AttachmentFileResult
             {
                 Success = false,
+
                 Message =
-                    "Attachment path is missing."
+                    "Attachment path is invalid."
             };
         }
 
 
-        // -----------------------------------------------------
-        // Normalize stored path
-        // -----------------------------------------------------
-
-        var storedPath =
-            attachment.FilePath.Trim();
-
-
-        storedPath = storedPath
-            .Replace(
-                '/',
-                Path.DirectorySeparatorChar)
-            .Replace(
-                '\\',
-                Path.DirectorySeparatorChar);
+        var relativePath =
+            attachment.FilePath
+                .Replace(
+                    '/',
+                    Path.DirectorySeparatorChar);
 
 
-        // -----------------------------------------------------
-        // Get wwwroot path
-        // -----------------------------------------------------
-
-        var webRootPath =
-            Path.GetFullPath(
-                _environment.WebRootPath);
+        var physicalPath =
+            Path.Combine(
+                _environment.WebRootPath,
+                relativePath);
 
 
-        string physicalPath;
-
-
-        // -----------------------------------------------------
-        // Handle old/new path formats
-        // -----------------------------------------------------
-
-        /*
-         * New records:
-         *
-         * uploads/tickets/5/file.jpg
-         *
-         * Old records may contain:
-         *
-         * /uploads/tickets/5/file.jpg
-         *
-         * wwwroot/uploads/tickets/5/file.jpg
-         *
-         * D:\...\wwwroot\uploads\tickets\5\file.jpg
-         */
-
-
-        // Remove leading slash/backslash.
-        storedPath = storedPath.TrimStart(
-            Path.DirectorySeparatorChar,
-            Path.AltDirectorySeparatorChar);
-
-
-        // Remove "wwwroot\" if it exists.
-        var webRootPrefix =
-            "wwwroot" +
-            Path.DirectorySeparatorChar;
-
-
-        if (storedPath.StartsWith(
-                webRootPrefix,
-                StringComparison.OrdinalIgnoreCase))
-        {
-            storedPath =
-                storedPath.Substring(
-                    webRootPrefix.Length);
-        }
-
-
-        // -----------------------------------------------------
-        // Resolve physical path
-        // -----------------------------------------------------
-
-        if (Path.IsPathFullyQualified(
-                storedPath))
-        {
-            // Old absolute path.
-            physicalPath =
-                Path.GetFullPath(
-                    storedPath);
-        }
-        else
-        {
-            // Normal relative path.
-            physicalPath =
-                Path.GetFullPath(
-                    Path.Combine(
-                        webRootPath,
-                        storedPath));
-        }
-
-
-        // -----------------------------------------------------
-        // Security check
-        // -----------------------------------------------------
-
-        var webRootWithSeparator =
-            webRootPath.TrimEnd(
-                Path.DirectorySeparatorChar,
-                Path.AltDirectorySeparatorChar)
-            + Path.DirectorySeparatorChar;
-
-
-        if (!physicalPath.StartsWith(
-                webRootWithSeparator,
-                StringComparison.OrdinalIgnoreCase))
+        if (!File.Exists(
+                physicalPath))
         {
             return new AttachmentFileResult
             {
                 Success = false,
-                Message =
-                    "Invalid attachment path."
-            };
-        }
 
-
-        // -----------------------------------------------------
-        // Check whether file exists
-        // -----------------------------------------------------
-
-        if (!File.Exists(physicalPath))
-        {
-            return new AttachmentFileResult
-            {
-                Success = false,
                 Message =
                     "Attachment file was not found."
             };
         }
 
 
-        // -----------------------------------------------------
-        // Return physical path
-        // -----------------------------------------------------
-
         return new AttachmentFileResult
         {
             Success = true,
-            PhysicalPath = physicalPath
+
+            PhysicalPath =
+                physicalPath,
+
+            Message =
+                "Attachment loaded successfully."
         };
     }
 }

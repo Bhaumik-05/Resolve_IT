@@ -18,6 +18,22 @@
 
     <div class="container rit-details-container">
 
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success" role="alert">
+                <i class="bi bi-check-circle me-2"></i>
+                @TempData["SuccessMessage"]
+            </div>
+        }
+
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="alert alert-danger" role="alert">
+                <i class="bi bi-exclamation-triangle me-2"></i>
+                @TempData["ErrorMessage"]
+            </div>
+        }
+
         <!-- =====================================================
              BREADCRUMB
              ===================================================== -->
@@ -65,6 +81,31 @@
 
 
             <div class="rit-header-actions">
+
+                @if (Model.Status == rsit.Models.TicketStatuses.Resolved)
+                {
+                    <form asp-action="Close"
+                          method="post"
+                          class="d-inline"
+                          onsubmit="return confirm('Are you sure you want to close this ticket?');">
+
+                        @Html.AntiForgeryToken()
+
+                        <input type="hidden"
+                               name="id"
+                               value="@Model.TicketId" />
+
+                        <button type="submit"
+                                class="rit-header-btn">
+
+                            <i class="bi bi-check2-circle"></i>
+
+                            Close Ticket
+
+                        </button>
+
+                    </form>
+                }
 
                 <a asp-action="Create"
                    class="rit-header-btn">
@@ -612,15 +653,17 @@
 
 
                 <!-- =================================================
-                     FEEDBACK
-                     ================================================= -->
+     FEEDBACK
+     ================================================= -->
 
                 <section class="rit-card">
 
                     <div class="rit-card-header">
 
                         <div class="rit-card-icon">
+
                             <i class="bi bi-star"></i>
+
                         </div>
 
                         <div class="rit-card-heading">
@@ -630,7 +673,7 @@
                             </h2>
 
                             <p>
-                                Employee feedback for this ticket
+                                Your feedback for this support request
                             </p>
 
                         </div>
@@ -642,6 +685,10 @@
 
                         @if (Model.Feedback != null)
                         {
+                            <!-- =============================================
+                 FEEDBACK ALREADY SUBMITTED
+                 ============================================= -->
+
                             <div class="rit-feedback-rating">
 
                                 @for (var i = 1;
@@ -660,6 +707,7 @@
 
                             </div>
 
+
                             @if (!string.IsNullOrWhiteSpace(
                                 Model.Feedback.Comments))
                             {
@@ -669,13 +717,130 @@
 
                                 </div>
                             }
+
+
+                            <div class="text-muted small mt-2">
+
+                                Submitted
+                                @Model.Feedback.SubmittedAt
+                                .ToLocalTime()
+                                .ToString(
+                                "dd MMM yyyy, hh:mm tt")
+
+                            </div>
+                        }
+                        else if (
+                            Model.Status ==
+                                rsit.Models.TicketStatuses.Resolved ||
+                            Model.Status ==
+                                rsit.Models.TicketStatuses.Closed)
+                        {
+                            <!-- =============================================
+                 SUBMIT FEEDBACK
+                 ============================================= -->
+
+                            <form asp-action="SubmitFeedback"
+                                  method="post">
+
+                                @Html.AntiForgeryToken()
+
+
+                                <input type="hidden"
+                                       name="ticketId"
+                                       value="@Model.TicketId" />
+
+
+                                <!-- RATING -->
+
+                                <div class="mb-3">
+
+                                    <label for="rating"
+                                           class="form-label">
+
+                                        Rating
+
+                                    </label>
+
+
+                                    <select id="rating"
+                                            name="rating"
+                                            class="form-select"
+                                            required>
+
+                                        <option value="">
+                                            Select a rating
+                                        </option>
+
+                                        <option value="5">
+                                            5 - Excellent
+                                        </option>
+
+                                        <option value="4">
+                                            4 - Good
+                                        </option>
+
+                                        <option value="3">
+                                            3 - Average
+                                        </option>
+
+                                        <option value="2">
+                                            2 - Poor
+                                        </option>
+
+                                        <option value="1">
+                                            1 - Very poor
+                                        </option>
+
+                                    </select>
+
+                                </div>
+
+
+                                <!-- COMMENTS -->
+
+                                <div class="mb-3">
+
+                                    <label for="comments"
+                                           class="form-label">
+
+                                        Comments
+
+                                        <span class="text-muted">
+                                            (optional)
+                                        </span>
+
+                                    </label>
+
+
+                                    <textarea id="comments"
+                                              name="comments"
+                                              class="form-control"
+                                              rows="4"
+                                              maxlength="1000"
+                                              placeholder="Tell us about your support experience..."></textarea>
+
+                                </div>
+
+
+                                <!-- SUBMIT -->
+
+                                <button type="submit"
+                                        class="btn btn-primary">
+
+                                    <i class="bi bi-star me-1"></i>
+
+                                    Submit Feedback
+
+                                </button>
+
+                            </form>
                         }
                         else
                         {
                             <div class="rit-empty">
 
-                                No feedback has been submitted
-                                for this ticket yet.
+                                Feedback can be submitted after
+                                the ticket is resolved.
 
                             </div>
                         }

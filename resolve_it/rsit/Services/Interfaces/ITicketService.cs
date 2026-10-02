@@ -1,4 +1,5 @@
 ﻿using rsit.Models;
+using rsit.Services;
 using rsit.ViewModels;
 
 namespace rsit.Services.Interfaces;
@@ -33,6 +34,26 @@ public interface ITicketService
     // =========================================================
 
     Task<List<Ticket>> GetTicketsForEmployeeAsync(
+        int employeeId);
+
+
+    // =========================================================
+    // EMPLOYEE FEEDBACK
+    // =========================================================
+
+    Task<ServiceResult> SubmitFeedbackAsync(
+        int ticketId,
+        int employeeId,
+        int rating,
+        string? comments);
+
+
+    // =========================================================
+    // EMPLOYEE TICKET CLOSURE
+    // =========================================================
+
+    Task<ServiceResult> CloseTicketAsync(
+        int ticketId,
         int employeeId);
 
 

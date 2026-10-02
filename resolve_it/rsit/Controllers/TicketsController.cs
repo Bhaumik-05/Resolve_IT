@@ -202,11 +202,113 @@ public class TicketsController : Controller
             enableRangeProcessing: true);
     }
 
+
+    // =========================================================
+    // SUBMIT FEEDBACK
+    // =========================================================
+
+    // POST: /Tickets/SubmitFeedback
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> SubmitFeedback(
+        int ticketId,
+        int rating,
+        string? comments)
+    {
+        var user =
+            await _userManager.GetUserAsync(User);
+
+        if (user == null)
+        {
+            return Challenge();
+        }
+
+        var result =
+            await _ticketService.SubmitFeedbackAsync(
+                ticketId,
+                user.Id,
+                rating,
+                comments);
+
+        if (!result.Succeeded)
+        {
+            TempData["ErrorMessage"] =
+                result.Errors.FirstOrDefault()
+                ?? "Unable to submit feedback.";
+
+            return RedirectToAction(
+                nameof(Details),
+                new
+                {
+                    id = ticketId
+                });
+        }
+
+        TempData["SuccessMessage"] =
+            "Thank you. Your feedback has been submitted successfully.";
+
+        return RedirectToAction(
+            nameof(Details),
+            new
+            {
+                id = ticketId
+            });
+    }
+
+
+    // =========================================================
+    // CLOSE TICKET
+    // =========================================================
+
+    // POST: /Tickets/Close
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Close(int id)
+    {
+        var user =
+            await _userManager.GetUserAsync(User);
+
+        if (user == null)
+        {
+            return Challenge();
+        }
+
+        var result =
+            await _ticketService.CloseTicketAsync(
+                id,
+                user.Id);
+
+        if (!result.Succeeded)
+        {
+            TempData["ErrorMessage"] =
+                result.Errors.FirstOrDefault()
+                ?? "Unable to close the ticket.";
+        }
+        else
+        {
+            TempData["SuccessMessage"] =
+                "Ticket closed successfully.";
+        }
+
+        return RedirectToAction(
+            nameof(Details),
+            new
+            {
+                id
+            });
+    }
+
+
+    // =========================================================
+    // MY TICKETS
+    // =========================================================
+
     // GET: /Tickets/MyTickets
     [HttpGet]
     public async Task<IActionResult> MyTickets()
     {
-        var user = await _userManager.GetUserAsync(User);
+        var user =
+            await _userManager.GetUserAsync(User);
 
         if (user == null)
         {
@@ -214,13 +316,14 @@ public class TicketsController : Controller
         }
 
         var tickets =
-            await _ticketService.GetTicketsForEmployeeAsync(
-                user.Id);
+            await _ticketService
+                .GetTicketsForEmployeeAsync(user.Id);
 
-        var model = new MyTicketsViewModel
-        {
-            Tickets = tickets
-        };
+        var model =
+            new MyTicketsViewModel
+            {
+                Tickets = tickets
+            };
 
         return View(model);
     }
