@@ -17,9 +17,17 @@
              ===================================================== -->
 
         <div class="rit-breadcrumb">
-            <span>Helpdesk</span>
+
+            <span>
+                Helpdesk
+            </span>
+
             <i class="bi bi-chevron-right"></i>
-            <span class="active">Dashboard</span>
+
+            <span class="active">
+                Dashboard
+            </span>
+
         </div>
 
 
@@ -42,9 +50,13 @@
 
             </div>
 
+
             <div class="rit-page-badge">
+
                 <i class="bi bi-shield-check"></i>
+
                 Internal IT Helpdesk
+
             </div>
 
         </div>
@@ -57,8 +69,11 @@
         <div class="rit-employee-card">
 
             <div class="rit-employee-icon">
+
                 <i class="bi bi-person"></i>
+
             </div>
+
 
             <div class="rit-employee-info">
 
@@ -72,7 +87,9 @@
 
             </div>
 
+
             <div class="rit-employee-divider"></div>
+
 
             <div class="rit-employee-info">
 
@@ -86,7 +103,9 @@
 
             </div>
 
+
             <div class="rit-employee-divider"></div>
+
 
             <div class="rit-employee-info">
 
@@ -126,12 +145,17 @@
 
             <div class="rit-stat-grid">
 
-                <!-- Total -->
+
+                <!-- =================================================
+                     TOTAL
+                     ================================================= -->
 
                 <div class="rit-stat-card">
 
                     <div class="rit-stat-icon">
+
                         <i class="bi bi-ticket-detailed"></i>
+
                     </div>
 
                     <div class="rit-stat-content">
@@ -149,12 +173,16 @@
                 </div>
 
 
-                <!-- New -->
+                <!-- =================================================
+                     NEW
+                     ================================================= -->
 
                 <div class="rit-stat-card">
 
                     <div class="rit-stat-icon">
+
                         <i class="bi bi-file-earmark-plus"></i>
+
                     </div>
 
                     <div class="rit-stat-content">
@@ -172,12 +200,16 @@
                 </div>
 
 
-                <!-- Assigned -->
+                <!-- =================================================
+                     ASSIGNED
+                     ================================================= -->
 
                 <div class="rit-stat-card">
 
                     <div class="rit-stat-icon">
+
                         <i class="bi bi-person-check"></i>
+
                     </div>
 
                     <div class="rit-stat-content">
@@ -195,12 +227,16 @@
                 </div>
 
 
-                <!-- In Progress -->
+                <!-- =================================================
+                     IN PROGRESS
+                     ================================================= -->
 
                 <div class="rit-stat-card">
 
                     <div class="rit-stat-icon">
+
                         <i class="bi bi-hourglass-split"></i>
+
                     </div>
 
                     <div class="rit-stat-content">
@@ -218,12 +254,16 @@
                 </div>
 
 
-                <!-- Resolved -->
+                <!-- =================================================
+                     RESOLVED
+                     ================================================= -->
 
                 <div class="rit-stat-card">
 
                     <div class="rit-stat-icon">
+
                         <i class="bi bi-check2-circle"></i>
+
                     </div>
 
                     <div class="rit-stat-content">
@@ -241,12 +281,16 @@
                 </div>
 
 
-                <!-- Closed -->
+                <!-- =================================================
+                     CLOSED
+                     ================================================= -->
 
                 <div class="rit-stat-card">
 
                     <div class="rit-stat-icon">
+
                         <i class="bi bi-check2-square"></i>
+
                     </div>
 
                     <div class="rit-stat-content">
@@ -283,6 +327,9 @@
 
                 <div class="rit-side-card">
 
+
+                    <!-- LIST HEADER -->
+
                     <div class="rit-side-header">
 
                         <div>
@@ -297,15 +344,21 @@
 
                         </div>
 
+
                         <a asp-controller="Tickets"
-                           asp-action="Index"
+                           asp-action="MyTickets"
                            class="rit-view-all">
+
                             View all
+
                             <i class="bi bi-arrow-right"></i>
+
                         </a>
 
                     </div>
 
+
+                    <!-- TICKET LIST -->
 
                     <div class="rit-ticket-list">
 
@@ -313,11 +366,20 @@
                         {
                             foreach (var ticket in Model.RecentTickets)
                             {
+
                                 <div class="rit-ticket-row">
 
+
+                                    <!-- TICKET NUMBER -->
+
                                     <div class="rit-ticket-number">
+
                                         #@ticket.TicketId
+
                                     </div>
+
+
+                                    <!-- TICKET DETAILS -->
 
                                     <div class="rit-ticket-details">
 
@@ -326,22 +388,39 @@
                                         </strong>
 
                                         <span>
+
                                             @ticket.CategoryName
+
                                             <i class="bi bi-dot"></i>
+
                                             @ticket.CreatedAt.ToString("dd MMM yyyy")
+
                                         </span>
 
                                     </div>
 
+
+                                    <!-- PRIORITY -->
+
                                     <div class="rit-ticket-priority">
+
                                         @ticket.Priority
+
                                     </div>
 
+
+                                    <!-- STATUS -->
+
                                     <div class="rit-ticket-status">
+
                                         <span>
                                             @ticket.Status
                                         </span>
+
                                     </div>
+
+
+                                    <!-- VIEW -->
 
                                     <a asp-controller="Tickets"
                                        asp-action="Details"
@@ -354,14 +433,20 @@
                                     </a>
 
                                 </div>
+
                             }
                         }
                         else
                         {
+
+                            <!-- EMPTY STATE -->
+
                             <div class="rit-empty-state">
 
                                 <div class="rit-empty-icon">
+
                                     <i class="bi bi-ticket"></i>
+
                                 </div>
 
                                 <strong>
@@ -373,6 +458,7 @@
                                 </span>
 
                             </div>
+
                         }
 
                     </div>
@@ -389,7 +475,9 @@
             <aside class="rit-dashboard-sidebar">
 
 
-                <!-- Quick Actions -->
+                <!-- =================================================
+                     QUICK ACTIONS
+                     ================================================= -->
 
                 <div class="rit-side-card">
 
@@ -401,15 +489,22 @@
 
                     </div>
 
+
                     <div class="rit-side-body">
+
+
+                        <!-- CREATE TICKET -->
 
                         <a asp-controller="Tickets"
                            asp-action="Create"
                            class="rit-action-button">
 
                             <div class="rit-action-icon">
+
                                 <i class="bi bi-plus-lg"></i>
+
                             </div>
+
 
                             <div>
 
@@ -423,18 +518,24 @@
 
                             </div>
 
+
                             <i class="bi bi-chevron-right"></i>
 
                         </a>
 
 
+                        <!-- MY TICKETS -->
+
                         <a asp-controller="Tickets"
-                           asp-action="Index"
+                           asp-action="MyTickets"
                            class="rit-action-button">
 
                             <div class="rit-action-icon">
+
                                 <i class="bi bi-list-ul"></i>
+
                             </div>
+
 
                             <div>
 
@@ -448,6 +549,7 @@
 
                             </div>
 
+
                             <i class="bi bi-chevron-right"></i>
 
                         </a>
@@ -457,7 +559,9 @@
                 </div>
 
 
-                <!-- Ticket Workflow -->
+                <!-- =================================================
+                     TICKET WORKFLOW
+                     ================================================= -->
 
                 <div class="rit-side-card">
 
@@ -469,9 +573,13 @@
 
                     </div>
 
+
                     <div class="rit-side-body">
 
                         <div class="rit-mini-workflow">
+
+
+                            <!-- STEP 1 -->
 
                             <div class="rit-mini-workflow-item">
 
@@ -480,12 +588,21 @@
                                 </div>
 
                                 <div>
-                                    <strong>New</strong>
-                                    <span>Request submitted</span>
+
+                                    <strong>
+                                        New
+                                    </strong>
+
+                                    <span>
+                                        Request submitted
+                                    </span>
+
                                 </div>
 
                             </div>
 
+
+                            <!-- STEP 2 -->
 
                             <div class="rit-mini-workflow-item">
 
@@ -494,12 +611,21 @@
                                 </div>
 
                                 <div>
-                                    <strong>Assigned</strong>
-                                    <span>Support staff assigned</span>
+
+                                    <strong>
+                                        Assigned
+                                    </strong>
+
+                                    <span>
+                                        Support staff assigned
+                                    </span>
+
                                 </div>
 
                             </div>
 
+
+                            <!-- STEP 3 -->
 
                             <div class="rit-mini-workflow-item">
 
@@ -508,12 +634,21 @@
                                 </div>
 
                                 <div>
-                                    <strong>In progress</strong>
-                                    <span>Issue is being investigated</span>
+
+                                    <strong>
+                                        In progress
+                                    </strong>
+
+                                    <span>
+                                        Issue is being investigated
+                                    </span>
+
                                 </div>
 
                             </div>
 
+
+                            <!-- STEP 4 -->
 
                             <div class="rit-mini-workflow-item">
 
@@ -522,12 +657,21 @@
                                 </div>
 
                                 <div>
-                                    <strong>Resolved</strong>
-                                    <span>Resolution provided</span>
+
+                                    <strong>
+                                        Resolved
+                                    </strong>
+
+                                    <span>
+                                        Resolution provided
+                                    </span>
+
                                 </div>
 
                             </div>
 
+
+                            <!-- STEP 5 -->
 
                             <div class="rit-mini-workflow-item">
 
@@ -536,8 +680,15 @@
                                 </div>
 
                                 <div>
-                                    <strong>Closed</strong>
-                                    <span>Request completed</span>
+
+                                    <strong>
+                                        Closed
+                                    </strong>
+
+                                    <span>
+                                        Request completed
+                                    </span>
+
                                 </div>
 
                             </div>
@@ -549,14 +700,18 @@
                 </div>
 
 
-                <!-- Helpdesk Information -->
+                <!-- =================================================
+                     HELPDESK INFORMATION
+                     ================================================= -->
 
                 <div class="rit-info-box">
 
                     <div class="rit-info-box-top">
 
                         <div class="rit-info-box-icon">
+
                             <i class="bi bi-info-circle"></i>
+
                         </div>
 
                         <strong>
@@ -565,6 +720,7 @@
 
                     </div>
 
+
                     <p>
                         Include screenshots, error messages, and clear
                         descriptions when submitting a ticket. This helps
@@ -572,6 +728,7 @@
                     </p>
 
                 </div>
+
 
             </aside>
 

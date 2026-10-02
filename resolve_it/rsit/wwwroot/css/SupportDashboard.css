@@ -1,0 +1,739 @@
+﻿/* ============================================================
+   RESOLVEIT SUPPORT DASHBOARD
+   Internal IT Helpdesk Theme
+   ============================================================ */
+
+.rit-support-page {
+    min-height: calc(100vh - 66px);
+    padding: 32px 0 60px;
+    background: #f7f8fa;
+}
+
+.rit-support-container {
+    max-width: 1400px;
+}
+
+
+/* ============================================================
+   BREADCRUMB
+   ============================================================ */
+
+.rit-support-breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    margin-bottom: 18px;
+    color: #7a8088;
+    font-size: 13px;
+}
+
+    .rit-support-breadcrumb i {
+        color: #a7adb5;
+        font-size: 10px;
+    }
+
+    .rit-support-breadcrumb .active {
+        color: #252a31;
+        font-weight: 600;
+    }
+
+
+/* ============================================================
+   PAGE HEADER
+   ============================================================ */
+
+.rit-support-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 30px;
+    margin-bottom: 28px;
+}
+
+    .rit-support-header h1 {
+        margin: 0 0 8px;
+        color: #1f242a;
+        font-size: 31px;
+        line-height: 1.2;
+        font-weight: 700;
+        letter-spacing: -0.5px;
+    }
+
+    .rit-support-header p {
+        max-width: 700px;
+        margin: 0;
+        color: #747b84;
+        font-size: 14px;
+        line-height: 1.7;
+    }
+
+.rit-support-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    border: 1px solid #dfe3e7;
+    border-radius: 7px;
+    background: #ffffff;
+    color: #555c65;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+
+/* ============================================================
+   STAFF INFORMATION
+   ============================================================ */
+
+.rit-staff-card {
+    display: flex;
+    align-items: center;
+    min-height: 88px;
+    padding: 20px 24px;
+    margin-bottom: 34px;
+    background: #ffffff;
+    border: 1px solid #dfe3e7;
+    border-radius: 8px;
+}
+
+.rit-staff-avatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 46px;
+    height: 46px;
+    margin-right: 17px;
+    border: 1px solid #d9dde2;
+    border-radius: 7px;
+    background: #f7f8fa;
+    color: #454c54;
+    font-size: 19px;
+}
+
+.rit-staff-detail {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 150px;
+}
+
+    .rit-staff-detail span {
+        color: #8a9098;
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .rit-staff-detail strong {
+        color: #242930;
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+.rit-staff-divider {
+    width: 1px;
+    height: 38px;
+    margin: 0 28px;
+    background: #e5e8eb;
+}
+
+
+/* ============================================================
+   SECTION
+   ============================================================ */
+
+.rit-support-section {
+    margin-bottom: 30px;
+}
+
+.rit-support-section-heading {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.rit-support-section-line {
+    width: 3px;
+    height: 19px;
+    border-radius: 2px;
+    background: #3f464e;
+}
+
+.rit-support-section-heading h3 {
+    margin: 0;
+    color: #272c32;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.rit-support-section-heading span {
+    margin-left: 4px;
+    color: #92979e;
+    font-size: 11px;
+}
+
+
+/* ============================================================
+   STATISTICS
+   ============================================================ */
+
+.rit-support-stat-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+}
+
+.rit-support-stat {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    min-height: 92px;
+    padding: 16px;
+    background: #ffffff;
+    border: 1px solid #dfe3e7;
+    border-radius: 8px;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+    .rit-support-stat:hover {
+        border-color: #cbd0d6;
+        box-shadow: 0 4px 14px rgba(30, 35, 40, 0.05);
+    }
+
+.rit-support-stat-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 38px;
+    height: 38px;
+    border: 1px solid #e0e3e7;
+    border-radius: 6px;
+    background: #f8f9fa;
+    color: #525962;
+    font-size: 16px;
+}
+
+.rit-support-stat > div:last-child {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.rit-support-stat span {
+    color: #858b93;
+    font-size: 11px;
+    white-space: nowrap;
+}
+
+.rit-support-stat strong {
+    color: #252a30;
+    font-size: 22px;
+    line-height: 1;
+    font-weight: 700;
+}
+
+
+/* ============================================================
+   CRITICAL
+   ============================================================ */
+
+.rit-critical-stat {
+    border-color: #d8dadd;
+}
+
+    .rit-critical-stat .rit-support-stat-icon {
+        color: #555b62;
+    }
+
+
+/* ============================================================
+   MAIN GRID
+   ============================================================ */
+
+.rit-support-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 340px;
+    gap: 18px;
+    align-items: start;
+}
+
+.rit-support-main {
+    min-width: 0;
+}
+
+.rit-support-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+
+/* ============================================================
+   CARD
+   ============================================================ */
+
+.rit-support-card {
+    overflow: hidden;
+    background: #ffffff;
+    border: 1px solid #dfe3e7;
+    border-radius: 8px;
+}
+
+.rit-support-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    padding: 17px 19px;
+    border-bottom: 1px solid #e7e9ec;
+}
+
+    .rit-support-card-header h3 {
+        margin: 0;
+        color: #292e35;
+        font-size: 14px;
+        font-weight: 700;
+    }
+
+    .rit-support-card-header p {
+        margin: 4px 0 0;
+        color: #8a9097;
+        font-size: 11px;
+    }
+
+.rit-ticket-count {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 27px;
+    height: 27px;
+    padding: 0 7px;
+    border: 1px solid #dfe3e7;
+    border-radius: 5px;
+    background: #f8f9fa;
+    color: #626971;
+    font-size: 10px;
+    font-weight: 700;
+}
+
+
+/* ============================================================
+   TICKET LIST
+   ============================================================ */
+
+.rit-support-ticket-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.rit-support-ticket {
+    display: grid;
+    grid-template-columns: 55px minmax(0, 1fr) 75px 100px 60px 28px;
+    align-items: center;
+    gap: 12px;
+    min-height: 73px;
+    padding: 11px 17px;
+    border-bottom: 1px solid #eceef0;
+    transition: background 0.15s ease;
+}
+
+    .rit-support-ticket:last-child {
+        border-bottom: none;
+    }
+
+    .rit-support-ticket:hover {
+        background: #fafbfc;
+    }
+
+.rit-support-ticket-id {
+    color: #777e86;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.rit-support-ticket-main {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    gap: 5px;
+}
+
+    .rit-support-ticket-main strong {
+        overflow: hidden;
+        color: #292e34;
+        font-size: 13px;
+        font-weight: 600;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .rit-support-ticket-main span {
+        overflow: hidden;
+        color: #8a9098;
+        font-size: 10px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+        .rit-support-ticket-main span i {
+            font-size: 12px;
+        }
+
+.rit-support-priority {
+    color: #686f77;
+    font-size: 10px;
+    font-weight: 600;
+}
+
+.rit-support-status span {
+    display: inline-block;
+    padding: 5px 8px;
+    border: 1px solid #dfe3e7;
+    border-radius: 5px;
+    background: #f8f9fa;
+    color: #60676f;
+    font-size: 10px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.rit-support-date {
+    color: #92979e;
+    font-size: 10px;
+}
+
+.rit-support-view {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 27px;
+    height: 27px;
+    border: 1px solid #e0e3e6;
+    border-radius: 5px;
+    color: #777e86;
+    text-decoration: none;
+}
+
+    .rit-support-view:hover {
+        background: #f4f5f6;
+        color: #252a30;
+    }
+
+    .rit-support-view i {
+        font-size: 10px;
+    }
+
+
+/* ============================================================
+   EMPTY
+   ============================================================ */
+
+.rit-support-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 55px 20px;
+    text-align: center;
+}
+
+.rit-support-empty-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    margin-bottom: 13px;
+    border: 1px solid #dfe3e7;
+    border-radius: 7px;
+    background: #f8f9fa;
+    color: #747b83;
+    font-size: 19px;
+}
+
+.rit-support-empty strong {
+    margin-bottom: 5px;
+    color: #333940;
+    font-size: 13px;
+}
+
+.rit-support-empty span {
+    color: #8a9097;
+    font-size: 11px;
+}
+
+
+/* ============================================================
+   QUICK ACTIONS
+   ============================================================ */
+
+.rit-support-actions {
+    padding: 12px;
+}
+
+.rit-support-action {
+    display: grid;
+    grid-template-columns: 36px minmax(0, 1fr) 12px;
+    align-items: center;
+    gap: 11px;
+    padding: 12px;
+    border: 1px solid #e1e4e7;
+    border-radius: 6px;
+    color: inherit;
+    text-decoration: none;
+    transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+    .rit-support-action + .rit-support-action {
+        margin-top: 9px;
+    }
+
+    .rit-support-action:hover {
+        background: #fafbfc;
+        border-color: #cfd4d9;
+    }
+
+.rit-support-action-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border: 1px solid #dfe3e7;
+    border-radius: 6px;
+    background: #f7f8f9;
+    color: #50575f;
+}
+
+.rit-support-action div:nth-child(2) {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.rit-support-action strong {
+    color: #30353b;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.rit-support-action span {
+    color: #92979e;
+    font-size: 10px;
+}
+
+.rit-support-action > i {
+    color: #a0a5ab;
+    font-size: 9px;
+}
+
+
+/* ============================================================
+   WORKFLOW
+   ============================================================ */
+
+.rit-support-workflow {
+    padding: 13px 17px;
+}
+
+.rit-support-step {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    padding: 9px 0;
+}
+
+    .rit-support-step:not(:last-child)::after {
+        content: "";
+        position: absolute;
+        left: 14px;
+        top: 38px;
+        width: 1px;
+        height: 18px;
+        background: #dfe3e7;
+    }
+
+.rit-support-step-number {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 29px;
+    height: 29px;
+    border: 1px solid #dce0e4;
+    border-radius: 50%;
+    background: #ffffff;
+    color: #626971;
+    font-size: 10px;
+    font-weight: 700;
+}
+
+.rit-support-step > div:last-child {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.rit-support-step strong {
+    color: #363c43;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.rit-support-step span {
+    color: #92979e;
+    font-size: 10px;
+}
+
+
+/* ============================================================
+   INFO BOX
+   ============================================================ */
+
+.rit-support-info {
+    padding: 16px;
+    border: 1px solid #dfe3e7;
+    border-radius: 8px;
+    background: #ffffff;
+}
+
+.rit-support-info-header {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    margin-bottom: 9px;
+}
+
+.rit-support-info-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border: 1px solid #dfe3e7;
+    border-radius: 5px;
+    background: #f7f8fa;
+    color: #5c636b;
+    font-size: 13px;
+}
+
+.rit-support-info strong {
+    color: #3b4148;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.rit-support-info p {
+    margin: 0;
+    color: #858b93;
+    font-size: 10px;
+    line-height: 1.7;
+}
+
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+
+@media (max-width: 1200px) {
+
+    .rit-support-stat-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .rit-support-grid {
+        grid-template-columns: minmax(0, 1fr) 300px;
+    }
+}
+
+
+@media (max-width: 992px) {
+
+    .rit-support-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .rit-support-sidebar {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        align-items: start;
+    }
+
+        .rit-support-sidebar .rit-support-info {
+            grid-column: 1 / -1;
+        }
+}
+
+
+@media (max-width: 768px) {
+
+    .rit-support-page {
+        padding: 24px 0 45px;
+    }
+
+    .rit-support-header {
+        flex-direction: column;
+    }
+
+        .rit-support-header h1 {
+            font-size: 26px;
+        }
+
+    .rit-staff-card {
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+
+    .rit-staff-divider {
+        display: none;
+    }
+
+    .rit-support-stat-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .rit-support-sidebar {
+        grid-template-columns: 1fr;
+    }
+
+        .rit-support-sidebar .rit-support-info {
+            grid-column: auto;
+        }
+
+    .rit-support-ticket {
+        grid-template-columns: 48px minmax(0, 1fr) 28px;
+    }
+
+    .rit-support-priority,
+    .rit-support-status,
+    .rit-support-date {
+        display: none;
+    }
+}
+
+
+@media (max-width: 480px) {
+
+    .rit-support-container {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    .rit-support-stat-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .rit-staff-card {
+        padding: 16px;
+    }
+
+    .rit-support-badge {
+        width: 100%;
+        justify-content: center;
+    }
+}
