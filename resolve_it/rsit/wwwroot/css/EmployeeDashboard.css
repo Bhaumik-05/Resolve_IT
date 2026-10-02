@@ -1,0 +1,753 @@
+﻿/* ============================================================
+   EMPLOYEE DASHBOARD
+   ResolveIT Employee / Internal Helpdesk Theme
+   ============================================================ */
+
+.rit-dashboard-page {
+    min-height: 100vh;
+    padding: 32px 0 60px;
+    background: #f7f8fa;
+}
+
+    .rit-dashboard-page .rit-container {
+        max-width: 1400px;
+    }
+
+
+    /* ============================================================
+   BREADCRUMB
+   ============================================================ */
+
+    .rit-dashboard-page .rit-breadcrumb {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        margin-bottom: 18px;
+        font-size: 13px;
+        color: #7a8088;
+    }
+
+        .rit-dashboard-page .rit-breadcrumb i {
+            font-size: 10px;
+            color: #a7adb5;
+        }
+
+        .rit-dashboard-page .rit-breadcrumb .active {
+            color: #252a31;
+            font-weight: 600;
+        }
+
+
+    /* ============================================================
+   PAGE HEADER
+   ============================================================ */
+
+    .rit-dashboard-page .rit-page-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 30px;
+        margin-bottom: 28px;
+    }
+
+    .rit-dashboard-page .rit-page-title {
+        margin: 0 0 8px;
+        font-size: 31px;
+        line-height: 1.2;
+        font-weight: 700;
+        letter-spacing: -0.5px;
+        color: #1f242a;
+    }
+
+    .rit-dashboard-page .rit-page-subtitle {
+        max-width: 680px;
+        margin: 0;
+        font-size: 14px;
+        line-height: 1.7;
+        color: #747b84;
+    }
+
+    .rit-dashboard-page .rit-page-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 14px;
+        border: 1px solid #dfe3e7;
+        border-radius: 7px;
+        background: #ffffff;
+        color: #555c65;
+        font-size: 12px;
+        font-weight: 600;
+        white-space: nowrap;
+    }
+
+        .rit-dashboard-page .rit-page-badge i {
+            font-size: 14px;
+        }
+
+
+/* ============================================================
+   EMPLOYEE INFORMATION
+   ============================================================ */
+
+.rit-employee-card {
+    display: flex;
+    align-items: center;
+    min-height: 88px;
+    padding: 20px 24px;
+    margin-bottom: 34px;
+    background: #ffffff;
+    border: 1px solid #dfe3e7;
+    border-radius: 8px;
+}
+
+.rit-employee-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 46px;
+    height: 46px;
+    margin-right: 17px;
+    border: 1px solid #d9dde2;
+    border-radius: 7px;
+    background: #f7f8fa;
+    color: #454c54;
+    font-size: 19px;
+}
+
+.rit-employee-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 150px;
+}
+
+    .rit-employee-info strong {
+        color: #242930;
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+.rit-info-label {
+    color: #8a9098;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.rit-employee-divider {
+    width: 1px;
+    height: 38px;
+    margin: 0 28px;
+    background: #e5e8eb;
+}
+
+
+/* ============================================================
+   SECTION HEADING
+   ============================================================ */
+
+.rit-dashboard-page .rit-section {
+    margin-bottom: 30px;
+}
+
+.rit-dashboard-page .rit-section-heading {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.rit-dashboard-page .rit-section-line {
+    width: 3px;
+    height: 19px;
+    background: #3f464e;
+    border-radius: 2px;
+}
+
+.rit-dashboard-page .rit-section-heading h3 {
+    margin: 0;
+    color: #272c32;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.rit-dashboard-page .rit-section-heading span {
+    margin-left: 4px;
+    color: #92979e;
+    font-size: 11px;
+}
+
+
+/* ============================================================
+   STATISTICS
+   ============================================================ */
+
+.rit-stat-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 12px;
+}
+
+.rit-stat-card {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    min-height: 92px;
+    padding: 16px;
+    background: #ffffff;
+    border: 1px solid #dfe3e7;
+    border-radius: 8px;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+    .rit-stat-card:hover {
+        border-color: #cbd0d6;
+        box-shadow: 0 4px 14px rgba(30, 35, 40, 0.05);
+    }
+
+.rit-stat-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 38px;
+    height: 38px;
+    border: 1px solid #e0e3e7;
+    border-radius: 6px;
+    background: #f8f9fa;
+    color: #525962;
+    font-size: 16px;
+}
+
+.rit-stat-content {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+    .rit-stat-content span {
+        color: #858b93;
+        font-size: 11px;
+        white-space: nowrap;
+    }
+
+    .rit-stat-content strong {
+        color: #252a30;
+        font-size: 22px;
+        line-height: 1;
+        font-weight: 700;
+    }
+
+
+/* ============================================================
+   MAIN GRID
+   ============================================================ */
+
+.rit-dashboard-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 340px;
+    gap: 18px;
+    align-items: start;
+}
+
+.rit-dashboard-main {
+    min-width: 0;
+}
+
+.rit-dashboard-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+
+/* ============================================================
+   CARDS
+   ============================================================ */
+
+.rit-dashboard-page .rit-side-card {
+    overflow: hidden;
+    background: #ffffff;
+    border: 1px solid #dfe3e7;
+    border-radius: 8px;
+}
+
+.rit-dashboard-page .rit-side-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    padding: 17px 19px;
+    border-bottom: 1px solid #e7e9ec;
+}
+
+    .rit-dashboard-page .rit-side-header h3 {
+        margin: 0;
+        color: #292e35;
+        font-size: 14px;
+        font-weight: 700;
+    }
+
+    .rit-dashboard-page .rit-side-header p {
+        margin: 4px 0 0;
+        color: #8a9097;
+        font-size: 11px;
+    }
+
+.rit-dashboard-page .rit-side-body {
+    padding: 16px;
+}
+
+
+/* ============================================================
+   VIEW ALL
+   ============================================================ */
+
+.rit-view-all {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: #555c64;
+    font-size: 11px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+    .rit-view-all:hover {
+        color: #1f242a;
+    }
+
+    .rit-view-all i {
+        font-size: 10px;
+    }
+
+
+/* ============================================================
+   TICKET LIST
+   ============================================================ */
+
+.rit-ticket-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.rit-ticket-row {
+    display: grid;
+    grid-template-columns: 58px minmax(0, 1fr) 80px 105px 30px;
+    align-items: center;
+    gap: 12px;
+    min-height: 72px;
+    padding: 12px 17px;
+    border-bottom: 1px solid #eceef0;
+    transition: background 0.15s ease;
+}
+
+    .rit-ticket-row:last-child {
+        border-bottom: none;
+    }
+
+    .rit-ticket-row:hover {
+        background: #fafbfc;
+    }
+
+.rit-ticket-number {
+    color: #777e86;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.rit-ticket-details {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    min-width: 0;
+}
+
+    .rit-ticket-details strong {
+        overflow: hidden;
+        color: #292e34;
+        font-size: 13px;
+        font-weight: 600;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .rit-ticket-details span {
+        overflow: hidden;
+        color: #8a9098;
+        font-size: 10px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+        .rit-ticket-details span i {
+            font-size: 12px;
+        }
+
+.rit-ticket-priority {
+    color: #686f77;
+    font-size: 10px;
+    font-weight: 600;
+}
+
+.rit-ticket-status {
+    text-align: left;
+}
+
+    .rit-ticket-status span {
+        display: inline-block;
+        padding: 5px 8px;
+        border: 1px solid #dfe3e7;
+        border-radius: 5px;
+        background: #f8f9fa;
+        color: #60676f;
+        font-size: 10px;
+        font-weight: 600;
+    }
+
+.rit-ticket-action {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 27px;
+    height: 27px;
+    border: 1px solid #e0e3e6;
+    border-radius: 5px;
+    color: #777e86;
+    text-decoration: none;
+    transition: background 0.15s ease, color 0.15s ease;
+}
+
+    .rit-ticket-action:hover {
+        background: #f4f5f6;
+        color: #252a30;
+    }
+
+    .rit-ticket-action i {
+        font-size: 10px;
+    }
+
+
+/* ============================================================
+   EMPTY STATE
+   ============================================================ */
+
+.rit-empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 55px 20px;
+    text-align: center;
+}
+
+.rit-empty-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    margin-bottom: 13px;
+    border: 1px solid #dfe3e7;
+    border-radius: 7px;
+    background: #f8f9fa;
+    color: #747b83;
+    font-size: 19px;
+}
+
+.rit-empty-state strong {
+    margin-bottom: 5px;
+    color: #333940;
+    font-size: 13px;
+}
+
+.rit-empty-state span {
+    color: #8a9097;
+    font-size: 11px;
+}
+
+
+/* ============================================================
+   QUICK ACTIONS
+   ============================================================ */
+
+.rit-action-button {
+    display: grid;
+    grid-template-columns: 36px minmax(0, 1fr) 12px;
+    align-items: center;
+    gap: 11px;
+    padding: 12px;
+    border: 1px solid #e1e4e7;
+    border-radius: 6px;
+    color: inherit;
+    text-decoration: none;
+    transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+    .rit-action-button + .rit-action-button {
+        margin-top: 9px;
+    }
+
+    .rit-action-button:hover {
+        background: #fafbfc;
+        border-color: #cfd4d9;
+    }
+
+.rit-action-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border: 1px solid #dfe3e7;
+    border-radius: 6px;
+    background: #f7f8f9;
+    color: #50575f;
+}
+
+.rit-action-button div:nth-child(2) {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.rit-action-button strong {
+    color: #30353b;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.rit-action-button span {
+    color: #92979e;
+    font-size: 10px;
+}
+
+.rit-action-button > i {
+    color: #a0a5ab;
+    font-size: 9px;
+}
+
+
+/* ============================================================
+   MINI WORKFLOW
+   ============================================================ */
+
+.rit-mini-workflow {
+    display: flex;
+    flex-direction: column;
+}
+
+.rit-mini-workflow-item {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    padding: 9px 0;
+}
+
+    .rit-mini-workflow-item:not(:last-child)::after {
+        content: "";
+        position: absolute;
+        left: 14px;
+        top: 36px;
+        width: 1px;
+        height: 20px;
+        background: #dfe3e7;
+    }
+
+.rit-mini-number {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 29px;
+    height: 29px;
+    border: 1px solid #dce0e4;
+    border-radius: 50%;
+    background: #ffffff;
+    color: #626971;
+    font-size: 10px;
+    font-weight: 700;
+}
+
+.rit-mini-workflow-item > div:last-child {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.rit-mini-workflow-item strong {
+    color: #363c43;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.rit-mini-workflow-item span {
+    color: #92979e;
+    font-size: 10px;
+}
+
+
+/* ============================================================
+   INFORMATION BOX
+   ============================================================ */
+
+.rit-dashboard-page .rit-info-box {
+    padding: 16px;
+    border: 1px solid #dfe3e7;
+    border-radius: 8px;
+    background: #ffffff;
+}
+
+.rit-dashboard-page .rit-info-box-top {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    margin-bottom: 9px;
+}
+
+.rit-dashboard-page .rit-info-box-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border: 1px solid #dfe3e7;
+    border-radius: 5px;
+    background: #f7f8fa;
+    color: #5c636b;
+    font-size: 13px;
+}
+
+.rit-dashboard-page .rit-info-box strong {
+    color: #3b4148;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.rit-dashboard-page .rit-info-box p {
+    margin: 0;
+    color: #858b93;
+    font-size: 10px;
+    line-height: 1.7;
+}
+
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+
+@media (max-width: 1200px) {
+
+    .rit-stat-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .rit-dashboard-grid {
+        grid-template-columns: minmax(0, 1fr) 300px;
+    }
+}
+
+
+@media (max-width: 992px) {
+
+    .rit-dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .rit-dashboard-sidebar {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        align-items: start;
+    }
+
+        .rit-dashboard-sidebar .rit-info-box {
+            grid-column: 1 / -1;
+        }
+}
+
+
+@media (max-width: 768px) {
+
+    .rit-dashboard-page {
+        padding: 24px 0 45px;
+    }
+
+        .rit-dashboard-page .rit-page-header {
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .rit-dashboard-page .rit-page-title {
+            font-size: 26px;
+        }
+
+    .rit-employee-card {
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+
+    .rit-employee-divider {
+        display: none;
+    }
+
+    .rit-employee-info {
+        min-width: calc(50% - 30px);
+    }
+
+    .rit-stat-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .rit-dashboard-sidebar {
+        grid-template-columns: 1fr;
+    }
+
+        .rit-dashboard-sidebar .rit-info-box {
+            grid-column: auto;
+        }
+
+    .rit-ticket-row {
+        grid-template-columns: 48px minmax(0, 1fr) 28px;
+    }
+
+    .rit-ticket-priority,
+    .rit-ticket-status {
+        display: none;
+    }
+}
+
+
+@media (max-width: 480px) {
+
+    .rit-dashboard-page .rit-container {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    .rit-stat-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .rit-employee-card {
+        padding: 16px;
+    }
+
+    .rit-employee-info {
+        min-width: calc(100% - 63px);
+    }
+
+        .rit-employee-info:nth-of-type(2),
+        .rit-employee-info:nth-of-type(3) {
+            min-width: calc(50% - 10px);
+            margin-left: 63px;
+        }
+
+    .rit-dashboard-page .rit-page-badge {
+        width: 100%;
+        justify-content: center;
+    }
+}

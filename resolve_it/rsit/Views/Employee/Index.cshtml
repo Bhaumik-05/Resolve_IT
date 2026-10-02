@@ -1,17 +1,582 @@
-﻿@{
+﻿@model rsit.ViewModels.Employee.EmployeeDashboardViewModel
+
+@{
     ViewData["Title"] = "Employee Dashboard";
 }
 
-<div class="container py-5">
+<link rel="stylesheet"
+      href="~/css/EmployeeDashboard.css"
+      asp-append-version="true" />
 
-    <h1>Employee Dashboard</h1>
+<div class="rit-dashboard-page">
 
-    <p class="text-muted">
-        Welcome to ResolveIT.
-    </p>
+    <div class="container rit-container">
 
-    <div class="alert alert-success">
-        You are logged in as an Employee.
+        <!-- =====================================================
+             BREADCRUMB
+             ===================================================== -->
+
+        <div class="rit-breadcrumb">
+            <span>Helpdesk</span>
+            <i class="bi bi-chevron-right"></i>
+            <span class="active">Dashboard</span>
+        </div>
+
+
+        <!-- =====================================================
+             PAGE HEADER
+             ===================================================== -->
+
+        <div class="rit-page-header">
+
+            <div>
+
+                <h1 class="rit-page-title">
+                    Employee Dashboard
+                </h1>
+
+                <p class="rit-page-subtitle">
+                    Track your support requests, monitor their progress,
+                    and stay updated on your IT issues.
+                </p>
+
+            </div>
+
+            <div class="rit-page-badge">
+                <i class="bi bi-shield-check"></i>
+                Internal IT Helpdesk
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             EMPLOYEE INFORMATION
+             ===================================================== -->
+
+        <div class="rit-employee-card">
+
+            <div class="rit-employee-icon">
+                <i class="bi bi-person"></i>
+            </div>
+
+            <div class="rit-employee-info">
+
+                <span class="rit-info-label">
+                    Logged in as
+                </span>
+
+                <strong>
+                    @Model.EmployeeName
+                </strong>
+
+            </div>
+
+            <div class="rit-employee-divider"></div>
+
+            <div class="rit-employee-info">
+
+                <span class="rit-info-label">
+                    Employee ID
+                </span>
+
+                <strong>
+                    @Model.EmployeeId
+                </strong>
+
+            </div>
+
+            <div class="rit-employee-divider"></div>
+
+            <div class="rit-employee-info">
+
+                <span class="rit-info-label">
+                    Department
+                </span>
+
+                <strong>
+                    @Model.DepartmentName
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             TICKET OVERVIEW
+             ===================================================== -->
+
+        <div class="rit-section">
+
+            <div class="rit-section-heading">
+
+                <div class="rit-section-line"></div>
+
+                <h3>
+                    Ticket overview
+                </h3>
+
+                <span>
+                    Current request status
+                </span>
+
+            </div>
+
+
+            <div class="rit-stat-grid">
+
+                <!-- Total -->
+
+                <div class="rit-stat-card">
+
+                    <div class="rit-stat-icon">
+                        <i class="bi bi-ticket-detailed"></i>
+                    </div>
+
+                    <div class="rit-stat-content">
+
+                        <span>
+                            Total tickets
+                        </span>
+
+                        <strong>
+                            @Model.TotalTickets
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <!-- New -->
+
+                <div class="rit-stat-card">
+
+                    <div class="rit-stat-icon">
+                        <i class="bi bi-file-earmark-plus"></i>
+                    </div>
+
+                    <div class="rit-stat-content">
+
+                        <span>
+                            New
+                        </span>
+
+                        <strong>
+                            @Model.NewTickets
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Assigned -->
+
+                <div class="rit-stat-card">
+
+                    <div class="rit-stat-icon">
+                        <i class="bi bi-person-check"></i>
+                    </div>
+
+                    <div class="rit-stat-content">
+
+                        <span>
+                            Assigned
+                        </span>
+
+                        <strong>
+                            @Model.AssignedTickets
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <!-- In Progress -->
+
+                <div class="rit-stat-card">
+
+                    <div class="rit-stat-icon">
+                        <i class="bi bi-hourglass-split"></i>
+                    </div>
+
+                    <div class="rit-stat-content">
+
+                        <span>
+                            In progress
+                        </span>
+
+                        <strong>
+                            @Model.InProgressTickets
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Resolved -->
+
+                <div class="rit-stat-card">
+
+                    <div class="rit-stat-icon">
+                        <i class="bi bi-check2-circle"></i>
+                    </div>
+
+                    <div class="rit-stat-content">
+
+                        <span>
+                            Resolved
+                        </span>
+
+                        <strong>
+                            @Model.ResolvedTickets
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Closed -->
+
+                <div class="rit-stat-card">
+
+                    <div class="rit-stat-icon">
+                        <i class="bi bi-check2-square"></i>
+                    </div>
+
+                    <div class="rit-stat-content">
+
+                        <span>
+                            Closed
+                        </span>
+
+                        <strong>
+                            @Model.ClosedTickets
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             MAIN GRID
+             ===================================================== -->
+
+        <div class="rit-dashboard-grid">
+
+
+            <!-- =================================================
+                 RECENT TICKETS
+                 ================================================= -->
+
+            <div class="rit-dashboard-main">
+
+                <div class="rit-side-card">
+
+                    <div class="rit-side-header">
+
+                        <div>
+
+                            <h3>
+                                Recent support requests
+                            </h3>
+
+                            <p>
+                                Your latest submitted tickets.
+                            </p>
+
+                        </div>
+
+                        <a asp-controller="Tickets"
+                           asp-action="Index"
+                           class="rit-view-all">
+                            View all
+                            <i class="bi bi-arrow-right"></i>
+                        </a>
+
+                    </div>
+
+
+                    <div class="rit-ticket-list">
+
+                        @if (Model.RecentTickets.Any())
+                        {
+                            foreach (var ticket in Model.RecentTickets)
+                            {
+                                <div class="rit-ticket-row">
+
+                                    <div class="rit-ticket-number">
+                                        #@ticket.TicketId
+                                    </div>
+
+                                    <div class="rit-ticket-details">
+
+                                        <strong>
+                                            @ticket.Title
+                                        </strong>
+
+                                        <span>
+                                            @ticket.CategoryName
+                                            <i class="bi bi-dot"></i>
+                                            @ticket.CreatedAt.ToString("dd MMM yyyy")
+                                        </span>
+
+                                    </div>
+
+                                    <div class="rit-ticket-priority">
+                                        @ticket.Priority
+                                    </div>
+
+                                    <div class="rit-ticket-status">
+                                        <span>
+                                            @ticket.Status
+                                        </span>
+                                    </div>
+
+                                    <a asp-controller="Tickets"
+                                       asp-action="Details"
+                                       asp-route-id="@ticket.TicketId"
+                                       class="rit-ticket-action"
+                                       title="View ticket">
+
+                                        <i class="bi bi-chevron-right"></i>
+
+                                    </a>
+
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <div class="rit-empty-state">
+
+                                <div class="rit-empty-icon">
+                                    <i class="bi bi-ticket"></i>
+                                </div>
+
+                                <strong>
+                                    No support requests yet
+                                </strong>
+
+                                <span>
+                                    Your submitted tickets will appear here.
+                                </span>
+
+                            </div>
+                        }
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 SIDEBAR
+                 ================================================= -->
+
+            <aside class="rit-dashboard-sidebar">
+
+
+                <!-- Quick Actions -->
+
+                <div class="rit-side-card">
+
+                    <div class="rit-side-header">
+
+                        <h3>
+                            Quick actions
+                        </h3>
+
+                    </div>
+
+                    <div class="rit-side-body">
+
+                        <a asp-controller="Tickets"
+                           asp-action="Create"
+                           class="rit-action-button">
+
+                            <div class="rit-action-icon">
+                                <i class="bi bi-plus-lg"></i>
+                            </div>
+
+                            <div>
+
+                                <strong>
+                                    Create support ticket
+                                </strong>
+
+                                <span>
+                                    Report a new IT issue
+                                </span>
+
+                            </div>
+
+                            <i class="bi bi-chevron-right"></i>
+
+                        </a>
+
+
+                        <a asp-controller="Tickets"
+                           asp-action="Index"
+                           class="rit-action-button">
+
+                            <div class="rit-action-icon">
+                                <i class="bi bi-list-ul"></i>
+                            </div>
+
+                            <div>
+
+                                <strong>
+                                    My tickets
+                                </strong>
+
+                                <span>
+                                    View all your requests
+                                </span>
+
+                            </div>
+
+                            <i class="bi bi-chevron-right"></i>
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Ticket Workflow -->
+
+                <div class="rit-side-card">
+
+                    <div class="rit-side-header">
+
+                        <h3>
+                            Ticket workflow
+                        </h3>
+
+                    </div>
+
+                    <div class="rit-side-body">
+
+                        <div class="rit-mini-workflow">
+
+                            <div class="rit-mini-workflow-item">
+
+                                <div class="rit-mini-number">
+                                    1
+                                </div>
+
+                                <div>
+                                    <strong>New</strong>
+                                    <span>Request submitted</span>
+                                </div>
+
+                            </div>
+
+
+                            <div class="rit-mini-workflow-item">
+
+                                <div class="rit-mini-number">
+                                    2
+                                </div>
+
+                                <div>
+                                    <strong>Assigned</strong>
+                                    <span>Support staff assigned</span>
+                                </div>
+
+                            </div>
+
+
+                            <div class="rit-mini-workflow-item">
+
+                                <div class="rit-mini-number">
+                                    3
+                                </div>
+
+                                <div>
+                                    <strong>In progress</strong>
+                                    <span>Issue is being investigated</span>
+                                </div>
+
+                            </div>
+
+
+                            <div class="rit-mini-workflow-item">
+
+                                <div class="rit-mini-number">
+                                    4
+                                </div>
+
+                                <div>
+                                    <strong>Resolved</strong>
+                                    <span>Resolution provided</span>
+                                </div>
+
+                            </div>
+
+
+                            <div class="rit-mini-workflow-item">
+
+                                <div class="rit-mini-number">
+                                    5
+                                </div>
+
+                                <div>
+                                    <strong>Closed</strong>
+                                    <span>Request completed</span>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Helpdesk Information -->
+
+                <div class="rit-info-box">
+
+                    <div class="rit-info-box-top">
+
+                        <div class="rit-info-box-icon">
+                            <i class="bi bi-info-circle"></i>
+                        </div>
+
+                        <strong>
+                            Need assistance?
+                        </strong>
+
+                    </div>
+
+                    <p>
+                        Include screenshots, error messages, and clear
+                        descriptions when submitting a ticket. This helps
+                        the support team diagnose your issue faster.
+                    </p>
+
+                </div>
+
+            </aside>
+
+        </div>
+
     </div>
 
 </div>

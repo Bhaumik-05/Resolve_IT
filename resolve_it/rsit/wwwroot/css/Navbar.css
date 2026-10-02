@@ -1,0 +1,365 @@
+﻿/* ============================================================
+   RESOLVEIT NAVBAR
+   Internal IT Helpdesk Theme
+   ============================================================ */
+
+.rit-navbar {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    width: 100%;
+    background: #ffffff;
+    border-bottom: 1px solid #dfe3e7;
+    box-shadow: 0 1px 4px rgba(25, 30, 35, 0.04);
+}
+
+
+/* ============================================================
+   CONTAINER
+   ============================================================ */
+
+.rit-navbar-container {
+    max-width: 1400px;
+    min-height: 66px;
+    margin: 0 auto;
+    padding: 0 28px;
+    display: flex;
+    align-items: center;
+}
+
+
+/* ============================================================
+   BRAND
+   ============================================================ */
+
+.rit-navbar-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    color: #24292f;
+    text-decoration: none;
+    margin-right: 38px;
+}
+
+    .rit-navbar-brand:hover {
+        color: #24292f;
+    }
+
+.rit-brand-mark {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border: 1px solid #d9dde2;
+    border-radius: 6px;
+    background: #f7f8fa;
+    color: #444b53;
+    font-size: 14px;
+}
+
+.rit-brand-text {
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: -0.2px;
+}
+
+
+/* ============================================================
+   NAVIGATION
+   ============================================================ */
+
+.rit-navbar-links {
+    display: flex;
+    align-items: stretch;
+    height: 66px;
+    gap: 4px;
+}
+
+.rit-nav-link {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 15px;
+    color: #686f77;
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 600;
+    transition: color 0.2s ease, background 0.2s ease;
+}
+
+    .rit-nav-link i {
+        font-size: 14px;
+        color: #7b828a;
+        transition: color 0.2s ease;
+    }
+
+    .rit-nav-link::after {
+        content: "";
+        position: absolute;
+        left: 15px;
+        right: 15px;
+        bottom: -1px;
+        height: 2px;
+        background: #3e454d;
+        transform: scaleX(0);
+        transform-origin: center;
+        transition: transform 0.2s ease;
+    }
+
+    .rit-nav-link:hover {
+        color: #252a30;
+        background: #fafbfc;
+    }
+
+        .rit-nav-link:hover i {
+            color: #444b53;
+        }
+
+        .rit-nav-link:hover::after {
+            transform: scaleX(1);
+        }
+
+
+/* ============================================================
+   USER AREA
+   ============================================================ */
+
+.rit-navbar-user {
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+}
+
+.rit-user-info {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+}
+
+.rit-user-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border: 1px solid #dfe3e7;
+    border-radius: 6px;
+    background: #f7f8fa;
+    color: #626971;
+    font-size: 13px;
+}
+
+.rit-user-details {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 80px;
+}
+
+    .rit-user-details strong {
+        max-width: 130px;
+        overflow: hidden;
+        color: #363c43;
+        font-size: 11px;
+        font-weight: 600;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .rit-user-details span {
+        color: #92979e;
+        font-size: 9px;
+    }
+
+
+/* ============================================================
+   DIVIDER
+   ============================================================ */
+
+.rit-navbar-divider {
+    width: 1px;
+    height: 28px;
+    margin: 0 16px;
+    background: #e3e6e9;
+}
+
+
+/* ============================================================
+   LOGOUT
+   ============================================================ */
+
+.rit-logout-form {
+    margin: 0;
+}
+
+.rit-logout-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 8px 11px;
+    border: 1px solid transparent;
+    border-radius: 5px;
+    background: transparent;
+    color: #777e86;
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+}
+
+    .rit-logout-button i {
+        font-size: 13px;
+    }
+
+    .rit-logout-button:hover {
+        border-color: #dfe3e7;
+        background: #f7f8fa;
+        color: #333940;
+    }
+
+
+/* ============================================================
+   LOGIN
+   ============================================================ */
+
+.rit-login-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 8px 13px;
+    border: 1px solid #d7dbe0;
+    border-radius: 5px;
+    background: #ffffff;
+    color: #555c64;
+    font-size: 11px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+    .rit-login-button:hover {
+        background: #f7f8fa;
+        border-color: #cdd2d7;
+        color: #292e34;
+    }
+
+
+/* ============================================================
+   MOBILE
+   ============================================================ */
+
+@media (max-width: 900px) {
+
+    .rit-navbar-container {
+        padding: 0 18px;
+    }
+
+    .rit-navbar-brand {
+        margin-right: 18px;
+    }
+
+    .rit-brand-text {
+        font-size: 16px;
+    }
+
+    .rit-nav-link {
+        padding: 0 9px;
+    }
+
+        .rit-nav-link::after {
+            left: 9px;
+            right: 9px;
+        }
+
+        .rit-nav-link span {
+            display: none;
+        }
+
+        .rit-nav-link i {
+            font-size: 16px;
+        }
+
+    .rit-user-details {
+        display: none;
+    }
+
+    .rit-navbar-divider {
+        margin: 0 9px;
+    }
+}
+
+
+@media (max-width: 600px) {
+
+    .rit-navbar-container {
+        min-height: 58px;
+        padding: 0 13px;
+    }
+
+    .rit-navbar-links {
+        height: 58px;
+        gap: 0;
+    }
+
+    .rit-navbar-brand {
+        margin-right: 8px;
+    }
+
+    .rit-brand-mark {
+        width: 29px;
+        height: 29px;
+    }
+
+    .rit-brand-text {
+        font-size: 15px;
+    }
+
+    .rit-user-icon {
+        width: 29px;
+        height: 29px;
+    }
+
+    .rit-logout-button span {
+        display: none;
+    }
+
+    .rit-logout-button {
+        padding: 7px 8px;
+    }
+}
+/* ============================================================
+   FOOTER
+   ============================================================ */
+
+.rit-footer {
+    margin-top: 45px;
+    border-top: 1px solid #dfe3e7;
+    background: #ffffff;
+}
+
+.rit-footer-container {
+    max-width: 1400px;
+    min-height: 52px;
+    margin: 0 auto;
+    padding: 0 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: #8a9097;
+    font-size: 10px;
+}
+
+    .rit-footer-container span:last-child {
+        color: #a0a5ab;
+    }
+
+
+@media (max-width: 600px) {
+
+    .rit-footer-container {
+        padding: 0 15px;
+    }
+}
