@@ -1,4 +1,4 @@
-﻿@model rsit.ViewModels.Support.SupportDashboardViewModel
+@model rsit.ViewModels.Support.SupportDashboardViewModel
 @using rsit.Models
 
 @{
@@ -390,7 +390,7 @@
                                     <td>
 
                                         <span class="text-muted">
-                                            @ticket.CreatedAt.ToString("dd MMM yyyy")
+                                            @(ticket.CreatedAt.ToDisplayDate())
                                         </span>
 
                                     </td>

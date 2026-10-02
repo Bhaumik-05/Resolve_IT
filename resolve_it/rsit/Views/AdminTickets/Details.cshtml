@@ -1,4 +1,4 @@
-﻿@model rsit.ViewModels.Admin.AdminTicketDetailsViewModel
+@model rsit.ViewModels.Admin.AdminTicketDetailsViewModel
 
 @{
     Layout = "_AdminLayout";
@@ -125,7 +125,7 @@
                     </div>
 
                     <div>
-                        @Model.CreatedAt.ToString("dd MMM yyyy, hh:mm tt")
+                        @Model.CreatedAt.ToDisplayDateTime()
                     </div>
 
                 </div>
@@ -139,7 +139,7 @@
 
                     <div>
                         @(Model.ResolvedAt.HasValue
-                            ? Model.ResolvedAt.Value.ToString("dd MMM yyyy, hh:mm tt")
+                            ? Model.ResolvedAt.Value.ToDisplayDateTime()
                             : "-")
                     </div>
 
@@ -154,7 +154,7 @@
 
                     <div>
                         @(Model.ClosedAt.HasValue
-                            ? Model.ClosedAt.Value.ToString("dd MMM yyyy, hh:mm tt")
+                            ? Model.ClosedAt.Value.ToDisplayDateTime()
                             : "-")
                     </div>
 
@@ -290,8 +290,7 @@
                                     </td>
 
                                     <td>
-                                        @assignment.AssignedAt.ToString(
-                                            "dd MMM yyyy, hh:mm tt")
+                                        @(assignment.AssignedAt.ToDisplayDateTime())
                                     </td>
 
                                 </tr>
@@ -369,8 +368,7 @@
                                     </td>
 
                                     <td>
-                                        @attachment.UploadedAt.ToString(
-                                            "dd MMM yyyy, hh:mm tt")
+                                        @(attachment.UploadedAt.ToDisplayDateTime())
                                     </td>
 
                                 </tr>
@@ -459,8 +457,7 @@
                                     </td>
 
                                     <td>
-                                        @history.ChangedAt.ToString(
-                                            "dd MMM yyyy, hh:mm tt")
+                                        @(history.ChangedAt.ToDisplayDateTime())
                                     </td>
 
                                 </tr>

@@ -1,4 +1,4 @@
-﻿@model rsit.Models.Ticket
+@model rsit.Models.Ticket
 
 @{
     ViewData["Title"] = $"Ticket #{Model.TicketId}";
@@ -87,7 +87,7 @@
                     <i class="bi bi-calendar3"></i>
 
                     <span>
-                        Created @Model.CreatedAt.ToString("dd MMM yyyy, hh:mm tt")
+                        Created @Model.CreatedAt.ToDisplayDateTime()
                     </span>
 
                 </div>
@@ -532,8 +532,7 @@
 
                                                 <span> • </span>
 
-                                                @attachment.UploadedAt
-                                                .ToString("dd MMM yyyy")
+                                                @(attachment.UploadedAt.ToDisplayDate())
 
                                             </div>
 
@@ -651,9 +650,7 @@
 
                                         <div class="history-date">
 
-                                            @history.ChangedAt.ToString(
-                                                "dd MMM yyyy, hh:mm tt"
-                                            )
+                                            @(history.ChangedAt.ToDisplayDateTime())
 
                                             @if (history.ChangedByUser != null)
                                             {
@@ -796,7 +793,7 @@
                             </span>
 
                             <span class="summary-value">
-                                @Model.CreatedAt.ToString("dd MMM yyyy")
+                                @(Model.CreatedAt.ToDisplayDate())
                             </span>
 
                         </div>
@@ -865,9 +862,7 @@
                             <i class="bi bi-calendar3"></i>
 
                             Assigned
-                            @latestAssignment.AssignedAt.ToString(
-                                "dd MMM yyyy, hh:mm tt"
-                            )
+                            @(latestAssignment.AssignedAt.ToDisplayDateTime())
 
                         </div>
                     }
@@ -932,9 +927,7 @@
 
                                 <div class="date-value">
 
-                                    @Model.CreatedAt.ToString(
-                                        "dd MMM yyyy, hh:mm tt"
-                                    )
+                                    @(Model.CreatedAt.ToDisplayDateTime())
 
                                 </div>
 
@@ -961,9 +954,7 @@
 
                                     <div class="date-value">
 
-                                        @Model.ResolvedAt.Value.ToString(
-                                            "dd MMM yyyy, hh:mm tt"
-                                        )
+                                        @(Model.ResolvedAt.Value.ToDisplayDateTime())
 
                                     </div>
 
@@ -991,9 +982,7 @@
 
                                     <div class="date-value">
 
-                                        @Model.ClosedAt.Value.ToString(
-                                            "dd MMM yyyy, hh:mm tt"
-                                        )
+                                        @(Model.ClosedAt.Value.ToDisplayDateTime())
 
                                     </div>
 

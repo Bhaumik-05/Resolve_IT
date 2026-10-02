@@ -93,8 +93,7 @@
                 <div class="rit-ticket-date">
 
                     Created
-                    @Model.CreatedAt.ToLocalTime()
-                    .ToString("dd MMM yyyy, hh:mm tt")
+                    @(Model.CreatedAt.ToDisplayDateTime())
 
                 </div>
 
@@ -420,10 +419,7 @@
                                             <div class="rit-attachment-meta">
 
                                                 Uploaded
-                                                @attachment.UploadedAt
-                                                .ToLocalTime()
-                                                .ToString(
-                                                "dd MMM yyyy, hh:mm tt")
+                                                @(attachment.UploadedAt.ToDisplayDateTime())
 
                                                 ·
 
@@ -556,10 +552,7 @@
                                         <div class="rit-assignment-date">
 
                                             Assigned
-                                            @assignment.AssignedAt
-                                            .ToLocalTime()
-                                            .ToString(
-                                            "dd MMM yyyy, hh:mm tt")
+                                            @(assignment.AssignedAt.ToDisplayDateTime())
 
                                         </div>
 
@@ -646,10 +639,7 @@
 
                                             <div class="rit-history-meta">
 
-                                                @history.ChangedAt
-                                                .ToLocalTime()
-                                                .ToString(
-                                                "dd MMM yyyy, hh:mm tt")
+                                                @(history.ChangedAt.ToDisplayDateTime())
 
                                                 @if (history.ChangedByUser != null)
                                                 {
@@ -767,10 +757,7 @@
 
                                 Submitted
 
-                                @Model.Feedback.SubmittedAt
-                                .ToLocalTime()
-                                .ToString(
-                                "dd MMM yyyy, hh:mm tt")
+                                @(Model.Feedback.SubmittedAt.ToDisplayDateTime())
 
                             </div>
                         }
@@ -1080,19 +1067,13 @@
 
                             <div class="rit-side-value">
 
-                                @Model.CreatedAt
-                                .ToLocalTime()
-                                .ToString(
-                                "dd MMM yyyy")
+                                @(Model.CreatedAt.ToDisplayDate())
 
                             </div>
 
                             <div class="rit-side-subvalue">
 
-                                @Model.CreatedAt
-                                .ToLocalTime()
-                                .ToString(
-                                "hh:mm tt")
+                                @(Model.CreatedAt.ToDisplayClock())
 
                             </div>
 
@@ -1110,19 +1091,13 @@
 
                                 <div class="rit-side-value">
 
-                                    @Model.ResolvedAt.Value
-                                    .ToLocalTime()
-                                    .ToString(
-                                    "dd MMM yyyy")
+                                    @(Model.ResolvedAt.Value.ToDisplayDate())
 
                                 </div>
 
                                 <div class="rit-side-subvalue">
 
-                                    @Model.ResolvedAt.Value
-                                    .ToLocalTime()
-                                    .ToString(
-                                    "hh:mm tt")
+                                    @(Model.ResolvedAt.Value.ToDisplayClock())
 
                                 </div>
 
@@ -1141,19 +1116,13 @@
 
                                 <div class="rit-side-value">
 
-                                    @Model.ClosedAt.Value
-                                    .ToLocalTime()
-                                    .ToString(
-                                    "dd MMM yyyy")
+                                    @(Model.ClosedAt.Value.ToDisplayDate())
 
                                 </div>
 
                                 <div class="rit-side-subvalue">
 
-                                    @Model.ClosedAt.Value
-                                    .ToLocalTime()
-                                    .ToString(
-                                    "hh:mm tt")
+                                    @(Model.ClosedAt.Value.ToDisplayClock())
 
                                 </div>
 

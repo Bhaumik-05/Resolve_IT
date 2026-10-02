@@ -28,7 +28,7 @@ public class CreateTicketViewModel
     public int DepartmentId { get; set; }
 
     [Display(Name = "Attachments")]
-    public List<IFormFile> Attachments { get; set; } = [];
+    public List<IFormFile>? Attachments { get; set; } = [];
 
     public string[] Priorities { get; set; } = [];
 

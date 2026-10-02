@@ -1,4 +1,4 @@
-﻿@model rsit.ViewModels.Admin.AdminFeedbackListViewModel
+@model rsit.ViewModels.Admin.AdminFeedbackListViewModel
 
 @{
     Layout = "_AdminLayout";
@@ -192,15 +192,11 @@
                             <td>
 
                                 <div>
-                                    @feedback.SubmittedAt
-                                        .ToLocalTime()
-                                        .ToString("dd MMM yyyy")
+                                    @(feedback.SubmittedAt.ToDisplayDate())
                                 </div>
 
                                 <div class="text-muted small">
-                                    @feedback.SubmittedAt
-                                        .ToLocalTime()
-                                        .ToString("hh:mm tt")
+                                    @(feedback.SubmittedAt.ToDisplayClock())
                                 </div>
 
                             </td>

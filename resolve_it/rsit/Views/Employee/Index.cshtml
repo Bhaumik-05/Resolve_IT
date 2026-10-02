@@ -1,4 +1,4 @@
-﻿@model rsit.ViewModels.Employee.EmployeeDashboardViewModel
+@model rsit.ViewModels.Employee.EmployeeDashboardViewModel
 
 @{
     ViewData["Title"] = "Employee Dashboard";
@@ -393,7 +393,7 @@
 
                                             <i class="bi bi-dot"></i>
 
-                                            @ticket.CreatedAt.ToString("dd MMM yyyy")
+                                            @(ticket.CreatedAt.ToDisplayDate())
 
                                         </span>
 

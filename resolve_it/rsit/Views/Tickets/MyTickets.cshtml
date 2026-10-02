@@ -1,4 +1,4 @@
-﻿@model rsit.ViewModels.MyTicketsViewModel
+@model rsit.ViewModels.MyTicketsViewModel
 
 @{
     ViewData["Title"] = "My Tickets";
@@ -410,9 +410,7 @@
                                     <td>
 
                                         <span class="rit-created-date">
-                                            @(ticket.CreatedAt
-                                                .ToLocalTime()
-                                                .ToString("dd MMM yyyy"))
+                                            @(ticket.CreatedAt.ToDisplayDate())
                                         </span>
 
                                     </td>

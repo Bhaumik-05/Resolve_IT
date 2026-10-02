@@ -1,4 +1,4 @@
-﻿@model rsit.ViewModels.Admin.AdminTicketListViewModel
+@model rsit.ViewModels.Admin.AdminTicketListViewModel
 
 @{
     Layout = "_AdminLayout";
@@ -264,11 +264,11 @@
                             <td>
 
                                 <div>
-                                    @ticket.CreatedAt.ToString("dd MMM yyyy")
+                                    @(ticket.CreatedAt.ToDisplayDate())
                                 </div>
 
                                 <div class="text-muted small">
-                                    @ticket.CreatedAt.ToString("hh:mm tt")
+                                    @(ticket.CreatedAt.ToDisplayClock())
                                 </div>
 
                             </td>

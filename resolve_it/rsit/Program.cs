@@ -16,7 +16,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
         builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Add services to the container
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews(o =>
+    o.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true);
 
 
 // Repositories
