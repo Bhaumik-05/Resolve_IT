@@ -774,4 +774,256 @@ public class TicketService : ITicketService
                 "Attachment loaded successfully."
         };
     }
+
+
+    // =========================================================
+    // SUPPORT STAFF - UPDATE STATUS
+    // =========================================================
+
+    public async Task<bool>
+        UpdateTicketStatusAsync(
+            int ticketId,
+            int staffId,
+            string newStatus)
+    {
+        // -----------------------------------------------------
+        // Get ticket
+        // -----------------------------------------------------
+
+        var ticket =
+            await _ticketRepository
+                .GetTicketByIdAsync(
+                    ticketId);
+
+
+        if (ticket == null)
+        {
+            return false;
+        }
+
+
+        // -----------------------------------------------------
+        // Verify staff assignment
+        // -----------------------------------------------------
+
+        var isAssigned =
+            ticket.Assignments
+                .Any(a =>
+                    a.StaffId == staffId);
+
+
+        if (!isAssigned)
+        {
+            return false;
+        }
+
+
+        // -----------------------------------------------------
+        // Only In Progress is allowed
+        // -----------------------------------------------------
+
+        if (newStatus !=
+            TicketStatuses.InProgress)
+        {
+            return false;
+        }
+
+
+        // -----------------------------------------------------
+        // Only New or Assigned tickets
+        // can move to In Progress
+        // -----------------------------------------------------
+
+        if (ticket.Status !=
+                TicketStatuses.New &&
+            ticket.Status !=
+                TicketStatuses.Assigned)
+        {
+            return false;
+        }
+
+
+        // -----------------------------------------------------
+        // Store old status
+        // -----------------------------------------------------
+
+        var oldStatus =
+            ticket.Status;
+
+
+        // -----------------------------------------------------
+        // Update status
+        // -----------------------------------------------------
+
+        ticket.Status =
+            TicketStatuses.InProgress;
+
+
+        // -----------------------------------------------------
+        // Add ticket history
+        // -----------------------------------------------------
+
+        var history =
+            new TicketHistory
+            {
+                TicketId =
+                    ticket.TicketId,
+
+                OldStatus =
+                    oldStatus,
+
+                NewStatus =
+                    TicketStatuses.InProgress,
+
+                Remarks =
+                    "Ticket moved to In Progress by support staff.",
+
+                ChangedAt =
+                    DateTime.UtcNow,
+
+                ChangedBy =
+                    staffId
+            };
+
+
+        ticket.History.Add(
+            history);
+
+
+        // -----------------------------------------------------
+        // Save changes
+        // -----------------------------------------------------
+
+        await _ticketRepository
+            .SaveChangesAsync();
+
+
+        return true;
+    }
+
+
+    // =========================================================
+    // SUPPORT STAFF - RESOLVE TICKET
+    // =========================================================
+
+    public async Task<bool>
+        ResolveTicketAsync(
+            int ticketId,
+            int staffId,
+            string remarks)
+    {
+        // -----------------------------------------------------
+        // Get ticket
+        // -----------------------------------------------------
+
+        var ticket =
+            await _ticketRepository
+                .GetTicketByIdAsync(
+                    ticketId);
+
+
+        if (ticket == null)
+        {
+            return false;
+        }
+
+
+        // -----------------------------------------------------
+        // Validate resolution remarks
+        // -----------------------------------------------------
+
+        if (string.IsNullOrWhiteSpace(
+                remarks))
+        {
+            return false;
+        }
+
+
+        // -----------------------------------------------------
+        // Verify staff assignment
+        // -----------------------------------------------------
+
+        var isAssigned =
+            ticket.Assignments
+                .Any(a =>
+                    a.StaffId == staffId);
+
+
+        if (!isAssigned)
+        {
+            return false;
+        }
+
+
+        // -----------------------------------------------------
+        // Only In Progress tickets can be resolved
+        // -----------------------------------------------------
+
+        if (ticket.Status !=
+            TicketStatuses.InProgress)
+        {
+            return false;
+        }
+
+
+        // -----------------------------------------------------
+        // Store old status
+        // -----------------------------------------------------
+
+        var oldStatus =
+            ticket.Status;
+
+
+        // -----------------------------------------------------
+        // Update ticket
+        // -----------------------------------------------------
+
+        ticket.Status =
+            TicketStatuses.Resolved;
+
+        ticket.ResolvedAt =
+            DateTime.UtcNow;
+
+
+        // -----------------------------------------------------
+        // Add ticket history
+        // -----------------------------------------------------
+
+        var history =
+            new TicketHistory
+            {
+                TicketId =
+                    ticket.TicketId,
+
+                OldStatus =
+                    oldStatus,
+
+                NewStatus =
+                    TicketStatuses.Resolved,
+
+                Remarks =
+                    remarks.Trim(),
+
+                ChangedAt =
+                    DateTime.UtcNow,
+
+                ChangedBy =
+                    staffId
+            };
+
+
+        ticket.History.Add(
+            history);
+
+
+        // -----------------------------------------------------
+        // Save changes
+        // -----------------------------------------------------
+
+        await _ticketRepository
+            .SaveChangesAsync();
+
+
+        return true;
+    }
 }

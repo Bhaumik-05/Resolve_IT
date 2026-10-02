@@ -76,4 +76,24 @@ public interface ITicketService
 
     Task<AttachmentFileResult> GetAttachmentFileAsync(
         Attachment attachment);
+
+
+    // =========================================================
+    // SUPPORT STAFF - UPDATE STATUS
+    // =========================================================
+
+    Task<bool> UpdateTicketStatusAsync(
+        int ticketId,
+        int staffId,
+        string newStatus);
+
+
+    // =========================================================
+    // SUPPORT STAFF - RESOLVE TICKET
+    // =========================================================
+
+    Task<bool> ResolveTicketAsync(
+        int ticketId,
+        int staffId,
+        string remarks);
 }

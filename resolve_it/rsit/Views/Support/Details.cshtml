@@ -1,0 +1,1046 @@
+﻿@model rsit.Models.Ticket
+
+@{
+    ViewData["Title"] = $"Ticket #{Model.TicketId}";
+
+    var statusClass = Model.Status switch
+    {
+        TicketStatuses.New => "ticket-status-new",
+        TicketStatuses.Assigned => "ticket-status-assigned",
+        TicketStatuses.InProgress => "ticket-status-progress",
+        TicketStatuses.Resolved => "ticket-status-resolved",
+        TicketStatuses.Closed => "ticket-status-closed",
+        _ => "ticket-status-default"
+    };
+
+    var priorityClass = Model.Priority switch
+    {
+        "Critical" => "ticket-priority-critical",
+        "High" => "ticket-priority-high",
+        "Medium" => "ticket-priority-medium",
+        "Low" => "ticket-priority-low",
+        _ => "ticket-priority-default"
+    };
+
+    var latestAssignment = Model.Assignments
+        .OrderByDescending(a => a.AssignedAt)
+        .FirstOrDefault();
+}
+
+<link rel="stylesheet"
+      href="~/css/support-details.css"
+      asp-append-version="true" />
+
+<div class="support-details-page">
+
+    <div class="container-fluid px-4 px-lg-5 py-4">
+
+        <!-- =====================================================
+             Breadcrumb + Back
+             ===================================================== -->
+        <div class="support-topbar">
+
+            <div class="support-breadcrumb">
+
+                <span>Helpdesk</span>
+
+                <i class="bi bi-chevron-right"></i>
+
+                <span>Support</span>
+
+                <i class="bi bi-chevron-right"></i>
+
+                <strong>Ticket #@Model.TicketId</strong>
+
+            </div>
+
+            <a asp-controller="Support"
+               asp-action="Index"
+               class="support-back-btn">
+
+                <i class="bi bi-arrow-left"></i>
+
+                Back to Dashboard
+
+            </a>
+
+        </div>
+
+
+        <!-- =====================================================
+             Ticket Header
+             ===================================================== -->
+        <div class="ticket-hero">
+
+            <div class="ticket-number">
+                Ticket #@Model.TicketId
+            </div>
+
+            <h1 class="ticket-title">
+                @Model.Title
+            </h1>
+
+            <div class="ticket-meta">
+
+                <div class="ticket-meta-item">
+
+                    <i class="bi bi-calendar3"></i>
+
+                    <span>
+                        Created @Model.CreatedAt.ToString("dd MMM yyyy, hh:mm tt")
+                    </span>
+
+                </div>
+
+
+                @if (Model.Category != null)
+                {
+                    <div class="ticket-meta-item">
+
+                        <i class="bi bi-tag"></i>
+
+                        <span>
+                            @Model.Category.Name
+                        </span>
+
+                    </div>
+                }
+
+
+                @if (Model.Department != null)
+                {
+                    <div class="ticket-meta-item">
+
+                        <i class="bi bi-building"></i>
+
+                        <span>
+                            @Model.Department.Name
+                        </span>
+
+                    </div>
+                }
+
+            </div>
+
+
+            <!-- =================================================
+                 Status + Priority
+                 ================================================= -->
+            <div class="ticket-badges">
+
+                <span class="ticket-status @statusClass">
+                    @Model.Status
+                </span>
+
+                <span class="ticket-priority @priorityClass">
+
+                    <i class="bi bi-flag-fill"></i>
+
+                    @Model.Priority
+
+                </span>
+
+            </div>
+
+
+            <!-- =================================================
+                 Staff Actions
+                 ================================================= -->
+            @if (Model.Status == TicketStatuses.New ||
+                             Model.Status == TicketStatuses.Assigned)
+            {
+                <!-- -------------------------------------------------
+                     Start Working
+                     ------------------------------------------------- -->
+
+                <div class="ticket-action-area">
+
+                    <div class="ticket-action-text">
+
+                        <strong>
+                            Ready to start working?
+                        </strong>
+
+                        <span>
+                            Change the ticket status to In Progress.
+                        </span>
+
+                    </div>
+
+
+                    <form asp-controller="Support"
+                          asp-action="UpdateStatus"
+                          method="post">
+
+                        @Html.AntiForgeryToken()
+
+                        <input type="hidden"
+                               name="TicketId"
+                               value="@Model.TicketId" />
+
+                        <input type="hidden"
+                               name="Status"
+                               value="@TicketStatuses.InProgress" />
+
+                        <button type="submit"
+                                class="ticket-action-btn">
+
+                            <i class="bi bi-play-circle-fill"></i>
+
+                            Start Working
+
+                        </button>
+
+                    </form>
+
+                </div>
+            }
+            else if (Model.Status == TicketStatuses.InProgress)
+            {
+                <!-- -------------------------------------------------
+                     Resolve Ticket
+                     ------------------------------------------------- -->
+
+                <div class="resolve-ticket-area">
+
+                    <div class="resolve-ticket-header">
+
+                        <div class="resolve-ticket-icon">
+
+                            <i class="bi bi-check-circle"></i>
+
+                        </div>
+
+                        <div>
+
+                            <h3>
+                                Resolve Ticket
+                            </h3>
+
+                            <p>
+                                Add the resolution details before
+                                marking this ticket as resolved.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <form asp-controller="Support"
+                          asp-action="ResolveTicket"
+                          method="post">
+
+                        @Html.AntiForgeryToken()
+
+                        <input type="hidden"
+                               name="TicketId"
+                               value="@Model.TicketId" />
+
+
+                        <div class="resolve-form-group">
+
+                            <label for="Remarks">
+                                Resolution Remarks
+                            </label>
+
+                            <textarea id="Remarks"
+                                      name="Remarks"
+                                      class="resolve-textarea"
+                                      rows="4"
+                                      placeholder="Describe how the issue was resolved..."
+                                      required></textarea>
+
+                            <span class="resolve-help-text">
+                                Please provide a clear explanation of the solution provided.
+                            </span>
+
+                        </div>
+
+
+                        <button type="submit"
+                                class="resolve-ticket-btn">
+
+                            <i class="bi bi-check-circle-fill"></i>
+
+                            Resolve Ticket
+
+                        </button>
+
+                    </form>
+
+                </div>
+            }
+
+        </div>
+
+
+        <!-- =====================================================
+             Main Layout
+             ===================================================== -->
+
+        <div class="support-details-layout">
+
+
+            <!-- =================================================
+                 LEFT COLUMN
+                 ================================================= -->
+
+            <main>
+
+
+                <!-- =================================================
+                     Description
+                     ================================================= -->
+
+                <div class="support-card">
+
+                    <div class="support-card-header">
+
+                        <div class="support-card-icon">
+
+                            <i class="bi bi-file-text"></i>
+
+                        </div>
+
+                        <div>
+
+                            <h2 class="support-card-title">
+                                Ticket Description
+                            </h2>
+
+                            <p class="support-card-subtitle">
+                                Issue reported by the employee
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="ticket-description">
+
+                        @Model.Description
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     Employee Information
+                     ================================================= -->
+
+                <div class="support-card">
+
+                    <div class="support-card-header">
+
+                        <div class="support-card-icon">
+
+                            <i class="bi bi-person"></i>
+
+                        </div>
+
+                        <div>
+
+                            <h2 class="support-card-title">
+                                Employee Information
+                            </h2>
+
+                            <p class="support-card-subtitle">
+                                Ticket requester details
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    @if (Model.Employee != null)
+                    {
+                        <div class="employee-grid">
+
+                            <div class="info-item">
+
+                                <span class="info-label">
+                                    Employee Name
+                                </span>
+
+                                <span class="info-value">
+                                    @Model.Employee.Name
+                                </span>
+
+                            </div>
+
+
+                            <div class="info-item">
+
+                                <span class="info-label">
+                                    Employee ID
+                                </span>
+
+                                <span class="info-value">
+                                    @Model.Employee.EmployeeId
+                                </span>
+
+                            </div>
+
+
+                            <div class="info-item">
+
+                                <span class="info-label">
+                                    Email
+                                </span>
+
+                                <span class="info-value">
+                                    @Model.Employee.Email
+                                </span>
+
+                            </div>
+
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="support-empty">
+
+                            <i class="bi bi-person-x"></i>
+
+                            Employee information is not available.
+
+                        </div>
+                    }
+
+                </div>
+
+
+                <!-- =================================================
+                     Attachments
+                     ================================================= -->
+
+                <div class="support-card">
+
+                    <div class="support-card-header">
+
+                        <div class="support-card-icon">
+
+                            <i class="bi bi-paperclip"></i>
+
+                        </div>
+
+                        <div>
+
+                            <h2 class="support-card-title">
+                                Attachments
+                            </h2>
+
+                            <p class="support-card-subtitle">
+
+                                @Model.Attachments.Count
+                                file(s) attached
+
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    @if (Model.Attachments.Any())
+                    {
+                        <div class="attachments-list">
+
+                            @foreach (var attachment in Model.Attachments)
+                            {
+                                var extension =
+                                    System.IO.Path.GetExtension(
+                                        attachment.FileName
+                                    )?.TrimStart('.')
+                                    .ToUpper();
+
+                                var fileIcon = "bi-file-earmark";
+
+
+                                if (!string.IsNullOrEmpty(
+                                        attachment.FileType))
+                                {
+                                    if (attachment.FileType.Contains("pdf"))
+                                    {
+                                        fileIcon =
+                                            "bi-file-earmark-pdf";
+                                    }
+                                    else if (
+                                        attachment.FileType.Contains("image"))
+                                    {
+                                        fileIcon =
+                                            "bi-file-earmark-image";
+                                    }
+                                    else if (
+                                        attachment.FileType.Contains("word"))
+                                    {
+                                        fileIcon =
+                                            "bi-file-earmark-word";
+                                    }
+                                    else if (
+                                        attachment.FileType.Contains("excel") ||
+                                        attachment.FileType.Contains("spreadsheet"))
+                                    {
+                                        fileIcon =
+                                            "bi-file-earmark-spreadsheet";
+                                    }
+                                }
+
+
+                                <div class="attachment-item">
+
+                                    <div class="attachment-info">
+
+                                        <div class="attachment-icon">
+
+                                            <i class="bi @fileIcon"></i>
+
+                                        </div>
+
+
+                                        <div class="attachment-text">
+
+                                            <div class="attachment-name"
+                                                 title="@attachment.FileName">
+
+                                                @attachment.FileName
+
+                                            </div>
+
+
+                                            <div class="attachment-meta">
+
+                                                @extension
+
+                                                @if (attachment.FileSize > 0)
+                                                {
+                                                    <span> • </span>
+
+                                                    @(
+                                                        (attachment.FileSize /
+                                                         1024.0 /
+                                                         1024.0)
+                                                        .ToString("0.##")
+                                                    )
+
+                                                    <span> MB</span>
+                                                }
+
+                                                <span> • </span>
+
+                                                @attachment.UploadedAt
+                                                .ToString("dd MMM yyyy")
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+
+                                    <div class="attachment-actions">
+
+                                        <a href="@attachment.FilePath"
+                                           target="_blank"
+                                           rel="noopener noreferrer"
+                                           class="attachment-view-btn">
+
+                                            <i class="bi bi-eye"></i>
+
+                                            View
+
+                                        </a>
+
+
+                                        <a href="@attachment.FilePath"
+                                           download="@attachment.FileName"
+                                           class="attachment-download-btn">
+
+                                            <i class="bi bi-download"></i>
+
+                                            Download
+
+                                        </a>
+
+                                    </div>
+
+                                </div>
+                            }
+
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="support-empty">
+
+                            <i class="bi bi-paperclip"></i>
+
+                            No attachments were added to this ticket.
+
+                        </div>
+                    }
+
+                </div>
+
+
+                <!-- =================================================
+                     Ticket History
+                     ================================================= -->
+
+                <div class="support-card">
+
+                    <div class="support-card-header">
+
+                        <div class="support-card-icon">
+
+                            <i class="bi bi-clock-history"></i>
+
+                        </div>
+
+                        <div>
+
+                            <h2 class="support-card-title">
+                                Ticket History
+                            </h2>
+
+                            <p class="support-card-subtitle">
+                                Status changes and ticket activity
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    @if (Model.History.Any())
+                    {
+                        <div class="ticket-history">
+
+                            @foreach (var history in Model.History
+                                .OrderByDescending(h => h.ChangedAt))
+                            {
+                                <div class="history-item">
+
+                                    <span class="history-dot"></span>
+
+
+                                    <div class="history-content">
+
+                                        <div class="history-status">
+
+                                            @if (!string.IsNullOrWhiteSpace(
+                                                history.OldStatus))
+                                            {
+                                                <span>
+                                                    @history.OldStatus
+                                                </span>
+
+                                                <i class="bi bi-arrow-right"></i>
+                                            }
+
+                                            <span>
+                                                @history.NewStatus
+                                            </span>
+
+                                        </div>
+
+
+                                        <div class="history-date">
+
+                                            @history.ChangedAt.ToString(
+                                                "dd MMM yyyy, hh:mm tt"
+                                            )
+
+                                            @if (history.ChangedByUser != null)
+                                            {
+                                                <span>
+                                                    •
+                                                    @history.ChangedByUser.Name
+                                                </span>
+                                            }
+
+                                        </div>
+
+
+                                        @if (!string.IsNullOrWhiteSpace(
+                                            history.Remarks))
+                                        {
+                                            <div class="history-remarks">
+
+                                                @history.Remarks
+
+                                            </div>
+                                        }
+
+                                    </div>
+
+                                </div>
+                            }
+
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="support-empty">
+
+                            <i class="bi bi-clock-history"></i>
+
+                            No status history is available yet.
+
+                        </div>
+                    }
+
+                </div>
+
+            </main>
+
+
+            <!-- =================================================
+                 RIGHT SIDEBAR
+                 ================================================= -->
+
+            <aside>
+
+
+                <!-- =================================================
+                     Ticket Summary
+                     ================================================= -->
+
+                <div class="sidebar-card">
+
+                    <div class="sidebar-card-header">
+
+                        <div class="sidebar-card-icon">
+
+                            <i class="bi bi-info-circle"></i>
+
+                        </div>
+
+                        <div>
+
+                            <h2 class="sidebar-title">
+                                Ticket Summary
+                            </h2>
+
+                            <p class="sidebar-subtitle">
+                                Current ticket information
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="summary-list">
+
+                        <div class="summary-item">
+
+                            <span class="summary-label">
+                                Status
+                            </span>
+
+                            <span class="summary-value">
+                                @Model.Status
+                            </span>
+
+                        </div>
+
+
+                        <div class="summary-item">
+
+                            <span class="summary-label">
+                                Priority
+                            </span>
+
+                            <span class="summary-value">
+                                @Model.Priority
+                            </span>
+
+                        </div>
+
+
+                        <div class="summary-item">
+
+                            <span class="summary-label">
+                                Category
+                            </span>
+
+                            <span class="summary-value">
+                                @(Model.Category?.Name ?? "N/A")
+                            </span>
+
+                        </div>
+
+
+                        <div class="summary-item">
+
+                            <span class="summary-label">
+                                Department
+                            </span>
+
+                            <span class="summary-value">
+                                @(Model.Department?.Name ?? "N/A")
+                            </span>
+
+                        </div>
+
+
+                        <div class="summary-item">
+
+                            <span class="summary-label">
+                                Created
+                            </span>
+
+                            <span class="summary-value">
+                                @Model.CreatedAt.ToString("dd MMM yyyy")
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     Assignment
+                     ================================================= -->
+
+                <div class="sidebar-card">
+
+                    <div class="sidebar-card-header">
+
+                        <div class="sidebar-card-icon">
+
+                            <i class="bi bi-person-check"></i>
+
+                        </div>
+
+                        <div>
+
+                            <h2 class="sidebar-title">
+                                Assignment
+                            </h2>
+
+                            <p class="sidebar-subtitle">
+                                Support staff assigned to ticket
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    @if (latestAssignment?.Staff != null)
+                    {
+                        <div class="assignment-person">
+
+                            <div class="assignment-avatar">
+
+                                <i class="bi bi-person"></i>
+
+                            </div>
+
+                            <div>
+
+                                <div class="assignment-name">
+                                    @latestAssignment.Staff.Name
+                                </div>
+
+                                <div class="assignment-id">
+                                    @latestAssignment.Staff.EmployeeId
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="assignment-date">
+
+                            <i class="bi bi-calendar3"></i>
+
+                            Assigned
+                            @latestAssignment.AssignedAt.ToString(
+                                "dd MMM yyyy, hh:mm tt"
+                            )
+
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="support-empty">
+
+                            <i class="bi bi-person-x"></i>
+
+                            No staff assignment found.
+
+                        </div>
+                    }
+
+                </div>
+
+
+                <!-- =================================================
+                     Important Dates
+                     ================================================= -->
+
+                <div class="sidebar-card">
+
+                    <div class="sidebar-card-header">
+
+                        <div class="sidebar-card-icon">
+
+                            <i class="bi bi-calendar-event"></i>
+
+                        </div>
+
+                        <div>
+
+                            <h2 class="sidebar-title">
+                                Important Dates
+                            </h2>
+
+                            <p class="sidebar-subtitle">
+                                Ticket timeline
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="dates-list">
+
+                        <div class="date-item">
+
+                            <div class="date-icon">
+
+                                <i class="bi bi-plus-circle"></i>
+
+                            </div>
+
+                            <div>
+
+                                <div class="date-label">
+                                    Created
+                                </div>
+
+                                <div class="date-value">
+
+                                    @Model.CreatedAt.ToString(
+                                        "dd MMM yyyy, hh:mm tt"
+                                    )
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        @if (Model.ResolvedAt.HasValue)
+                        {
+                            <div class="date-item">
+
+                                <div class="date-icon">
+
+                                    <i class="bi bi-check-circle"></i>
+
+                                </div>
+
+                                <div>
+
+                                    <div class="date-label">
+                                        Resolved
+                                    </div>
+
+                                    <div class="date-value">
+
+                                        @Model.ResolvedAt.Value.ToString(
+                                            "dd MMM yyyy, hh:mm tt"
+                                        )
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        }
+
+
+                        @if (Model.ClosedAt.HasValue)
+                        {
+                            <div class="date-item">
+
+                                <div class="date-icon">
+
+                                    <i class="bi bi-lock"></i>
+
+                                </div>
+
+                                <div>
+
+                                    <div class="date-label">
+                                        Closed
+                                    </div>
+
+                                    <div class="date-value">
+
+                                        @Model.ClosedAt.Value.ToString(
+                                            "dd MMM yyyy, hh:mm tt"
+                                        )
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        }
+
+                    </div>
+
+                </div>
+
+            </aside>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     Success / Error Messages
+     ========================================================= -->
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="support-toast support-toast-success">
+
+        <i class="bi bi-check-circle-fill"></i>
+
+        <span>
+            @TempData["SuccessMessage"]
+        </span>
+
+    </div>
+}
+
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="support-toast support-toast-error">
+
+        <i class="bi bi-exclamation-circle-fill"></i>
+
+        <span>
+            @TempData["ErrorMessage"]
+        </span>
+
+    </div>
+}

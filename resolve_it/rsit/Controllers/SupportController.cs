@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using rsit.Data;
 using rsit.Models;
+using rsit.Services.Interfaces;
 using rsit.ViewModels.Support;
 
 namespace rsit.Controllers;
@@ -13,14 +14,22 @@ public class SupportController : Controller
 {
     private readonly ApplicationDbContext _context;
     private readonly UserManager<User> _userManager;
+    private readonly ITicketService _ticketService;
 
     public SupportController(
         ApplicationDbContext context,
-        UserManager<User> userManager)
+        UserManager<User> userManager,
+        ITicketService ticketService)
     {
         _context = context;
         _userManager = userManager;
+        _ticketService = ticketService;
     }
+
+
+    // =========================================================
+    // SUPPORT STAFF DASHBOARD
+    // =========================================================
 
     [HttpGet]
     public async Task<IActionResult> Index()
@@ -95,5 +104,193 @@ public class SupportController : Controller
         };
 
         return View(model);
+    }
+
+
+    // =========================================================
+    // TICKET DETAILS
+    // =========================================================
+
+    [HttpGet]
+    public async Task<IActionResult> Details(int id)
+    {
+        var userId = _userManager.GetUserId(User);
+
+        if (!int.TryParse(userId, out var staffId))
+        {
+            return Challenge();
+        }
+
+        // Get the ticket with all required details
+        var ticket = await _context.Tickets
+            .Include(t => t.Employee)
+            .Include(t => t.Category)
+            .Include(t => t.Department)
+            .Include(t => t.Attachments)
+            .Include(t => t.Assignments)
+                .ThenInclude(a => a.Staff)
+            .Include(t => t.History)
+                .ThenInclude(h => h.ChangedByUser)
+            .FirstOrDefaultAsync(t => t.TicketId == id);
+
+        if (ticket == null)
+        {
+            return NotFound();
+        }
+
+        // Staff can only view tickets assigned to them
+        var isAssigned = ticket.Assignments
+            .Any(a => a.StaffId == staffId);
+
+        if (!isAssigned)
+        {
+            return Forbid();
+        }
+
+        return View(ticket);
+    }
+
+
+    // =========================================================
+    // UPDATE TICKET STATUS
+    // =========================================================
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> UpdateStatus(
+        SupportStatusUpdateViewModel model)
+    {
+        var userId = _userManager.GetUserId(User);
+
+        if (!int.TryParse(userId, out var staffId))
+        {
+            return Challenge();
+        }
+
+        // -----------------------------------------------------
+        // Validate requested status
+        // -----------------------------------------------------
+
+        if (model.Status != TicketStatuses.InProgress)
+        {
+            TempData["ErrorMessage"] =
+                "Invalid status update.";
+
+            return RedirectToAction(
+                nameof(Details),
+                new { id = model.TicketId });
+        }
+
+
+        // -----------------------------------------------------
+        // Update status through TicketService
+        // -----------------------------------------------------
+
+        var success =
+            await _ticketService.UpdateTicketStatusAsync(
+                model.TicketId,
+                staffId,
+                model.Status);
+
+
+        // -----------------------------------------------------
+        // Handle failed update
+        // -----------------------------------------------------
+
+        if (!success)
+        {
+            TempData["ErrorMessage"] =
+                "Unable to update the ticket status. " +
+                "Make sure the ticket is assigned to you " +
+                "and can be moved to In Progress.";
+
+            return RedirectToAction(
+                nameof(Details),
+                new { id = model.TicketId });
+        }
+
+
+        // -----------------------------------------------------
+        // Success
+        // -----------------------------------------------------
+
+        TempData["SuccessMessage"] =
+            "Ticket status updated to In Progress.";
+
+        return RedirectToAction(
+            nameof(Details),
+            new { id = model.TicketId });
+    }
+
+
+    // =========================================================
+    // RESOLVE TICKET
+    // =========================================================
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> ResolveTicket(
+        SupportResolveViewModel model)
+    {
+        var userId = _userManager.GetUserId(User);
+
+        if (!int.TryParse(userId, out var staffId))
+        {
+            return Challenge();
+        }
+
+        // -----------------------------------------------------
+        // Validate resolution remarks
+        // -----------------------------------------------------
+
+        if (string.IsNullOrWhiteSpace(model.Remarks))
+        {
+            TempData["ErrorMessage"] =
+                "Resolution remarks are required before resolving the ticket.";
+
+            return RedirectToAction(
+                nameof(Details),
+                new { id = model.TicketId });
+        }
+
+
+        // -----------------------------------------------------
+        // Resolve ticket through TicketService
+        // -----------------------------------------------------
+
+        var success =
+            await _ticketService.ResolveTicketAsync(
+                model.TicketId,
+                staffId,
+                model.Remarks);
+
+
+        // -----------------------------------------------------
+        // Handle failed resolution
+        // -----------------------------------------------------
+
+        if (!success)
+        {
+            TempData["ErrorMessage"] =
+                "Unable to resolve the ticket. " +
+                "Make sure the ticket is assigned to you " +
+                "and is currently In Progress.";
+
+            return RedirectToAction(
+                nameof(Details),
+                new { id = model.TicketId });
+        }
+
+
+        // -----------------------------------------------------
+        // Success
+        // -----------------------------------------------------
+
+        TempData["SuccessMessage"] =
+            "Ticket has been resolved successfully.";
+
+        return RedirectToAction(
+            nameof(Details),
+            new { id = model.TicketId });
     }
 }
